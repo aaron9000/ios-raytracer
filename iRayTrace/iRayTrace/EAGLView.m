@@ -1,14 +1,14 @@
 //
 //  EAGLView.m
-//  OpenGLES_iPhone
+//  iPhoton
 //
-//  Created by mmalc Crawford on 11/18/10.
-//  Copyright 2010 Apple Inc. All rights reserved.
+//  Created by Aaron on 6/8/11.
+//  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
-
-#import <QuartzCore/QuartzCore.h>
 
 #import "EAGLView.h"
+
+#import <QuartzCore/QuartzCore.h>
 
 @interface EAGLView (PrivateMethods)
 - (void)createFramebuffer;
@@ -25,7 +25,7 @@
     return [CAEAGLLayer class];
 }
 
-//The EAGL view is stored in the nib file. When it's unarchived it's sent -initWithCoder:.
+// The EAGL view is stored in the nib file. When it's unarchived it's sent -initWithCoder:.
 - (id)initWithCoder:(NSCoder*)coder
 {
     self = [super initWithCoder:coder];
@@ -45,9 +45,6 @@
 - (void)dealloc
 {
     [self deleteFramebuffer];    
-    [context release];
-    
-    [super dealloc];
 }
 
 - (void)setContext:(EAGLContext *)newContext
@@ -55,8 +52,7 @@
     if (context != newContext) {
         [self deleteFramebuffer];
         
-        [context release];
-        context = [newContext retain];
+        context = newContext;
         
         [EAGLContext setCurrentContext:nil];
     }
@@ -74,6 +70,8 @@
         // Create color render buffer and allocate backing store.
         glGenRenderbuffers(1, &colorRenderbuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
+
+        
         [context renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer *)self.layer];
         glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &framebufferWidth);
         glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &framebufferHeight);
@@ -102,8 +100,7 @@
     }
 }
 
-- (void)setFramebuffer
-{
+- (void)setFramebuffer  {
     if (context) {
         [EAGLContext setCurrentContext:context];
         
@@ -116,8 +113,7 @@
     }
 }
 
-- (BOOL)presentFramebuffer
-{
+- (BOOL)presentFramebuffer  {
     BOOL success = FALSE;
     
     if (context) {
@@ -131,8 +127,7 @@
     return success;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews  {
     // The framebuffer will be re-created at the beginning of the next setFramebuffer method call.
     [self deleteFramebuffer];
 }

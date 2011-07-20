@@ -21,6 +21,10 @@
 		9315D83F13D5417B001B1A70 /* iRayTraceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9315D83D13D5417B001B1A70 /* iRayTraceViewController.xib */; };
 		9315D85B13D542E2001B1A70 /* Test.png in Resources */ = {isa = PBXBuildFile; fileRef = 9315D85A13D542E2001B1A70 /* Test.png */; };
 		9315D87913D5433B001B1A70 /* Texture2D.m in Sources */ = {isa = PBXBuildFile; fileRef = 9315D87813D5433B001B1A70 /* Texture2D.m */; };
+		9315D88B13D679A8001B1A70 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87B13D543AB001B1A70 /* Shader.fsh */; };
+		9315D88C13D679A8001B1A70 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87C13D543AB001B1A70 /* Shader.vsh */; };
+		9315D88D13D679A8001B1A70 /* Texture.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87D13D543AB001B1A70 /* Texture.fsh */; };
+		9315D88E13D679A8001B1A70 /* Texture.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87E13D543AB001B1A70 /* Texture.vsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -287,6 +291,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9315D88B13D679A8001B1A70 /* Shader.fsh in Resources */,
+				9315D88C13D679A8001B1A70 /* Shader.vsh in Resources */,
+				9315D88D13D679A8001B1A70 /* Texture.fsh in Resources */,
+				9315D88E13D679A8001B1A70 /* Texture.vsh in Resources */,
 				9315D82913D5417B001B1A70 /* InfoPlist.strings in Resources */,
 				9315D83213D5417B001B1A70 /* MainWindow.xib in Resources */,
 				9315D83F13D5417B001B1A70 /* iRayTraceViewController.xib in Resources */,
@@ -422,6 +430,7 @@
 				9315D84413D5417B001B1A70 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

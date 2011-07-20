@@ -162,5 +162,5 @@ void main (void)
  
     //output
     gl_FragColor = mediump vec4(color, 1.0);
-
+    
 }

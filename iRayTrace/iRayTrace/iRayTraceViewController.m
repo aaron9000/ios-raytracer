@@ -317,7 +317,7 @@
         NSLog(@"OpenGLES 2.0 not supported");
         return;
     }
-    /*
+    
      if (![self validateProgram:renderShader]) {
      NSLog(@"Failed to validate program: %d", renderShader);
      return;
@@ -326,7 +326,7 @@
      NSLog(@"Failed to validate program: %d", textureShader);
      return;
      }
-     */
+     
     
     //temp vars
     GLuint vertex = 0;
