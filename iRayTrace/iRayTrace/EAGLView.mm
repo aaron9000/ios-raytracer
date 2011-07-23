@@ -40,11 +40,13 @@
     }
     
     return self;
+    [super dealloc];
 }
 
 - (void)dealloc
 {
-    [self deleteFramebuffer];    
+    [self deleteFramebuffer];  
+    [super dealloc];
 }
 
 - (void)setContext:(EAGLContext *)newContext

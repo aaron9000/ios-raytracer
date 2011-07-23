@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@class iRayTraceViewController;
+#import "iRayTraceViewController.h"
+
+#import "TouchController.h"
 
 @interface iRayTraceAppDelegate : NSObject <UIApplicationDelegate> {
 
@@ -17,5 +19,7 @@
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 
 @property (nonatomic, retain) IBOutlet iRayTraceViewController *viewController;
+
+@property (nonatomic, retain) IBOutlet TouchController *touchController;
 
 @end

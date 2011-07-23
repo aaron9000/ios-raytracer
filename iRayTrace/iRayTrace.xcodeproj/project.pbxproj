@@ -13,18 +13,24 @@
 		9315D82113D5417A001B1A70 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9315D82013D5417A001B1A70 /* QuartzCore.framework */; };
 		9315D82313D5417A001B1A70 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9315D82213D5417A001B1A70 /* OpenGLES.framework */; };
 		9315D82913D5417B001B1A70 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9315D82713D5417B001B1A70 /* InfoPlist.strings */; };
-		9315D82C13D5417B001B1A70 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9315D82B13D5417B001B1A70 /* main.m */; };
-		9315D82F13D5417B001B1A70 /* iRayTraceAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9315D82E13D5417B001B1A70 /* iRayTraceAppDelegate.m */; };
+		9315D82C13D5417B001B1A70 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D82B13D5417B001B1A70 /* main.mm */; };
+		9315D82F13D5417B001B1A70 /* iRayTraceAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D82E13D5417B001B1A70 /* iRayTraceAppDelegate.mm */; };
 		9315D83213D5417B001B1A70 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9315D83013D5417B001B1A70 /* MainWindow.xib */; };
-		9315D83913D5417B001B1A70 /* EAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9315D83813D5417B001B1A70 /* EAGLView.m */; };
-		9315D83C13D5417B001B1A70 /* iRayTraceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9315D83B13D5417B001B1A70 /* iRayTraceViewController.m */; };
+		9315D83913D5417B001B1A70 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D83813D5417B001B1A70 /* EAGLView.mm */; };
+		9315D83C13D5417B001B1A70 /* iRayTraceViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D83B13D5417B001B1A70 /* iRayTraceViewController.mm */; };
 		9315D83F13D5417B001B1A70 /* iRayTraceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9315D83D13D5417B001B1A70 /* iRayTraceViewController.xib */; };
 		9315D85B13D542E2001B1A70 /* Test.png in Resources */ = {isa = PBXBuildFile; fileRef = 9315D85A13D542E2001B1A70 /* Test.png */; };
-		9315D87913D5433B001B1A70 /* Texture2D.m in Sources */ = {isa = PBXBuildFile; fileRef = 9315D87813D5433B001B1A70 /* Texture2D.m */; };
+		9315D87913D5433B001B1A70 /* Texture2D.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D87813D5433B001B1A70 /* Texture2D.mm */; };
 		9315D88B13D679A8001B1A70 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87B13D543AB001B1A70 /* Shader.fsh */; };
 		9315D88C13D679A8001B1A70 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87C13D543AB001B1A70 /* Shader.vsh */; };
 		9315D88D13D679A8001B1A70 /* Texture.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87D13D543AB001B1A70 /* Texture.fsh */; };
 		9315D88E13D679A8001B1A70 /* Texture.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87E13D543AB001B1A70 /* Texture.vsh */; };
+		93FAD71313DA530C0063D4FE /* TouchController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D84D13D542D5001B1A70 /* TouchController.mm */; };
+		93FAD71413DA53120063D4FE /* TouchObj.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D84F13D542D5001B1A70 /* TouchObj.mm */; };
+		93FAD71513DA53190063D4FE /* Touch.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D84B13D542D5001B1A70 /* Touch.mm */; };
+		93FAD71613DA53450063D4FE /* V3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D85313D542D5001B1A70 /* V3.mm */; };
+		93FAD71713DA534B0063D4FE /* V2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D85113D542D5001B1A70 /* V2.mm */; };
+		93FAD71813DA53660063D4FE /* MathHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D84913D542D5001B1A70 /* MathHelper.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,14 +43,14 @@
 		9315D82613D5417B001B1A70 /* iRayTrace-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iRayTrace-Info.plist"; sourceTree = "<group>"; };
 		9315D82813D5417B001B1A70 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9315D82A13D5417B001B1A70 /* iRayTrace-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iRayTrace-Prefix.pch"; sourceTree = "<group>"; };
-		9315D82B13D5417B001B1A70 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		9315D82B13D5417B001B1A70 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		9315D82D13D5417B001B1A70 /* iRayTraceAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iRayTraceAppDelegate.h; sourceTree = "<group>"; };
-		9315D82E13D5417B001B1A70 /* iRayTraceAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iRayTraceAppDelegate.m; sourceTree = "<group>"; };
+		9315D82E13D5417B001B1A70 /* iRayTraceAppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = iRayTraceAppDelegate.mm; sourceTree = "<group>"; };
 		9315D83113D5417B001B1A70 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		9315D83713D5417B001B1A70 /* EAGLView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
-		9315D83813D5417B001B1A70 /* EAGLView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EAGLView.m; sourceTree = "<group>"; };
+		9315D83813D5417B001B1A70 /* EAGLView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = EAGLView.mm; sourceTree = "<group>"; };
 		9315D83A13D5417B001B1A70 /* iRayTraceViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iRayTraceViewController.h; sourceTree = "<group>"; };
-		9315D83B13D5417B001B1A70 /* iRayTraceViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iRayTraceViewController.m; sourceTree = "<group>"; };
+		9315D83B13D5417B001B1A70 /* iRayTraceViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = iRayTraceViewController.mm; sourceTree = "<group>"; };
 		9315D83E13D5417B001B1A70 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/iRayTraceViewController.xib; sourceTree = "<group>"; };
 		9315D84813D542D5001B1A70 /* MathHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathHelper.h; path = Touch/MathHelper.h; sourceTree = "<group>"; };
 		9315D84913D542D5001B1A70 /* MathHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MathHelper.mm; path = Touch/MathHelper.mm; sourceTree = "<group>"; };
@@ -87,7 +93,7 @@
 		9315D87513D542F6001B1A70 /* vec3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vec3.h; path = gfx/vec3.h; sourceTree = "<group>"; };
 		9315D87613D542F6001B1A70 /* vec4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vec4.h; path = gfx/vec4.h; sourceTree = "<group>"; };
 		9315D87713D5433B001B1A70 /* Texture2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Texture2D.h; sourceTree = "<group>"; };
-		9315D87813D5433B001B1A70 /* Texture2D.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Texture2D.m; sourceTree = "<group>"; };
+		9315D87813D5433B001B1A70 /* Texture2D.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Texture2D.mm; sourceTree = "<group>"; };
 		9315D87B13D543AB001B1A70 /* Shader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Shader.fsh; path = Shaders/Shader.fsh; sourceTree = "<group>"; };
 		9315D87C13D543AB001B1A70 /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Shader.vsh; path = Shaders/Shader.vsh; sourceTree = "<group>"; };
 		9315D87D13D543AB001B1A70 /* Texture.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Texture.fsh; path = Shaders/Texture.fsh; sourceTree = "<group>"; };
@@ -144,17 +150,17 @@
 			children = (
 				9315D87A13D54397001B1A70 /* Shaders */,
 				9315D87713D5433B001B1A70 /* Texture2D.h */,
-				9315D87813D5433B001B1A70 /* Texture2D.m */,
+				9315D87813D5433B001B1A70 /* Texture2D.mm */,
 				9315D84713D542B8001B1A70 /* Touch */,
 				9315D84613D542AE001B1A70 /* Content */,
 				9315D84513D542A5001B1A70 /* gfx */,
 				9315D82D13D5417B001B1A70 /* iRayTraceAppDelegate.h */,
-				9315D82E13D5417B001B1A70 /* iRayTraceAppDelegate.m */,
+				9315D82E13D5417B001B1A70 /* iRayTraceAppDelegate.mm */,
 				9315D83013D5417B001B1A70 /* MainWindow.xib */,
 				9315D83713D5417B001B1A70 /* EAGLView.h */,
-				9315D83813D5417B001B1A70 /* EAGLView.m */,
+				9315D83813D5417B001B1A70 /* EAGLView.mm */,
 				9315D83A13D5417B001B1A70 /* iRayTraceViewController.h */,
-				9315D83B13D5417B001B1A70 /* iRayTraceViewController.m */,
+				9315D83B13D5417B001B1A70 /* iRayTraceViewController.mm */,
 				9315D83D13D5417B001B1A70 /* iRayTraceViewController.xib */,
 				9315D82513D5417A001B1A70 /* Supporting Files */,
 			);
@@ -167,7 +173,7 @@
 				9315D82613D5417B001B1A70 /* iRayTrace-Info.plist */,
 				9315D82713D5417B001B1A70 /* InfoPlist.strings */,
 				9315D82A13D5417B001B1A70 /* iRayTrace-Prefix.pch */,
-				9315D82B13D5417B001B1A70 /* main.m */,
+				9315D82B13D5417B001B1A70 /* main.mm */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -309,11 +315,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9315D82C13D5417B001B1A70 /* main.m in Sources */,
-				9315D82F13D5417B001B1A70 /* iRayTraceAppDelegate.m in Sources */,
-				9315D83913D5417B001B1A70 /* EAGLView.m in Sources */,
-				9315D83C13D5417B001B1A70 /* iRayTraceViewController.m in Sources */,
-				9315D87913D5433B001B1A70 /* Texture2D.m in Sources */,
+				93FAD71813DA53660063D4FE /* MathHelper.mm in Sources */,
+				93FAD71713DA534B0063D4FE /* V2.mm in Sources */,
+				93FAD71613DA53450063D4FE /* V3.mm in Sources */,
+				93FAD71513DA53190063D4FE /* Touch.mm in Sources */,
+				93FAD71413DA53120063D4FE /* TouchObj.mm in Sources */,
+				93FAD71313DA530C0063D4FE /* TouchController.mm in Sources */,
+				9315D82C13D5417B001B1A70 /* main.mm in Sources */,
+				9315D82F13D5417B001B1A70 /* iRayTraceAppDelegate.mm in Sources */,
+				9315D83913D5417B001B1A70 /* EAGLView.mm in Sources */,
+				9315D83C13D5417B001B1A70 /* iRayTraceViewController.mm in Sources */,
+				9315D87913D5433B001B1A70 /* Texture2D.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,7 +9,14 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "iRayTraceViewController.h"
+
 #import "EAGLView.h"
+
+#import "TouchController.h"
+
+#import "Texture2D.h"
+
+#import "TouchObj.h"
 
 
 @implementation iRayTraceViewController
@@ -36,6 +43,9 @@
 //must be integer >= 1
 #define FRAMERATE_DIVIDER 3
 
+#define HWMaxTouches 5
+
+
 ////////
 //MAIN//
 ////////
@@ -50,6 +60,9 @@
     
     //
     [self setupNotifications];
+    
+    //
+    [self setupInput];
     
     
     //
@@ -707,5 +720,94 @@
 		framerate = ((1.0f / (dt * timingFactor)) + 0.5f);
     //NSLog(@"FPS = %i", (int)framerate);
     NSLog(@"%@ %i",message, (int)(dt * timingFactor * 1000));
+}
+
+/////////////////////////////////
+/*TouchController communication*/
+/////////////////////////////////
+- (BOOL)setupInput{
+    return true;
+}
+- (BOOL)tearDownInput{
+    return true;
+}
+- (void)linkTouchController:(TouchController*) linkedController{
+	touchController = linkedController;
+}
+- (void) touchHelper:(NSSet *)touches{
+	int i,len;
+	SEL selector;
+	UITouch *touch; 
+	CGPoint touchPoint;	
+	TouchObj* passObj=[[TouchObj alloc] init];
+	len=[touches count];
+	
+	//bound max touches
+	if (len>HWMaxTouches)
+		len=HWMaxTouches;
+	
+	
+	//for each touch 
+	for (i=0;i<len;i++){
+		
+		//get the touch out of set
+		touch = [[touches allObjects] objectAtIndex:i];
+		
+		//what state is this touch in
+		UITouchPhase state=[touch phase];
+		switch (state){
+			case UITouchPhaseBegan:
+				selector=@selector(startTouchWithObj:);
+				break;
+			case UITouchPhaseEnded:
+				selector=@selector(endTouchWithObj:);
+				break;
+			case UITouchPhaseCancelled:
+				selector=@selector(endTouchWithObj:);
+				break;
+			case  UITouchPhaseStationary:
+				selector=@selector(moveTouchWithObj:);
+				break;
+			case UITouchPhaseMoved:
+				selector=@selector(moveTouchWithObj:);
+				break;
+		}
+		
+		//set properties of passObj
+		[passObj setTaps:[touch tapCount]];
+		
+		touchPoint = [touch locationInView:self.view];
+		
+		touchPoint.y = -(touchPoint.y-1024);
+				
+		[passObj setPoint:touchPoint];
+		
+		
+		//let touch controller do the rest
+		[touchController performSelector:selector withObject:passObj];
+	}
+	
+	//release that obj
+	[passObj release];
+}
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+	[self touchHelper:touches];
+}
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+	[self touchHelper:touches];
+}
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+	[self touchHelper:touches];
+}
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+	[self touchHelper:touches];
+}
+/////////
+/*ACCEL*/
+/////////
+@synthesize accelerometer;
+- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration {
+	V3 accel=V3(acceleration.x,acceleration.y,acceleration.z);
+	[touchController accelUpdate:&accel];
 }
 @end

@@ -12,15 +12,23 @@
 
 #import "iRayTraceViewController.h"
 
+#import "TouchController.h"
+
 @implementation iRayTraceAppDelegate
 
 
 @synthesize window=_window;
 
 @synthesize viewController=_viewController;
+@synthesize touchController=_touchController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    //set up touchController
+    self.touchController = [[TouchController alloc] init];
+    
+    
     // Override point for customization after application launch.
     self.window.rootViewController = self.viewController;
     return YES;
@@ -72,6 +80,7 @@
 {
     [_window release];
     [_viewController release];
+    [_touchController release];
     [super dealloc];
 }
 

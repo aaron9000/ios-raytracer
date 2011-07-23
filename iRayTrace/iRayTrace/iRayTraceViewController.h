@@ -9,17 +9,16 @@
 #import <UIKit/UIKit.h>
 
 #import <OpenGLES/EAGL.h>
-
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 
-#import "Texture2D.h"
-
-//#import "V2.h"
-
 #include <mach/mach_time.h>
+
+#import "Texture2D.h"
+#import "TouchController.h"
+
 
 @interface iRayTraceViewController : UIViewController {
     //gl stuff
@@ -54,6 +53,9 @@
     uint64_t oldTime;
     double timingFactor;
     
+    //touch and input
+    UIAccelerometer *accelerometer;
+    TouchController *touchController;
 }
 
 
@@ -106,6 +108,11 @@
 - (void)applicationWillResignActive:(NSNotification *)notification;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 - (void)applicationWillTerminate:(NSNotification *)notification;
+
+//touch and input
+@property (readonly, nonatomic) UIAccelerometer* accelerometer;
+- (BOOL)setupInput;
+- (BOOL)tearDownInput;
 
 
 
