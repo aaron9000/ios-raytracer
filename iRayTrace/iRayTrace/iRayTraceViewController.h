@@ -19,6 +19,8 @@
 #import "Texture2D.h"
 #import "TouchController.h"
 
+#import "mat4.h"
+
 
 @interface iRayTraceViewController : UIViewController {
     //gl stuff
@@ -56,6 +58,9 @@
     //touch and input
     UIAccelerometer *accelerometer;
     TouchController *touchController;
+    
+    //camera
+    Mat4 cameraMat;
 }
 
 
@@ -111,8 +116,15 @@
 
 //touch and input
 @property (readonly, nonatomic) UIAccelerometer* accelerometer;
+- (void) linkTouchController:(TouchController*) controller;
 - (BOOL)setupInput;
 - (BOOL)tearDownInput;
+
+//camera
+- (void) updateCamera;
+- (BOOL) setupCamera;
+- (BOOL) tearDownCamera;
+
 
 
 

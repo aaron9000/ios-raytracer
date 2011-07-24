@@ -64,6 +64,8 @@
     //
     [self setupInput];
     
+    //
+    [self setupCamera];
     
     //
     [self setupDisplayLink];
@@ -94,9 +96,15 @@
     
     [self tearDownGL];
     
+    [self tearDownInput];
+    
+    [self tearDownCamera];
+    
     [self tearDownNotifications];
     
     [super dealloc];
+    
+    
 }
 
 ////////////
@@ -407,11 +415,13 @@
     
     //view rotation matrix uniform
     //rotates [1, 0 , 0] 
+    [self updateCamera];
     GLfloat rot[] = {
-        1.0f,   0,      0,      
-        0,   1.0f,      0,      
-        0,      0,   1.0f,      
+        cameraMat[0][0],   cameraMat[1][0],   cameraMat[2][0],      
+        cameraMat[0][1],   cameraMat[1][1],   cameraMat[2][1],      
+        cameraMat[0][2],   cameraMat[1][2],   cameraMat[2][2],      
     };
+    
     GLuint matrix = [[renderUniformDict valueForKey:@"matrix"] unsignedIntValue];
     glUniformMatrix3fv(matrix, 3, false, rot);
     
@@ -466,6 +476,9 @@
     ticks++;
     [self endTiming:@"render MS = "];
     [self startTiming];
+    
+    //touch controller stuff
+    [touchController recievedTaps];
 }
 
 //////////////////
@@ -809,5 +822,42 @@
 - (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration {
 	V3 accel=V3(acceleration.x,acceleration.y,acceleration.z);
 	[touchController accelUpdate:&accel];
+}
+
+//////////
+/*CAMERA*/
+//////////
+- (void) updateCamera{
+    
+    //consts
+    float sensitivity = 0.2f;
+    
+    //get inout
+    Touch* touch = [touchController getTouchWithIndex:4];
+    float deltaX = touch->currVelocity.x;
+    float deltaY = touch->currVelocity.y;
+
+    //rotate
+    Vec3 axis = Vec3(0.0, 0.0, 1.0);
+    float theta = deltaX * sensitivity;;
+    Mat4 rotZMat = rotation_matrix_deg(deltaX * sensitivity, Vec3(0.0, 0.0, 1.0));
+    Mat4 rotYMat = rotation_matrix_deg(deltaY * sensitivity, Vec3(0.0, 1.0, 0.0));
+    cameraMat = cameraMat * rotZMat * rotYMat;
+    
+}
+- (BOOL) setupCamera{
+    
+    //init to identity
+    cameraMat = Mat4::I();
+    
+    
+    
+    return true;
+    
+}
+- (BOOL) tearDownCamera{
+    
+    
+    return true;
 }
 @end

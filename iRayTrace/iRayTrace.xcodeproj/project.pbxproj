@@ -31,6 +31,15 @@
 		93FAD71613DA53450063D4FE /* V3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D85313D542D5001B1A70 /* V3.mm */; };
 		93FAD71713DA534B0063D4FE /* V2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D85113D542D5001B1A70 /* V2.mm */; };
 		93FAD71813DA53660063D4FE /* MathHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D84913D542D5001B1A70 /* MathHelper.mm */; };
+		93FAD72E13DC91AD0063D4FE /* geom3d.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93FAD72513DC91AD0063D4FE /* geom3d.mm */; };
+		93FAD72F13DC91AD0063D4FE /* geom4d.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93FAD72613DC91AD0063D4FE /* geom4d.mm */; };
+		93FAD73013DC91AD0063D4FE /* mat2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93FAD72713DC91AD0063D4FE /* mat2.mm */; };
+		93FAD73113DC91AD0063D4FE /* mat3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93FAD72813DC91AD0063D4FE /* mat3.mm */; };
+		93FAD73213DC91AD0063D4FE /* mat4.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93FAD72913DC91AD0063D4FE /* mat4.mm */; };
+		93FAD73313DC91AD0063D4FE /* quat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93FAD72A13DC91AD0063D4FE /* quat.mm */; };
+		93FAD73413DC91AD0063D4FE /* symmat2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93FAD72B13DC91AD0063D4FE /* symmat2.mm */; };
+		93FAD73513DC91AD0063D4FE /* symmat3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93FAD72C13DC91AD0063D4FE /* symmat3.mm */; };
+		93FAD73613DC91AD0063D4FE /* symmat4.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93FAD72D13DC91AD0063D4FE /* symmat4.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -98,6 +107,15 @@
 		9315D87C13D543AB001B1A70 /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Shader.vsh; path = Shaders/Shader.vsh; sourceTree = "<group>"; };
 		9315D87D13D543AB001B1A70 /* Texture.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Texture.fsh; path = Shaders/Texture.fsh; sourceTree = "<group>"; };
 		9315D87E13D543AB001B1A70 /* Texture.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Texture.vsh; path = Shaders/Texture.vsh; sourceTree = "<group>"; };
+		93FAD72513DC91AD0063D4FE /* geom3d.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = geom3d.mm; path = gfx/geom3d.mm; sourceTree = "<group>"; };
+		93FAD72613DC91AD0063D4FE /* geom4d.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = geom4d.mm; path = gfx/geom4d.mm; sourceTree = "<group>"; };
+		93FAD72713DC91AD0063D4FE /* mat2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = mat2.mm; path = gfx/mat2.mm; sourceTree = "<group>"; };
+		93FAD72813DC91AD0063D4FE /* mat3.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = mat3.mm; path = gfx/mat3.mm; sourceTree = "<group>"; };
+		93FAD72913DC91AD0063D4FE /* mat4.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = mat4.mm; path = gfx/mat4.mm; sourceTree = "<group>"; };
+		93FAD72A13DC91AD0063D4FE /* quat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = quat.mm; path = gfx/quat.mm; sourceTree = "<group>"; };
+		93FAD72B13DC91AD0063D4FE /* symmat2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = symmat2.mm; path = gfx/symmat2.mm; sourceTree = "<group>"; };
+		93FAD72C13DC91AD0063D4FE /* symmat3.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = symmat3.mm; path = gfx/symmat3.mm; sourceTree = "<group>"; };
+		93FAD72D13DC91AD0063D4FE /* symmat4.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = symmat4.mm; path = gfx/symmat4.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +199,15 @@
 		9315D84513D542A5001B1A70 /* gfx */ = {
 			isa = PBXGroup;
 			children = (
+				93FAD72513DC91AD0063D4FE /* geom3d.mm */,
+				93FAD72613DC91AD0063D4FE /* geom4d.mm */,
+				93FAD72713DC91AD0063D4FE /* mat2.mm */,
+				93FAD72813DC91AD0063D4FE /* mat3.mm */,
+				93FAD72913DC91AD0063D4FE /* mat4.mm */,
+				93FAD72A13DC91AD0063D4FE /* quat.mm */,
+				93FAD72B13DC91AD0063D4FE /* symmat2.mm */,
+				93FAD72C13DC91AD0063D4FE /* symmat3.mm */,
+				93FAD72D13DC91AD0063D4FE /* symmat4.mm */,
 				9315D85C13D542F6001B1A70 /* arcball.h */,
 				9315D85D13D542F6001B1A70 /* array.h */,
 				9315D85E13D542F6001B1A70 /* baseball.h */,
@@ -326,6 +353,15 @@
 				9315D83913D5417B001B1A70 /* EAGLView.mm in Sources */,
 				9315D83C13D5417B001B1A70 /* iRayTraceViewController.mm in Sources */,
 				9315D87913D5433B001B1A70 /* Texture2D.mm in Sources */,
+				93FAD72E13DC91AD0063D4FE /* geom3d.mm in Sources */,
+				93FAD72F13DC91AD0063D4FE /* geom4d.mm in Sources */,
+				93FAD73013DC91AD0063D4FE /* mat2.mm in Sources */,
+				93FAD73113DC91AD0063D4FE /* mat3.mm in Sources */,
+				93FAD73213DC91AD0063D4FE /* mat4.mm in Sources */,
+				93FAD73313DC91AD0063D4FE /* quat.mm in Sources */,
+				93FAD73413DC91AD0063D4FE /* symmat2.mm in Sources */,
+				93FAD73513DC91AD0063D4FE /* symmat3.mm in Sources */,
+				93FAD73613DC91AD0063D4FE /* symmat4.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

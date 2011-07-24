@@ -54,7 +54,7 @@ public:
     //
     inline Mat4& operator=(const Mat4& m);
     inline Mat4& operator=(double s);
-
+    
     inline Mat4& operator+=(const Mat4& m);
     inline Mat4& operator-=(const Mat4& m);
     inline Mat4& operator*=(double s);
@@ -128,7 +128,8 @@ inline Mat4 operator/(const Mat4& m, double s)
 
 inline Vec4 operator*(const Mat4& m, const Vec4& v)
 	{ return Vec4(m[0]*v, m[1]*v, m[2]*v, m[3]*v); }
-    
+
+extern Mat4 operator*(const Mat4& n, const Mat4& m);
 
 //
 // Transform a homogeneous 3-vector and reproject into normal 3-space
@@ -159,10 +160,10 @@ extern Mat4 scaling_matrix(const Vec3& scale);
 
 extern Mat4 rotation_matrix_rad(double theta, const Vec3& axis);
 
-    /*
-extern Mat4 rotation_matrix_deg(double theta, const Vec3& axis)
+
+inline Mat4 rotation_matrix_deg(double theta, const Vec3& axis)
 	{ return rotation_matrix_rad(theta*M_PI/180.0, axis); }
-*/
+
 extern Mat4 perspective_matrix(double fovy, double aspect,
 			       double zmin=0.0, double zmax=0.0);
 

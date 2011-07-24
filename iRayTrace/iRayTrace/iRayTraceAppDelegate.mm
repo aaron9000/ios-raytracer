@@ -27,6 +27,8 @@
     
     //set up touchController
     self.touchController = [[TouchController alloc] init];
+    [_viewController linkTouchController:_touchController];
+    
     
     
     // Override point for customization after application launch.
