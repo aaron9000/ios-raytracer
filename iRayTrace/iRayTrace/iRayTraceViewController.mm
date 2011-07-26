@@ -18,6 +18,8 @@
 
 #import "TouchObj.h"
 
+#import "V3.h"
+
 
 @implementation iRayTraceViewController
 
@@ -338,7 +340,7 @@
         NSLog(@"OpenGLES 2.0 not supported");
         return;
     }
-    
+    /*
      if (![self validateProgram:renderShader]) {
      NSLog(@"Failed to validate program: %d", renderShader);
      return;
@@ -348,6 +350,7 @@
      return;
      }
      
+    */
     
     //temp vars
     GLuint vertex = 0;
@@ -474,7 +477,7 @@
     
     //do timing
     ticks++;
-    [self endTiming:@"render MS = "];
+    //[self endTiming:@"render MS = "];
     [self startTiming];
     
     //touch controller stuff
@@ -827,29 +830,66 @@
 //////////
 /*CAMERA*/
 //////////
+//math helpers for camera
+Mat4 fpsRotMat(V3* f){
+    V3 l;
+    *f = unit3(f);
+    if (fabs(f->z) == 1.0f){
+        l = V3(f->z, 0, 0);
+    }else{
+        V3 temp = V3(f->y, -f->x, 0.0f);
+        l = unit3(&temp);
+    }
+    
+    V3 u = cross3(f, &l);
+    
+    Mat4 m;
+    m(0,0) = f->x;      m(0,1) = f->y;      m(0,2) = f->z;  m(0,3) = 0;
+    m(1,0) = l.x;       m(1,1) = l.y;       m(1,2) = l.z;   m(1,3) = 0;
+    m(2,0) = u.x;       m(2,1) = u.y;       m(2,2) = u.z;   m(2,3) = 0;
+    m(3,0) = 0;         m(3,1) = 0;         m(3,2) = 0;     m(3,3) = 1;
+    
+    return m;
+}
+
+
+
 - (void) updateCamera{
     
     //consts
-    float sensitivity = 0.2f;
+    float sensitivity = 0.005f;
     
     //get inout
     Touch* touch = [touchController getTouchWithIndex:4];
-    float deltaX = touch->currVelocity.x;
-    float deltaY = touch->currVelocity.y;
+    
+    //early return if its not an active touch
+    if (!touch->down)
+        return;
+    
+    float deltaX = touch->currVelocity.x * sensitivity;
+    float deltaY = touch->currVelocity.y * sensitivity;
+    
+    //update camrea
+    cameraLongitude += deltaX;
+    cameraLatitude -= deltaY;
+    if (cameraLatitude <= -halfPi*0.9f)
+        cameraLatitude = -halfPi*0.9f; 
+    if (cameraLatitude >= halfPi*0.9f)
+        cameraLatitude = halfPi*0.9f; 
+    
+    //NSLog(@"%f , %f", cameraLatitude, cameraLongitude);
+    
+    //construct rotation matrix
+    V3 unit = sphericalToUnit(cameraLongitude, cameraLatitude);
+    cameraMat = fpsRotMat(&unit);
 
-    //rotate
-    Vec3 axis = Vec3(0.0, 0.0, 1.0);
-    float theta = deltaX * sensitivity;;
-    Mat4 rotZMat = rotation_matrix_deg(deltaX * sensitivity, Vec3(0.0, 0.0, 1.0));
-    Mat4 rotYMat = rotation_matrix_deg(deltaY * sensitivity, Vec3(0.0, 1.0, 0.0));
-    cameraMat = cameraMat * rotZMat * rotYMat;
     
 }
 - (BOOL) setupCamera{
     
     //init to identity
     cameraMat = Mat4::I();
-    
+    cameraLatitude = cameraLongitude = 0.0f;
     
     
     return true;

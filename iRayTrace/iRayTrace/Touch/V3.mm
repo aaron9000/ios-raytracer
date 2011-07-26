@@ -1,4 +1,5 @@
 #include "V3.h"
+
 //2d point class
 /*
 V3::V3(){

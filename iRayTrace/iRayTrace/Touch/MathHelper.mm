@@ -59,6 +59,23 @@ V3 cross3( V3* a, V3* b ) {
 V3 randUnit3(){
 	return(V3());
 }
+V3 sphericalToUnit(float longitude, float latitude){
+    
+    float cosLat = cosf(latitude);
+    float sinLat = sinf(latitude);
+    float cosLong = cosf(longitude);
+    float sinLong = sinf(longitude);
+    
+    float x = cosLong * cosLat;
+    float y = sinLong * cosLat;
+    float z = sinLat;
+    
+    
+    //NSLog(@"%f, %f, %f",x, y, z);
+    V3 ret = V3(x, y, z);
+    
+    return ret;
+}
 float dot3(V3* a, V3* b){
 	return((a->x * b->x)+(a->y * b->y)+(a->z * b->z));
 }

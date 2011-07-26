@@ -61,6 +61,8 @@
     
     //camera
     Mat4 cameraMat;
+    float cameraLatitude;
+    float cameraLongitude;
 }
 
 

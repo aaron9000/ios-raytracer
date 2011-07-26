@@ -35,9 +35,11 @@ V3 avg3(V3* a, V3* b);
 V3 unit3(V3* a);
 V3 cross3( V3* a, V3* b );
 V3 randUnit3();
+V3 sphericalToUnit(float longitude, float latitude);
 float dot3(V3* a, V3* b);
 float mag3(V3* a);
 float dist3(V3* a, V3* b);
+
 
 
 //2d
@@ -82,6 +84,7 @@ inline V2 randSpread2(float radius){
 	ret=mult2(&ret,fRand()*radius);
 	return ret;
 }
+
 
 //direction stuff
 float findDir(float d1,float  d2);
