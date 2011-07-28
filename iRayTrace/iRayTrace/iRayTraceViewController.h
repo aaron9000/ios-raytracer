@@ -18,7 +18,7 @@
 
 #import "Texture2D.h"
 #import "TouchController.h"
-
+#import "Camera.h"
 #import "mat4.h"
 
 
@@ -60,9 +60,12 @@
     TouchController *touchController;
     
     //camera
+    Camera cam;
+    /*
     Mat4 cameraMat;
     float cameraLatitude;
     float cameraLongitude;
+     */
 }
 
 

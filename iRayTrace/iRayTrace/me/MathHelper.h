@@ -3,7 +3,7 @@
 #include <math.h>
 #include "V2.h"
 #include "V3.h"
-
+#include "mat4.h"
 
 
 ////////////
@@ -34,11 +34,12 @@ V3 sub3(V3* a, V3* b);
 V3 avg3(V3* a, V3* b);
 V3 unit3(V3* a);
 V3 cross3( V3* a, V3* b );
-V3 randUnit3();
+V3 randUnit3(float zScale);
 V3 sphericalToUnit(float longitude, float latitude);
 float dot3(V3* a, V3* b);
 float mag3(V3* a);
 float dist3(V3* a, V3* b);
+Mat4 fpsRotMat(V3* f);
 
 
 

@@ -91,15 +91,19 @@ Collision intersectionCheck(Ray r){
 
 		Collision c = createCollision();
 
+        
 		//each sphere we are going to check against
-        raySphereIntersect(r, vec4(0.3, 1.0, 0.0, 0.5), vec4(14.0, 3.0, -3.0, 2.5), c);	
-		raySphereIntersect(r, vec4(0.0, 0.6, 1.0, 0.3), vec4(5.0, 2.0, 2.0, 1.0), c);
-		raySphereIntersect(r, vec4(0.0, 1.0, 1.0, 0.2), vec4(9.0, -2.0, -4.0, 1.5), c);	
-		raySphereIntersect(r, vec4(0.5, 0.0, 1.0, 0.9), vec4(14.0, 4.0, 7.0, 3.0), c);
-		raySphereIntersect(r, vec4(0.2, 0.4, 1.0, 0.8), vec4(7.0, -4.0, 3.0, 1.75), c);
-		raySphereIntersect(r, vec4(0.5, 0.2, 0.9, 0.7), vec4(18.0, -6.0, 5.0, 4.75), c);
-        raySphereIntersect(r, vec4(1.0, 0.8, 0.3, 0.5), vec4(20.0, 5.0, -7.0, 3.75), c);
-        raySphereIntersect(r, vec4(0.7, 0.7, 0.7, 0.0), vec4(17.0, -7.0, 3.0, 30), c);
+        raySphereIntersect(r, vec4(0.3, 1.0, 0.0, 0.5), vec4(-7.0, 3.0, -0.0, 2.5), c);	
+		raySphereIntersect(r, vec4(1.0, 0.0, 0.2, 0.3), vec4(5.0, 1.0, 5.0, 2.0), c);
+		raySphereIntersect(r, vec4(0.0, 1.0, 1.0, 0.2), vec4(-9.0, -6.0, -4.0, 2.5), c);	
+		raySphereIntersect(r, vec4(0.5, 0.0, 1.0, 0.9), vec4(1.40, 8.0, 7.0, 3.0), c);
+		raySphereIntersect(r, vec4(0.2, 0.4, 1.0, 0.8), vec4(-3.0, -2.0, 1.0, 2.75), c);
+		raySphereIntersect(r, vec4(0.5, 0.2, 0.9, 0.7), vec4(9.0, -6.0, 8.0, 4.75), c);
+        raySphereIntersect(r, vec4(1.0, 0.8, 0.3, 0.5), vec4(-10.0, 5.0, -7.0, 3.75), c);
+    
+        //raySphereIntersect(r, vec4(1.0, 0.0, 0.0, 0.0), vec4(64.0, 48.0, -48.0, 32), c);
+    
+        raySphereIntersect(r, vec4(1.0, 1.0, 1.0, 0.0), vec4(-120.0, -40.0, 32.0, 256), c);
 
 
 	return c;

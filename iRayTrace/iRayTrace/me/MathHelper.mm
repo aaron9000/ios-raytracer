@@ -1,4 +1,5 @@
 #include "MathHelper.h"
+#include "mat4.h"
 
 ////////////////////
 /*HELPER FUNCTIONS*/
@@ -22,7 +23,7 @@ V2 reflection2(V2* unit,V2* normal,V3* friction) {
  */
 //random sign +/- 1.0f
 float randSign(){
-	if (rand()%2==0){
+	if (rand() % 2 == 0){
 		return 1.0f;
 	}else{
 		return -1.0f;
@@ -56,8 +57,16 @@ V3 unit3(V3* a){
 V3 cross3( V3* a, V3* b ) {
 	return  V3((b->y * a->z) - (b->z * a->y), (b->z * a->x) - (b->x * a->z), (b->x * a->y) - (b->y * a->x));
 }
-V3 randUnit3(){
-	return(V3());
+V3 randUnit3(float zScale){
+    float phi = fRand() * twoPi;
+    float z = (2.0f * fRand()) - 1.0f;
+    float cosPhi = cosf(phi);
+    float sinPhi = sinf(phi);
+    V3 vec = V3(cosPhi, sinPhi, 0.0f);
+    vec = mult3(&vec, sqrtf(1.0f - (z * z)));
+    vec.z = z * zScale;
+    vec = unit3(&vec);
+	return(vec);
 }
 V3 sphericalToUnit(float longitude, float latitude){
     
@@ -80,13 +89,36 @@ float dot3(V3* a, V3* b){
 	return((a->x * b->x)+(a->y * b->y)+(a->z * b->z));
 }
 float mag3(V3* a){
-	return(sqrt(a->x*a->x+a->y*a->y+a->z*a->z));
+	return(sqrtf(a->x*a->x+a->y*a->y+a->z*a->z));
 }
 float dist3(V3* a, V3* b){
 	float dx=a->x-b->x;
 	float dy=a->y-b->y;
 	float dz=a->z-b->z;
 	return(sqrt(dx*dx+dy*dy+dz*dz));
+}
+
+
+//rotation matrix for a FPS style camera from a unit vector
+Mat4 fpsRotMat(V3* f){
+    V3 l;
+    *f = unit3(f);
+    if (fabs(f->z) == 1.0f){
+        l = V3(f->z, 0.0f, 0.0f);
+    }else{
+        V3 temp = V3(f->y, -f->x, 0.0f);
+        l = unit3(&temp);
+    }
+    
+    V3 u = cross3(f, &l);
+    
+    Mat4 m;
+    m(0,0) = f->x;      m(0,1) = f->y;      m(0,2) = f->z;  m(0,3) = 0.0f;
+    m(1,0) = l.x;       m(1,1) = l.y;       m(1,2) = l.z;   m(1,3) = 0.0f;
+    m(2,0) = u.x;       m(2,1) = u.y;       m(2,2) = u.z;   m(2,3) = 0.0f;
+    m(3,0) = 0.0f;      m(3,1) = 0.0f;      m(3,2) = 0.0f;  m(3,3) = 1.0f;
+    
+    return m;
 }
 
  
@@ -134,121 +166,3 @@ float dir2(V2* a,V2* b) {
 	}
 	return temp;
 }
-/*
-
-BOOL segmentIntersect(V2* a,V2* b, V2* c, V2* d, Collision2* collisionData) {
-	
-	collisionData->occured=false;
-	int l1type =-1;
-	int l2type = -1;
-	float tempx = 0;
-	float tempy = 0;
-	float m1 = 0;
-	float m2 = 0;
-	float b1 = 0;
-	float b2 = 0;
-	float l1_x1=a->x;
-	float l1_y1=a->y;
-	float l1_x2=b->x;
-	float l1_y2=b->y;
-	float l2_x1=c->x;
-	float l2_y1=c->y;
-	float l2_x2=d->x;
-	float l2_y2=d->y;
-	
-	if (l1_x1-l1_x2 == 0) 
-		l1type = 1;
-	if (l2_x1-l2_x2 == 0) 
-		l2type = 1;
-	if (l1_y1-l1_y2 == 0) 
-		l1type = 0;
-	if (l2_y1-l2_y2 == 0) 
-		l2type = 0;
-	
-	if (l1type+l2type == -2) {
-		m1 = (l1_y1-l1_y2)/(l1_x1-l1_x2);
-		m2 = (l2_y1-l2_y2)/(l2_x1-l2_x2);
-		if (m2-m1 != 0) {
-			b1 = -m1*l1_x1+l1_y1;
-			b2 = -m2*l2_x1+l2_y1;
-			tempy = (b1*m2-b2*m1)/(m2-m1);
-			tempx = (b2-b1)/(m1-m2);
-		} else {
-			return false;
-		}
-	} else if (l1type != l2type) {
-		if (l1type != -1 && l2type != -1) {
-			if (l1type == 0 && l2type == 1) {
-				tempx = l2_x1;
-				tempy = l1_y1;
-			}
-			if (l1type == 1 && l2type == 0) {
-				tempx = l1_x1;
-				tempy = l2_y1;
-			}
-		} else if (l1type == -1) {
-			m1 = (l1_y1-l1_y2)/(l1_x1-l1_x2);
-			b1 = -m1*l1_x1+l1_y1;
-			if (l2type == 0) {
-				tempy = l2_y1;
-				tempx = (tempy-b1)/m1;
-			} else {
-				tempx = l2_x1;
-				tempy = m1*tempx+b1;
-			}
-		} else {
-			m2 = (l2_y1-l2_y2)/(l2_x1-l2_x2);
-			b2 = -m2*l2_x1+l2_y1;
-			if (l1type == 0) {
-				tempy = l1_y1;
-				tempx = (tempy-b2)/m2;
-			} else {
-				tempx = l1_x1;
-				tempy = m2*tempx+b2;
-			}
-		}
-	} else {
-		return false;
-	}
-	
-	
-	
-	if (l1_x1<=l1_x2) {
-		if (tempx<l1_x1 || tempx>l1_x2) 
-			return false;
-		
-	} else if (tempx>l1_x1 || tempx<l1_x2) {
-		return false;
-	}
-	if (l1_y1<l1_y2) {
-		if (tempy<l1_y1 || tempy>l1_y2) 
-			return false;
-		
-	} else if (tempy>l1_y1 || tempy<l1_y2) {
-		return false;
-	}
-	if (l2_x1<=l2_x2) {
-		if (tempx<l2_x1 || tempx>l2_x2) 
-			return false;
-		
-	} else if (tempx>l2_x1 || tempx<l2_x2) {
-		return false;
-	}
-	if (l2_y1<=l2_y2) {
-		if (tempy<l2_y1 || tempy>l2_y2) 
-			return false;
-		
-	} else if (tempy>l2_y1 || tempy<l2_y2) {
-		return false;
-	}
-	
-	//to get collision data
-	collisionData->pos=V2(tempx,tempy);
-	collisionData->occured=true;
-	
-	return true;
-	
-}
-
-*/
-

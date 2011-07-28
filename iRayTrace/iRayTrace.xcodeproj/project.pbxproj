@@ -19,18 +19,19 @@
 		9315D83913D5417B001B1A70 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D83813D5417B001B1A70 /* EAGLView.mm */; };
 		9315D83C13D5417B001B1A70 /* iRayTraceViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D83B13D5417B001B1A70 /* iRayTraceViewController.mm */; };
 		9315D83F13D5417B001B1A70 /* iRayTraceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9315D83D13D5417B001B1A70 /* iRayTraceViewController.xib */; };
-		9315D85B13D542E2001B1A70 /* Test.png in Resources */ = {isa = PBXBuildFile; fileRef = 9315D85A13D542E2001B1A70 /* Test.png */; };
 		9315D87913D5433B001B1A70 /* Texture2D.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D87813D5433B001B1A70 /* Texture2D.mm */; };
 		9315D88B13D679A8001B1A70 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87B13D543AB001B1A70 /* Shader.fsh */; };
 		9315D88C13D679A8001B1A70 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87C13D543AB001B1A70 /* Shader.vsh */; };
 		9315D88D13D679A8001B1A70 /* Texture.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87D13D543AB001B1A70 /* Texture.fsh */; };
 		9315D88E13D679A8001B1A70 /* Texture.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87E13D543AB001B1A70 /* Texture.vsh */; };
-		93FAD71313DA530C0063D4FE /* TouchController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D84D13D542D5001B1A70 /* TouchController.mm */; };
-		93FAD71413DA53120063D4FE /* TouchObj.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D84F13D542D5001B1A70 /* TouchObj.mm */; };
-		93FAD71513DA53190063D4FE /* Touch.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D84B13D542D5001B1A70 /* Touch.mm */; };
-		93FAD71613DA53450063D4FE /* V3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D85313D542D5001B1A70 /* V3.mm */; };
-		93FAD71713DA534B0063D4FE /* V2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D85113D542D5001B1A70 /* V2.mm */; };
-		93FAD71813DA53660063D4FE /* MathHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9315D84913D542D5001B1A70 /* MathHelper.mm */; };
+		93EFCD1C13E06E8D00EF3DB6 /* Camera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD0F13E06E8D00EF3DB6 /* Camera.mm */; };
+		93EFCD1D13E06E8D00EF3DB6 /* MathHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD1113E06E8D00EF3DB6 /* MathHelper.mm */; };
+		93EFCD1E13E06E8D00EF3DB6 /* Touch.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD1313E06E8D00EF3DB6 /* Touch.mm */; };
+		93EFCD1F13E06E8D00EF3DB6 /* TouchController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD1513E06E8D00EF3DB6 /* TouchController.mm */; };
+		93EFCD2013E06E8D00EF3DB6 /* TouchObj.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD1713E06E8D00EF3DB6 /* TouchObj.mm */; };
+		93EFCD2113E06E8D00EF3DB6 /* V2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD1913E06E8D00EF3DB6 /* V2.mm */; };
+		93EFCD2213E06E8D00EF3DB6 /* V3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD1B13E06E8D00EF3DB6 /* V3.mm */; };
+		93EFCD2413E06EAF00EF3DB6 /* Test.png in Resources */ = {isa = PBXBuildFile; fileRef = 93EFCD2313E06EAF00EF3DB6 /* Test.png */; };
 		93FAD72E13DC91AD0063D4FE /* geom3d.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93FAD72513DC91AD0063D4FE /* geom3d.mm */; };
 		93FAD72F13DC91AD0063D4FE /* geom4d.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93FAD72613DC91AD0063D4FE /* geom4d.mm */; };
 		93FAD73013DC91AD0063D4FE /* mat2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93FAD72713DC91AD0063D4FE /* mat2.mm */; };
@@ -61,19 +62,6 @@
 		9315D83A13D5417B001B1A70 /* iRayTraceViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iRayTraceViewController.h; sourceTree = "<group>"; };
 		9315D83B13D5417B001B1A70 /* iRayTraceViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = iRayTraceViewController.mm; sourceTree = "<group>"; };
 		9315D83E13D5417B001B1A70 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/iRayTraceViewController.xib; sourceTree = "<group>"; };
-		9315D84813D542D5001B1A70 /* MathHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathHelper.h; path = Touch/MathHelper.h; sourceTree = "<group>"; };
-		9315D84913D542D5001B1A70 /* MathHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MathHelper.mm; path = Touch/MathHelper.mm; sourceTree = "<group>"; };
-		9315D84A13D542D5001B1A70 /* Touch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Touch.h; path = Touch/Touch.h; sourceTree = "<group>"; };
-		9315D84B13D542D5001B1A70 /* Touch.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Touch.mm; path = Touch/Touch.mm; sourceTree = "<group>"; };
-		9315D84C13D542D5001B1A70 /* TouchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchController.h; path = Touch/TouchController.h; sourceTree = "<group>"; };
-		9315D84D13D542D5001B1A70 /* TouchController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = TouchController.mm; path = Touch/TouchController.mm; sourceTree = "<group>"; };
-		9315D84E13D542D5001B1A70 /* TouchObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchObj.h; path = Touch/TouchObj.h; sourceTree = "<group>"; };
-		9315D84F13D542D5001B1A70 /* TouchObj.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = TouchObj.mm; path = Touch/TouchObj.mm; sourceTree = "<group>"; };
-		9315D85013D542D5001B1A70 /* V2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = V2.h; path = Touch/V2.h; sourceTree = "<group>"; };
-		9315D85113D542D5001B1A70 /* V2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = V2.mm; path = Touch/V2.mm; sourceTree = "<group>"; };
-		9315D85213D542D5001B1A70 /* V3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = V3.h; path = Touch/V3.h; sourceTree = "<group>"; };
-		9315D85313D542D5001B1A70 /* V3.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = V3.mm; path = Touch/V3.mm; sourceTree = "<group>"; };
-		9315D85A13D542E2001B1A70 /* Test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Test.png; path = Content/Test.png; sourceTree = "<group>"; };
 		9315D85C13D542F6001B1A70 /* arcball.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = arcball.h; path = gfx/arcball.h; sourceTree = "<group>"; };
 		9315D85D13D542F6001B1A70 /* array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = array.h; path = gfx/array.h; sourceTree = "<group>"; };
 		9315D85E13D542F6001B1A70 /* baseball.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = baseball.h; path = gfx/baseball.h; sourceTree = "<group>"; };
@@ -107,6 +95,21 @@
 		9315D87C13D543AB001B1A70 /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Shader.vsh; path = Shaders/Shader.vsh; sourceTree = "<group>"; };
 		9315D87D13D543AB001B1A70 /* Texture.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Texture.fsh; path = Shaders/Texture.fsh; sourceTree = "<group>"; };
 		9315D87E13D543AB001B1A70 /* Texture.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Texture.vsh; path = Shaders/Texture.vsh; sourceTree = "<group>"; };
+		93EFCD0E13E06E8D00EF3DB6 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Camera.h; path = me/Camera.h; sourceTree = "<group>"; };
+		93EFCD0F13E06E8D00EF3DB6 /* Camera.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Camera.mm; path = me/Camera.mm; sourceTree = "<group>"; };
+		93EFCD1013E06E8D00EF3DB6 /* MathHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathHelper.h; path = me/MathHelper.h; sourceTree = "<group>"; };
+		93EFCD1113E06E8D00EF3DB6 /* MathHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MathHelper.mm; path = me/MathHelper.mm; sourceTree = "<group>"; };
+		93EFCD1213E06E8D00EF3DB6 /* Touch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Touch.h; path = me/Touch.h; sourceTree = "<group>"; };
+		93EFCD1313E06E8D00EF3DB6 /* Touch.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Touch.mm; path = me/Touch.mm; sourceTree = "<group>"; };
+		93EFCD1413E06E8D00EF3DB6 /* TouchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchController.h; path = me/TouchController.h; sourceTree = "<group>"; };
+		93EFCD1513E06E8D00EF3DB6 /* TouchController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = TouchController.mm; path = me/TouchController.mm; sourceTree = "<group>"; };
+		93EFCD1613E06E8D00EF3DB6 /* TouchObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchObj.h; path = me/TouchObj.h; sourceTree = "<group>"; };
+		93EFCD1713E06E8D00EF3DB6 /* TouchObj.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = TouchObj.mm; path = me/TouchObj.mm; sourceTree = "<group>"; };
+		93EFCD1813E06E8D00EF3DB6 /* V2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = V2.h; path = me/V2.h; sourceTree = "<group>"; };
+		93EFCD1913E06E8D00EF3DB6 /* V2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = V2.mm; path = me/V2.mm; sourceTree = "<group>"; };
+		93EFCD1A13E06E8D00EF3DB6 /* V3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = V3.h; path = me/V3.h; sourceTree = "<group>"; };
+		93EFCD1B13E06E8D00EF3DB6 /* V3.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = V3.mm; path = me/V3.mm; sourceTree = "<group>"; };
+		93EFCD2313E06EAF00EF3DB6 /* Test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Test.png; path = Textures/Test.png; sourceTree = "<group>"; };
 		93FAD72513DC91AD0063D4FE /* geom3d.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = geom3d.mm; path = gfx/geom3d.mm; sourceTree = "<group>"; };
 		93FAD72613DC91AD0063D4FE /* geom4d.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = geom4d.mm; path = gfx/geom4d.mm; sourceTree = "<group>"; };
 		93FAD72713DC91AD0063D4FE /* mat2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = mat2.mm; path = gfx/mat2.mm; sourceTree = "<group>"; };
@@ -166,19 +169,18 @@
 		9315D82413D5417A001B1A70 /* iRayTrace */ = {
 			isa = PBXGroup;
 			children = (
+				93EFCD0D13E06E3A00EF3DB6 /* cocoas2d */,
+				9315D84613D542AE001B1A70 /* Textures */,
 				9315D87A13D54397001B1A70 /* Shaders */,
-				9315D87713D5433B001B1A70 /* Texture2D.h */,
-				9315D87813D5433B001B1A70 /* Texture2D.mm */,
-				9315D84713D542B8001B1A70 /* Touch */,
-				9315D84613D542AE001B1A70 /* Content */,
+				9315D84713D542B8001B1A70 /* me */,
 				9315D84513D542A5001B1A70 /* gfx */,
 				9315D82D13D5417B001B1A70 /* iRayTraceAppDelegate.h */,
 				9315D82E13D5417B001B1A70 /* iRayTraceAppDelegate.mm */,
-				9315D83013D5417B001B1A70 /* MainWindow.xib */,
 				9315D83713D5417B001B1A70 /* EAGLView.h */,
 				9315D83813D5417B001B1A70 /* EAGLView.mm */,
 				9315D83A13D5417B001B1A70 /* iRayTraceViewController.h */,
 				9315D83B13D5417B001B1A70 /* iRayTraceViewController.mm */,
+				9315D83013D5417B001B1A70 /* MainWindow.xib */,
 				9315D83D13D5417B001B1A70 /* iRayTraceViewController.xib */,
 				9315D82513D5417A001B1A70 /* Supporting Files */,
 			);
@@ -239,31 +241,33 @@
 			name = gfx;
 			sourceTree = "<group>";
 		};
-		9315D84613D542AE001B1A70 /* Content */ = {
+		9315D84613D542AE001B1A70 /* Textures */ = {
 			isa = PBXGroup;
 			children = (
-				9315D85A13D542E2001B1A70 /* Test.png */,
+				93EFCD2313E06EAF00EF3DB6 /* Test.png */,
 			);
-			name = Content;
+			name = Textures;
 			sourceTree = "<group>";
 		};
-		9315D84713D542B8001B1A70 /* Touch */ = {
+		9315D84713D542B8001B1A70 /* me */ = {
 			isa = PBXGroup;
 			children = (
-				9315D84813D542D5001B1A70 /* MathHelper.h */,
-				9315D84913D542D5001B1A70 /* MathHelper.mm */,
-				9315D84A13D542D5001B1A70 /* Touch.h */,
-				9315D84B13D542D5001B1A70 /* Touch.mm */,
-				9315D84C13D542D5001B1A70 /* TouchController.h */,
-				9315D84D13D542D5001B1A70 /* TouchController.mm */,
-				9315D84E13D542D5001B1A70 /* TouchObj.h */,
-				9315D84F13D542D5001B1A70 /* TouchObj.mm */,
-				9315D85013D542D5001B1A70 /* V2.h */,
-				9315D85113D542D5001B1A70 /* V2.mm */,
-				9315D85213D542D5001B1A70 /* V3.h */,
-				9315D85313D542D5001B1A70 /* V3.mm */,
+				93EFCD0E13E06E8D00EF3DB6 /* Camera.h */,
+				93EFCD0F13E06E8D00EF3DB6 /* Camera.mm */,
+				93EFCD1013E06E8D00EF3DB6 /* MathHelper.h */,
+				93EFCD1113E06E8D00EF3DB6 /* MathHelper.mm */,
+				93EFCD1213E06E8D00EF3DB6 /* Touch.h */,
+				93EFCD1313E06E8D00EF3DB6 /* Touch.mm */,
+				93EFCD1413E06E8D00EF3DB6 /* TouchController.h */,
+				93EFCD1513E06E8D00EF3DB6 /* TouchController.mm */,
+				93EFCD1613E06E8D00EF3DB6 /* TouchObj.h */,
+				93EFCD1713E06E8D00EF3DB6 /* TouchObj.mm */,
+				93EFCD1813E06E8D00EF3DB6 /* V2.h */,
+				93EFCD1913E06E8D00EF3DB6 /* V2.mm */,
+				93EFCD1A13E06E8D00EF3DB6 /* V3.h */,
+				93EFCD1B13E06E8D00EF3DB6 /* V3.mm */,
 			);
-			name = Touch;
+			name = me;
 			sourceTree = "<group>";
 		};
 		9315D87A13D54397001B1A70 /* Shaders */ = {
@@ -275,6 +279,15 @@
 				9315D87E13D543AB001B1A70 /* Texture.vsh */,
 			);
 			name = Shaders;
+			sourceTree = "<group>";
+		};
+		93EFCD0D13E06E3A00EF3DB6 /* cocoas2d */ = {
+			isa = PBXGroup;
+			children = (
+				9315D87713D5433B001B1A70 /* Texture2D.h */,
+				9315D87813D5433B001B1A70 /* Texture2D.mm */,
+			);
+			name = cocoas2d;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -331,7 +344,7 @@
 				9315D82913D5417B001B1A70 /* InfoPlist.strings in Resources */,
 				9315D83213D5417B001B1A70 /* MainWindow.xib in Resources */,
 				9315D83F13D5417B001B1A70 /* iRayTraceViewController.xib in Resources */,
-				9315D85B13D542E2001B1A70 /* Test.png in Resources */,
+				93EFCD2413E06EAF00EF3DB6 /* Test.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,12 +355,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93FAD71813DA53660063D4FE /* MathHelper.mm in Sources */,
-				93FAD71713DA534B0063D4FE /* V2.mm in Sources */,
-				93FAD71613DA53450063D4FE /* V3.mm in Sources */,
-				93FAD71513DA53190063D4FE /* Touch.mm in Sources */,
-				93FAD71413DA53120063D4FE /* TouchObj.mm in Sources */,
-				93FAD71313DA530C0063D4FE /* TouchController.mm in Sources */,
 				9315D82C13D5417B001B1A70 /* main.mm in Sources */,
 				9315D82F13D5417B001B1A70 /* iRayTraceAppDelegate.mm in Sources */,
 				9315D83913D5417B001B1A70 /* EAGLView.mm in Sources */,
@@ -362,6 +369,13 @@
 				93FAD73413DC91AD0063D4FE /* symmat2.mm in Sources */,
 				93FAD73513DC91AD0063D4FE /* symmat3.mm in Sources */,
 				93FAD73613DC91AD0063D4FE /* symmat4.mm in Sources */,
+				93EFCD1C13E06E8D00EF3DB6 /* Camera.mm in Sources */,
+				93EFCD1D13E06E8D00EF3DB6 /* MathHelper.mm in Sources */,
+				93EFCD1E13E06E8D00EF3DB6 /* Touch.mm in Sources */,
+				93EFCD1F13E06E8D00EF3DB6 /* TouchController.mm in Sources */,
+				93EFCD2013E06E8D00EF3DB6 /* TouchObj.mm in Sources */,
+				93EFCD2113E06E8D00EF3DB6 /* V2.mm in Sources */,
+				93EFCD2213E06E8D00EF3DB6 /* V3.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

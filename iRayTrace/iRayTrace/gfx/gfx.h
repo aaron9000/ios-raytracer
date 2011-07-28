@@ -1,3 +1,4 @@
+
 #ifndef GFX_INCLUDED // -*- C++ -*-
 #define GFX_INCLUDED
 #if !defined(__GNUC__)

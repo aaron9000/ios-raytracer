@@ -409,20 +409,24 @@
     GLuint negLightDir = [[renderUniformDict valueForKey:@"negLightDir"] unsignedIntValue];
     glUniform3f(negLightDir, x, y, z);
     
+    
+    //
+    [self updateCamera];
+    
     //camera position uniform
-    x = 6.0f * sinf(ticks*0.015+ 0.7);
-    y = 2.0f * sinf(ticks*0.01+ 0.27);
-    z = 4.0f * sinf(ticks*0.025);
+    x = cam.pos.x;
+    y = cam.pos.y;
+    z = cam.pos.z;
+    NSLog(@"%f  %f  %f", x, y, z);
     GLuint cameraPos = [[renderUniformDict valueForKey:@"cameraPos"] unsignedIntValue];
     glUniform3f(cameraPos, x, y, z);
     
     //view rotation matrix uniform
     //rotates [1, 0 , 0] 
-    [self updateCamera];
     GLfloat rot[] = {
-        cameraMat[0][0],   cameraMat[1][0],   cameraMat[2][0],      
-        cameraMat[0][1],   cameraMat[1][1],   cameraMat[2][1],      
-        cameraMat[0][2],   cameraMat[1][2],   cameraMat[2][2],      
+        cam.cameraMat[0][0],   cam.cameraMat[1][0],   cam.cameraMat[2][0],      
+        cam.cameraMat[0][1],   cam.cameraMat[1][1],   cam.cameraMat[2][1],      
+        cam.cameraMat[0][2],   cam.cameraMat[1][2],   cam.cameraMat[2][2],      
     };
     
     GLuint matrix = [[renderUniformDict valueForKey:@"matrix"] unsignedIntValue];
@@ -830,73 +834,50 @@
 //////////
 /*CAMERA*/
 //////////
-//math helpers for camera
-Mat4 fpsRotMat(V3* f){
-    V3 l;
-    *f = unit3(f);
-    if (fabs(f->z) == 1.0f){
-        l = V3(f->z, 0, 0);
-    }else{
-        V3 temp = V3(f->y, -f->x, 0.0f);
-        l = unit3(&temp);
-    }
-    
-    V3 u = cross3(f, &l);
-    
-    Mat4 m;
-    m(0,0) = f->x;      m(0,1) = f->y;      m(0,2) = f->z;  m(0,3) = 0;
-    m(1,0) = l.x;       m(1,1) = l.y;       m(1,2) = l.z;   m(1,3) = 0;
-    m(2,0) = u.x;       m(2,1) = u.y;       m(2,2) = u.z;   m(2,3) = 0;
-    m(3,0) = 0;         m(3,1) = 0;         m(3,2) = 0;     m(3,3) = 1;
-    
-    return m;
-}
-
-
 
 - (void) updateCamera{
     
+    
+    
+
     //consts
     float sensitivity = 0.005f;
     
     //get inout
     Touch* touch = [touchController getTouchWithIndex:4];
     
+    float deltaX = 0.0f;
+    float deltaY = 0.0f;
+    
     //early return if its not an active touch
-    if (!touch->down)
-        return;
-    
-    float deltaX = touch->currVelocity.x * sensitivity;
-    float deltaY = touch->currVelocity.y * sensitivity;
-    
-    //update camrea
-    cameraLongitude += deltaX;
-    cameraLatitude -= deltaY;
-    if (cameraLatitude <= -halfPi*0.9f)
-        cameraLatitude = -halfPi*0.9f; 
-    if (cameraLatitude >= halfPi*0.9f)
-        cameraLatitude = halfPi*0.9f; 
-    
-    //NSLog(@"%f , %f", cameraLatitude, cameraLongitude);
-    
-    //construct rotation matrix
-    V3 unit = sphericalToUnit(cameraLongitude, cameraLatitude);
-    cameraMat = fpsRotMat(&unit);
+    if (touch->down){
+        deltaX = touch->currVelocity.x * sensitivity;
+        deltaY = touch->currVelocity.y * sensitivity;        
+    }
 
+    
+    
+    //update camera object with input
+    cam.control(deltaX, deltaY);
+    
+    //follow path
+    cam.pos = cam.getBezierPos();
     
 }
 - (BOOL) setupCamera{
     
-    //init to identity
-    cameraMat = Mat4::I();
-    cameraLatitude = cameraLongitude = 0.0f;
+    V3 origin = V3(0.0f, 16.0f, 0.0f);
     
+    //init to identity
+    cam = Camera();
+    cam.followPath(&origin, 20, 8.0f, 0.24f);
     
     return true;
     
 }
 - (BOOL) tearDownCamera{
     
+    //nothing
     
     return true;
 }
