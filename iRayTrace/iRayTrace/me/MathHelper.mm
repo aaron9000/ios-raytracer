@@ -132,6 +132,7 @@ float findDir(float d1,float  d2) {
 	   dir = dir-twoPi;
    return dir;
 }
+
 //find 2d direction between 2 points
 float dir2(V2* a,V2* b) {
 	float temp=0.0f;
@@ -166,3 +167,4 @@ float dir2(V2* a,V2* b) {
 	}
 	return temp;
 }
+

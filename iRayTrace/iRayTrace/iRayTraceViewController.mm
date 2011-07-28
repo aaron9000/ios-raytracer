@@ -108,7 +108,24 @@
     
     
 }
-
+- (void) update{
+    //do timing
+    ticks++;
+    
+    /*
+     [self endTiming:@"render MS = "];
+     [self startTiming];
+     */
+    
+    //camera stuff
+    [self updateCamera];
+    
+    //render
+    [self drawFrame];
+    
+    //touch controller stuff
+    [touchController recievedTaps];
+}
 ////////////
 //GL STUFF//
 ////////////
@@ -315,7 +332,7 @@
 }
 - (void)startAnimation {
     if (!animating) {
-        CADisplayLink *aDisplayLink = [[UIScreen mainScreen] displayLinkWithTarget:self selector:@selector(drawFrame)];
+        CADisplayLink *aDisplayLink = [[UIScreen mainScreen] displayLinkWithTarget:self selector:@selector(update)];
         [aDisplayLink setFrameInterval:animationFrameInterval];
         [aDisplayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
         
@@ -409,15 +426,13 @@
     GLuint negLightDir = [[renderUniformDict valueForKey:@"negLightDir"] unsignedIntValue];
     glUniform3f(negLightDir, x, y, z);
     
-    
-    //
-    [self updateCamera];
+
     
     //camera position uniform
     x = cam.pos.x;
     y = cam.pos.y;
     z = cam.pos.z;
-    NSLog(@"%f  %f  %f", x, y, z);
+
     GLuint cameraPos = [[renderUniformDict valueForKey:@"cameraPos"] unsignedIntValue];
     glUniform3f(cameraPos, x, y, z);
     
@@ -479,13 +494,9 @@
     //draw
     [(EAGLView *)self.view presentFramebuffer];
     
-    //do timing
-    ticks++;
-    //[self endTiming:@"render MS = "];
-    [self startTiming];
+
     
-    //touch controller stuff
-    [touchController recievedTaps];
+    
 }
 
 //////////////////
@@ -682,15 +693,12 @@
     
     // Get uniform locations.
     GLuint uniformId = 0;
-    
     NSMutableDictionary* uniformDict = [[NSMutableDictionary alloc] initWithDictionary:uDict copyItems:true];
     for (id key in uniformDict){
         uniformId = glGetUniformLocation(*shader, [key UTF8String]);
         [uDict setValue:[NSNumber numberWithUnsignedInt:uniformId] forKey:key];
     }
-    //[uDict removeAllObjects];
-    //[uDict addEntriesFromDictionary:uniformDict];
-    
+
     // Release vertex and fragment shaders.
     if (vertShader){
         glDetachShader(*shader, vertShader);
@@ -798,7 +806,7 @@
 		
 		touchPoint = [touch locationInView:self.view];
 		
-		touchPoint.y = -(touchPoint.y-1024);
+		touchPoint.y = -(touchPoint.y-1024.0f);
 				
 		[passObj setPoint:touchPoint];
 		
@@ -837,9 +845,46 @@
 
 - (void) updateCamera{
     
+    //test
+    /*
+    V2 z = V2();
     
+    V2 straightRightVec = V2(1.0f, 0.0f);
+    V2 straightLeftVec = V2(-1.0f, 0.0f);
+    V2 straightDownVec = V2(0.0f, -1.0f);
+    V2 straightUpVec = V2(0.0f, 1.0f);
     
-
+    V2 oneVec = V2(0.8f, 0.12f);
+    V2 twoVec = V2(0.12f, 0.8f);
+    V2 threeVec = V2(-0.12f, 0.8f);
+    V2 fourVec = V2(-0.8f, 0.12f);
+    V2 fiveVec = V2(-0.8f, -0.12f);
+    V2 sixVec = V2(-0.12f, -0.8f);
+    V2 sevenVec = V2(0.12f, -0.8f);
+    V2 eightVec = V2(0.8f, -0.12f);
+    
+    float straightRight = dir2(&straightRightVec, &z);
+    float straightLeft = dir2(&straightLeftVec, &z);
+    float straightDown = dir2(&straightDownVec, &z);
+    float straightUp = dir2(&straightUpVec, &z);
+    
+    float one = dir2(&oneVec, &z);
+    float two = dir2(&twoVec, &z);
+    float three = dir2(&threeVec, &z);
+    float four = dir2(&fourVec, &z);
+    
+    float five = dir2(&fiveVec, &z);
+    float six = dir2(&sixVec, &z);
+    float seven = dir2(&sevenVec, &z);
+    float eight = dir2(&eightVec, &z);
+    
+    NSLog(@"%f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f", 
+          straightRight, one, two, 
+          straightUp, three, four, 
+          straightLeft, five, six, 
+          straightDown, seven, eight);
+    */
+    
     //consts
     float sensitivity = 0.005f;
     
@@ -848,17 +893,18 @@
     
     float deltaX = 0.0f;
     float deltaY = 0.0f;
-    
+    bool pan = true;
     //early return if its not an active touch
     if (touch->down){
         deltaX = touch->currVelocity.x * sensitivity;
-        deltaY = touch->currVelocity.y * sensitivity;        
+        deltaY = touch->currVelocity.y * sensitivity;
+        pan = false;
     }
 
     
     
     //update camera object with input
-    cam.control(deltaX, deltaY);
+    cam.control(deltaX, deltaY, pan);
     
     //follow path
     cam.pos = cam.getBezierPos();
@@ -866,11 +912,11 @@
 }
 - (BOOL) setupCamera{
     
-    V3 origin = V3(0.0f, 16.0f, 0.0f);
+    V3 origin = V3(0.0f, 0.0f, 0.0f);
     
-    //init to identity
+    //init camera
     cam = Camera();
-    cam.followPath(&origin, 20, 8.0f, 0.24f);
+    cam.followPath(&origin, 20, 8.0f, 0.25f);
     
     return true;
     

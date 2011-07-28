@@ -32,7 +32,7 @@ void Camera::followPath(V3* center, int nodes, float spacing, float speed){
         for (k = 0; k < nodes; k++){
             
             //find position of new node
-            randDir = randUnit3(0.5f);
+            randDir = randUnit3(1.0f);
             randDir = mult3(&randDir, spacing);
             prev = add3(&prev, &randDir);
             
@@ -173,23 +173,111 @@ V3 Camera::getBezierPos(){
     return(bezierPos);
 }
                     
-void Camera::control(float deltaX, float deltaY){
+void Camera::control(float deltaX, float deltaY, bool panToOrigin){
+
+   
+    if (panToOrigin){
+        
+        //start rseetting to look at the origin
+        float panSpeed = 0.05f;
+        V2 origin = V2();
+
+        
+        //longitude
+        V2 pos2 = V2(pos.x, pos.y);
+        float idealLongitude = constrainLong(dir2(&pos2, &origin));
+
+        
+        //latitude
+        V2 vPos2 = V2(mag2(&pos2), pos.z);
+        vPos2 = unit2(&vPos2);
+        float idealLatitude = dir2(&origin, &vPos2);
+        if (idealLatitude > pi)
+            idealLatitude = - (twoPi - idealLatitude);
+        idealLatitude = constrainLat(idealLatitude);
+         
+        
+        
+        /*
+        float deltaLat = idealLatitude - cameraLatitude;
+        if (fabs(deltaLat) <= panSpeed){
+            cameraLatitude = idealLatitude;
+        
+        }else{
+            if (deltaLat > 0.0f){
+                cameraLatitude += panSpeed;
+            }else{
+                cameraLatitude -= panSpeed;
+            }
+        }
+        cameraLatitude = constrainLat(cameraLatitude);
+        cameraLatitude = idealLatitude;
+        */
+        cameraLatitude = constrainLat(cameraLatitude);
+        
+        float deltaLong = findDir(cameraLongitude, idealLongitude);
+        if (fabs(deltaLong) <= panSpeed){
+            cameraLongitude = idealLongitude;
+            
+        }else{
+            if (deltaLong > 0.0f){
+                cameraLongitude -= panSpeed;
+            }else{
+                cameraLongitude += panSpeed;
+            }
+        }
+        cameraLongitude = constrainLong(cameraLongitude);
+        //cameraLongitude = idealLongitude;
+        
+        
+        ///sNSLog(@"ACTUAL %f , %f", cameraLatitude, cameraLongitude);
+        
+        NSLog(@"----");
+        NSLog(@"IDEAL %f , %f", idealLatitude, idealLongitude);
+        NSLog(@"ACTUAL %f , %f", cameraLatitude, cameraLongitude);
+        NSLog(@"DELTA %f , %f", idealLatitude - cameraLatitude, idealLongitude - cameraLongitude);
+        
+        
+    }else{
+        
+        //update camrea
+        cameraLongitude += deltaX;
+        cameraLatitude -= deltaY;
+        
+        //make sure they are in bounds
+        cameraLongitude = constrainLong(cameraLongitude);
+        cameraLatitude = constrainLat(cameraLatitude);
+        
+    }
     
-    //update camrea
-    cameraLongitude += deltaX;
-    cameraLatitude -= deltaY;
-    if (cameraLatitude <= -halfPi*0.9f)
-        cameraLatitude = -halfPi*0.9f; 
-    if (cameraLatitude >= halfPi*0.9f)
-        cameraLatitude = halfPi*0.9f; 
-    
-    //NSLog(@"%f , %f", cameraLatitude, cameraLongitude);
+
     
     //construct rotation matrix
     V3 unit = sphericalToUnit(cameraLongitude, cameraLatitude);
     cameraMat = fpsRotMat(&unit);
 }
-                    
+       
+
+float Camera::constrainLong(float longitude){
+    
+    if (longitude < -pi)
+        longitude += twoPi; 
+    if (longitude > pi)
+        longitude -= twoPi; 
+    
+    return longitude;
+}
+
+float Camera::constrainLat(float latitude){
+    float amt = halfPi*0.9f;
+    if (latitude <= -amt)
+        latitude = -amt; 
+    if (latitude >= amt)
+        latitude = amt; 
+    
+    return latitude;
+}
+
 void Camera::reset(){
     //set pos to origin
     pos = lastPos = V3(0.0f, 0.0f, 0.0f);
@@ -202,8 +290,10 @@ void Camera::reset(){
     
     //point in default direction
     cameraLatitude = 0.0f;
-    cameraLongitude = 0.0f;\
-    cameraMat = Mat4::I();
+    cameraLongitude = 0.0f;
+    
+    V3 unit = sphericalToUnit(cameraLongitude, cameraLatitude);
+    cameraMat = fpsRotMat(&unit);
     //update camera Matrix
 }
     

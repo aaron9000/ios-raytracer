@@ -101,7 +101,7 @@ Collision intersectionCheck(Ray r){
 		raySphereIntersect(r, vec4(0.5, 0.2, 0.9, 0.7), vec4(9.0, -6.0, 8.0, 4.75), c);
         raySphereIntersect(r, vec4(1.0, 0.8, 0.3, 0.5), vec4(-10.0, 5.0, -7.0, 3.75), c);
     
-        //raySphereIntersect(r, vec4(1.0, 0.0, 0.0, 0.0), vec4(64.0, 48.0, -48.0, 32), c);
+        raySphereIntersect(r, vec4(1.0, 1.0, 1.0, 0.8), vec4(0.0, 0.0, 0.0, 1), c);
     
         raySphereIntersect(r, vec4(1.0, 1.0, 1.0, 0.0), vec4(-120.0, -40.0, 32.0, 256), c);
 

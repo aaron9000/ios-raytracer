@@ -69,7 +69,8 @@
 }
 
 
-
+//step method
+- (void) update;
 
 //timing
 - (void)startTiming;
@@ -83,7 +84,7 @@
 @property (retain, nonatomic) EAGLContext *context;
 - (BOOL)setupGL;
 - (BOOL)tearDownGL;
-
+- (void) drawFrame;
 //textures
 - (BOOL)loadTextures;
 - (BOOL)unloadTextures;
