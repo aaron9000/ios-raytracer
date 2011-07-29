@@ -27,8 +27,9 @@
 	for (i=0;i<len;i++){
 		index=activeTouchIndices[i];
 		if (touchArray[index].down){
+            if (touchIndexArray != nil)
 				touchIndexArray[count]=index;
-				count++;
+			count++;
 		}
 	}	
 
@@ -42,7 +43,8 @@ int index;
 	for (i=0;i<len;i++){
 		index=activeTouchIndices[i];
 		if (touchArray[index].tapping && !touchArray[index].doubleTapped){
-				touchIndexArray[count]=index;
+				if (touchIndexArray != nil)
+                    touchIndexArray[count]=index;
 				count++;
 		}
 	}	
@@ -57,7 +59,8 @@ int index;
 	for (i=0;i<len;i++){
 		index=activeTouchIndices[i];
 		if (touchArray[index].tapping && touchArray[index].doubleTapped){
-			touchIndexArray[count]=index;
+            if (touchIndexArray != nil)
+                touchIndexArray[count]=index;
 			count++;
 		}
 	}	
@@ -105,9 +108,11 @@ int index;
 	}
 	return ret;
 }
-
-
-
+///////////
+/* PINCH */
+///////////
+@synthesize pinchScale;
+@synthesize oldPinchScale;
 /////////
 /*ACCEL*/
 /////////
@@ -136,6 +141,7 @@ int index;
 }
 
 - (void) startTouchWithObj:(TouchObj*) obj{
+    
 	//extract info
 	CGPoint point=[obj point];
 	V2 loc=V2(point.x,point.y);
@@ -145,11 +151,13 @@ int index;
 	int index=[self nextAvailable];
 	
 	//check bounds
-	if (index<0 || index>=HWMaxTouches){
-		return;
+	if (index < 0 || index >= HWMaxTouches){
+		
 		NSLog(@"TouchController:startTouchAtPoint: index out of range");
-	}
+        return;
+    }
 	
+    
 	Touch* t=&touchArray[index];
 	
 	//tapping

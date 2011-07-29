@@ -7,6 +7,9 @@ class Camera{
 		//positional
 		V3 pos,lastPos;
         
+        //zoom
+        float zoom;
+    
         //rotational
         Mat4 cameraMat;
         float cameraLatitude;
@@ -16,6 +19,9 @@ class Camera{
 		float pathSpeed;
 		float currT;
 		unsigned int currNode;
+    
+        //inactivity
+        int idleTicker;
 
 		//path
 		bool hasPath;

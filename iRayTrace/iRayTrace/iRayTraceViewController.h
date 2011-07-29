@@ -40,9 +40,11 @@
     Texture2D* internalTexture;
     Texture2D* testTexture;
     
+    //scene
+    V3 lightDir;
+    
     //buffers
     GLuint halfFrameBuffer;
-    //GLuint halfRenderBuffer;
     
     //display link
     BOOL animating;
@@ -61,11 +63,7 @@
     
     //camera
     Camera cam;
-    /*
-    Mat4 cameraMat;
-    float cameraLatitude;
-    float cameraLongitude;
-     */
+
 }
 
 
@@ -93,6 +91,9 @@
 - (BOOL)setupBuffers;
 - (BOOL)tearDownBuffers;
 
+//scene
+- (BOOL) setupScene;
+- (BOOL) tearDownScene;
 
 //shaders
 @property (retain, nonatomic) NSMutableDictionary* renderUniformDict;

@@ -42,9 +42,11 @@
 //must be less than 512 x 512
 #define INTERNAL_WIDTH 384
 #define INTERNAL_HEIGHT 512
+
 //must be integer >= 1
 #define FRAMERATE_DIVIDER 3
 
+//do not change
 #define HWMaxTouches 5
 
 
@@ -54,38 +56,26 @@
 - (void)viewDidLoad
 {
     
-    //
     [self setupTiming];
     
-    //
+    [self setupScene];
+    
     [self setupGL];
     
-    //
     [self setupNotifications];
     
-    //
     [self setupInput];
     
-    //
     [self setupCamera];
     
-    //
     [self setupDisplayLink];
     
-    
-    //
     [self setupBuffers];
     
-    
-    //
     [self loadShaders];
     
-    
-    //
     [self loadTextures];
-    
-    
-    
+     
 }
 - (void)dealloc
 {
@@ -103,6 +93,8 @@
     [self tearDownCamera];
     
     [self tearDownNotifications];
+    
+    [self tearDownScene];
     
     [super dealloc];
     
@@ -146,7 +138,7 @@
     }
     
     self.context = aContext;
-    
+
     [(EAGLView *)self.view setContext:context];
     [(EAGLView *)self.view setFramebuffer];
     
@@ -241,23 +233,7 @@
     
     //half resolution internal frame buffer
     glGenFramebuffersOES(1, &halfFrameBuffer);
-    
-    
-    //half resolution render buffer
-    /*
-     glGenRenderbuffersOES(1, &halfRenderBuffer);
-     glBindRenderbufferOES(GL_RENDERBUFFER_OES, halfRenderBuffer);
-     
-     //change bounds of layer
-     glRenderbufferStorage(GL_RENDERBUFFER_OES, GL_RGBA8_OES, 128, 128);
-     
-     GLint w = 0;
-     GLint h = 0;
-     glGetRenderbufferParameteriv(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH, &w);
-     glGetRenderbufferParameteriv(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT, &h);
-     glBindRenderbufferOES(GL_RENDERBUFFER_OES, 1);
-     */
-    
+
     return true;
 }
 
@@ -266,9 +242,6 @@
     //frame buffer
     glDeleteFramebuffersOES(1, &halfFrameBuffer);
     
-    
-    //render buffer
-    //glDeleteRenderbuffers(1, &halfRenderBuffer);
     
     return false;
 }
@@ -288,8 +261,6 @@
     //init test texture
     testTexture = [[Texture2D alloc] initWithImage:[UIImage imageNamed:@"Test.png"]];
     
-    
-    
     return true;
 }
 - (BOOL) unloadTextures {
@@ -298,13 +269,11 @@
     glDeleteFramebuffersOES(1, &halfFrameBuffer);
     
     
-    //[internalTexture dealloc];
+    [internalTexture dealloc];
     
     
     return true;
 }
-
-
 
 ////////////////
 //DISPLAY LINK//
@@ -366,7 +335,6 @@
      NSLog(@"Failed to validate program: %d", textureShader);
      return;
      }
-     
     */
     
     //temp vars
@@ -420,13 +388,20 @@
     
     
     //set neg light dir uniform
+    /*
     x = 0.624f;
     y = 0.78f;
     z = 0.06f;
+    */
+    x = lightDir.x;
+    y = lightDir.y;
+    z = lightDir.z;
     GLuint negLightDir = [[renderUniformDict valueForKey:@"negLightDir"] unsignedIntValue];
     glUniform3f(negLightDir, x, y, z);
     
-
+    //zoom uniform
+    GLuint zoom = [[renderUniformDict   valueForKey:@"zoom"] unsignedIntValue];
+    glUniform1f(zoom, cam.zoom);
     
     //camera position uniform
     x = cam.pos.x;
@@ -534,7 +509,7 @@
     [renderUniformDict setValue:zero forKey:@"negLightDir"];
     [renderUniformDict setValue:zero forKey:@"cameraPos"];
     [renderUniformDict setValue:zero forKey:@"matrix"];
-    
+    [renderUniformDict setValue:zero forKey:@"zoom"];
     self.renderAttributeDict = [[NSMutableDictionary alloc] init];
     [renderAttributeDict setValue:one forKey:@"vertex"];
     
@@ -754,10 +729,85 @@
 /*TouchController communication*/
 /////////////////////////////////
 - (BOOL)setupInput{
+    
+    //pinch recognition
+    UIPinchGestureRecognizer *pinchRecognizer = 
+    [[[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchRecognizer:)] autorelease];
+    [[self view] addGestureRecognizer:pinchRecognizer];
+    
+    
     return true;
 }
 - (BOOL)tearDownInput{
     return true;
+}
+
+- (void)pinchRecognizer:(UIPinchGestureRecognizer *)recognizer 
+{
+   
+    //update pinch info
+    float oldScale = touchController.oldPinchScale = touchController.pinchScale;
+    float newScale = touchController.pinchScale = recognizer.scale;
+    
+    float deltaScale = fabsf(newScale - oldScale);
+    
+    if (deltaScale > 0.2f)
+        deltaScale = 0.2f;
+    deltaScale *= 1.20f;
+    
+    if (newScale > oldScale) {
+        newScale = cam.zoom + deltaScale;
+    }else{
+        newScale = cam.zoom - deltaScale;
+    }
+    
+    if (newScale < 0.4f)
+        newScale = 0.4f;
+    
+    if (newScale > 2.4f)
+        newScale = 2.4f;
+    
+    cam.zoom = newScale;
+    
+    
+    //end zooming
+    /*
+    int touchCount = [touchController getDown:nil];
+    if (touchCount < 2)
+        touchController.pinchScale = 1.0f;
+    */
+    
+    /*
+    if (scale > 2.0f)
+        scale = 2.0f;
+    
+    if (scale < 0.5f)
+        scale = 0.5f;
+    */
+    
+    
+    /*
+    if (scale < 1.0f){
+        //scale between 0.5 and 1.0
+        //between 1.0 and 0.4
+        scale = (scale - 0.5f) * 2.0f; 
+        scale = 0.4f + 0.6f * scale;
+    }else{
+        //scale between 1.0 and 2.0
+        //to 1.0 and 2.4
+        scale = 1.0f + (scale - 1.0f) * 2.4f;
+    }
+        
+    
+    scale *= cam.zoom;
+    
+    
+    cam.zoom = scale;
+    */
+
+    
+    
+
 }
 - (void)linkTouchController:(TouchController*) linkedController{
 	touchController = linkedController;
@@ -839,6 +889,17 @@
 	[touchController accelUpdate:&accel];
 }
 
+///////////
+/* SCENE */
+///////////
+- (BOOL) setupScene{
+    lightDir = randUnit3(1.0f);
+    
+    return true;
+}
+- (BOOL) tearDownScene{
+    return true;
+}
 //////////
 /*CAMERA*/
 //////////
@@ -908,6 +969,7 @@
     
     //follow path
     cam.pos = cam.getBezierPos();
+   
     
 }
 - (BOOL) setupCamera{

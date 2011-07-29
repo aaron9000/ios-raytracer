@@ -32,7 +32,7 @@ void Camera::followPath(V3* center, int nodes, float spacing, float speed){
         for (k = 0; k < nodes; k++){
             
             //find position of new node
-            randDir = randUnit3(1.0f);
+            randDir = randUnit3(0.5f);
             randDir = mult3(&randDir, spacing);
             prev = add3(&prev, &randDir);
             
@@ -76,7 +76,7 @@ V3 Camera::getBezierPos(){
     Vec4 px, py, pz;
     
     //loop stuff
-    bool done=false;
+    bool done = false;
     int i;
     //////////////////////
     
@@ -183,22 +183,26 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin){
         V2 origin = V2();
 
         
-        //longitude
-        V2 pos2 = V2(pos.x, pos.y);
-        float idealLongitude = constrainLong(dir2(&pos2, &origin));
-
+        
+        
+        idleTicker++;
+        
+        
+        if (idleTicker > 500)
+            idleTicker = 500;
+        
+        float idleRatio = idleTicker / 500.0f;
+        panSpeed *= idleRatio;
+        
         
         //latitude
+        /*
         V2 vPos2 = V2(mag2(&pos2), pos.z);
         vPos2 = unit2(&vPos2);
         float idealLatitude = dir2(&origin, &vPos2);
         if (idealLatitude > pi)
             idealLatitude = - (twoPi - idealLatitude);
         idealLatitude = constrainLat(idealLatitude);
-         
-        
-        
-        /*
         float deltaLat = idealLatitude - cameraLatitude;
         if (fabs(deltaLat) <= panSpeed){
             cameraLatitude = idealLatitude;
@@ -211,10 +215,12 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin){
             }
         }
         cameraLatitude = constrainLat(cameraLatitude);
-        cameraLatitude = idealLatitude;
+        //cameraLatitude = idealLatitude;
         */
-        cameraLatitude = constrainLat(cameraLatitude);
         
+        //longitude
+        V2 pos2 = V2(pos.x, pos.y);
+        float idealLongitude = constrainLong(dir2(&pos2, &origin));
         float deltaLong = findDir(cameraLongitude, idealLongitude);
         if (fabs(deltaLong) <= panSpeed){
             cameraLongitude = idealLongitude;
@@ -227,19 +233,20 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin){
             }
         }
         cameraLongitude = constrainLong(cameraLongitude);
-        //cameraLongitude = idealLongitude;
         
         
-        ///sNSLog(@"ACTUAL %f , %f", cameraLatitude, cameraLongitude);
-        
+        /*
         NSLog(@"----");
         NSLog(@"IDEAL %f , %f", idealLatitude, idealLongitude);
         NSLog(@"ACTUAL %f , %f", cameraLatitude, cameraLongitude);
         NSLog(@"DELTA %f , %f", idealLatitude - cameraLatitude, idealLongitude - cameraLongitude);
-        
+        */
         
     }else{
         
+        if (fabs(deltaX) > 0.01f || fabs(deltaY) > 0.01f)
+            idleTicker = 0;
+            
         //update camrea
         cameraLongitude += deltaX;
         cameraLatitude -= deltaY;
@@ -269,7 +276,7 @@ float Camera::constrainLong(float longitude){
 }
 
 float Camera::constrainLat(float latitude){
-    float amt = halfPi*0.9f;
+    float amt = halfPi*0.95f;
     if (latitude <= -amt)
         latitude = -amt; 
     if (latitude >= amt)
@@ -281,6 +288,13 @@ float Camera::constrainLat(float latitude){
 void Camera::reset(){
     //set pos to origin
     pos = lastPos = V3(0.0f, 0.0f, 0.0f);
+    
+    //zoom
+    zoom = 1.0f;
+    
+    
+    //inactivity
+    idleTicker = 0.0f;
     
     //bezier
     hasPath = false;
