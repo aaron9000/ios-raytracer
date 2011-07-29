@@ -44,14 +44,10 @@ const bool true = 1;
 // around this problem.
 //
 #if defined(_MSC_VER)
-#  define MIN(a,b) std::_cpp_min(a,b)
-#  define MAX(a,b) std::_cpp_max(a,b)
 #else
 #  if defined(__CYGWIN__)
 #    define NOMINMAX
 #  endif
-#  define MIN(a,b) std::min(a,b)
-#  define MAX(a,b) std::max(a,b)
 #endif
 
 #ifndef M_PI

@@ -419,7 +419,6 @@
     /////////////////////////
     //setup
     glUseProgram(textureShader);
-    glActiveTexture(GL_TEXTURE0);
     GLuint tex = internalTexture.name;
     glBindTexture(GL_TEXTURE_2D, tex);
     glViewport(0, 0, 768, 1024);
@@ -444,8 +443,7 @@
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
     //teardown 
-    glActiveTexture(0);
-    glBindTexture(0, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glDisableVertexAttribArray(vertex);
     glDisableVertexAttribArray(uvCoord);
     glUseProgram(0);
@@ -652,12 +650,13 @@
     
     // Get uniform locations.
     GLuint uniformId = 0;
-    NSMutableDictionary* uniformDict = [[NSMutableDictionary alloc] initWithDictionary:uDict copyItems:true];
+    NSMutableDictionary* uniformDict = [[NSMutableDictionary alloc] initWithDictionary:uDict copyItems:false];
     for (id key in uniformDict){
         uniformId = glGetUniformLocation(*shader, [key UTF8String]);
         [uDict setValue:[NSNumber numberWithUnsignedInt:uniformId] forKey:key];
     }
-
+    [uniformDict release];
+    
     // Release vertex and fragment shaders.
     if (vertShader){
         glDetachShader(*shader, vertShader);
@@ -748,9 +747,11 @@
  
     
 }
+
 - (void)linkTouchController:(TouchController*) linkedController{
 	touchController = linkedController;
 }
+
 - (void) touchHelper:(NSSet *)touches{
 	int i,len;
 	SEL selector;
