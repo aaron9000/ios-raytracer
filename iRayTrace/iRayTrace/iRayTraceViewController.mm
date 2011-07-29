@@ -749,64 +749,40 @@
     float oldScale = touchController.oldPinchScale = touchController.pinchScale;
     float newScale = touchController.pinchScale = recognizer.scale;
     
+    
     float deltaScale = fabsf(newScale - oldScale);
     
     if (deltaScale > 0.2f)
         deltaScale = 0.2f;
     deltaScale *= 1.20f;
     
-    if (newScale > oldScale) {
-        newScale = cam.zoom + deltaScale;
+    if (oldScale != 0.0f){
+        if (newScale > oldScale) {
+            newScale = cam.zoom + deltaScale;
+        }else{
+            newScale = cam.zoom - deltaScale;
+        }   
     }else{
-        newScale = cam.zoom - deltaScale;
+        newScale = cam.zoom;
     }
     
-    if (newScale < 0.4f)
-        newScale = 0.4f;
+    if (newScale < 0.45f)
+        newScale = 0.45f;
     
-    if (newScale > 2.4f)
-        newScale = 2.4f;
+    if (newScale > 3.6f)
+        newScale = 3.6f;
     
     cam.zoom = newScale;
     
-    
-    //end zooming
-    /*
-    int touchCount = [touchController getDown:nil];
-    if (touchCount < 2)
-        touchController.pinchScale = 1.0f;
-    */
-    
-    /*
-    if (scale > 2.0f)
-        scale = 2.0f;
-    
-    if (scale < 0.5f)
-        scale = 0.5f;
-    */
-    
-    
-    /*
-    if (scale < 1.0f){
-        //scale between 0.5 and 1.0
-        //between 1.0 and 0.4
-        scale = (scale - 0.5f) * 2.0f; 
-        scale = 0.4f + 0.6f * scale;
-    }else{
-        //scale between 1.0 and 2.0
-        //to 1.0 and 2.4
-        scale = 1.0f + (scale - 1.0f) * 2.4f;
-    }
+    if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled){
         
+        touchController.oldPinchScale = touchController.pinchScale = 0.0f;
+        NSLog(@"ended");
+        return;
+        
+    }
     
-    scale *= cam.zoom;
-    
-    
-    cam.zoom = scale;
-    */
 
-    
-    
 
 }
 - (void)linkTouchController:(TouchController*) linkedController{
@@ -947,7 +923,7 @@
     */
     
     //consts
-    float sensitivity = 0.005f;
+    float sensitivity = 0.008f;
     
     //get inout
     Touch* touch = [touchController getTouchWithIndex:4];
@@ -974,7 +950,7 @@
 }
 - (BOOL) setupCamera{
     
-    V3 origin = V3(0.0f, 0.0f, 0.0f);
+    V3 origin = V3(0.0f, 0.0f, 2.0f);
     
     //init camera
     cam = Camera();

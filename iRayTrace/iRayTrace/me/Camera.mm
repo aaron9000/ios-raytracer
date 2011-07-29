@@ -179,44 +179,35 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin){
     if (panToOrigin){
         
         //start rseetting to look at the origin
-        float panSpeed = 0.05f;
+        float panSpeed = 0.1f;
+        float zoomSpeed = 0.1f;
+        float idleZoom = 0.9f;
+        
         V2 origin = V2();
 
-        
-        
-        
+        //we are idle
         idleTicker++;
+        if (idleTicker > 100)
+            idleTicker = 100;
         
         
-        if (idleTicker > 500)
-            idleTicker = 500;
-        
-        float idleRatio = idleTicker / 500.0f;
+        //adjust pan speed by idle ratio
+        float idleRatio = idleTicker / 100.0f;
+        idleRatio *= idleRatio;
         panSpeed *= idleRatio;
         
         
-        //latitude
-        /*
-        V2 vPos2 = V2(mag2(&pos2), pos.z);
-        vPos2 = unit2(&vPos2);
-        float idealLatitude = dir2(&origin, &vPos2);
-        if (idealLatitude > pi)
-            idealLatitude = - (twoPi - idealLatitude);
-        idealLatitude = constrainLat(idealLatitude);
-        float deltaLat = idealLatitude - cameraLatitude;
-        if (fabs(deltaLat) <= panSpeed){
-            cameraLatitude = idealLatitude;
-        
+        //zoom
+        zoomSpeed *= idleRatio;
+        if (fabsf(idleZoom - zoom) < zoomSpeed){
+            zoom = idleZoom;
         }else{
-            if (deltaLat > 0.0f){
-                cameraLatitude += panSpeed;
+            if (zoom > idleZoom){
+                zoom -= zoomSpeed;
             }else{
-                cameraLatitude -= panSpeed;
+                zoom += zoomSpeed;
             }
         }
-        cameraLatitude = constrainLat(cameraLatitude);
-        //cameraLatitude = idealLatitude;
-        */
         
         //longitude
         V2 pos2 = V2(pos.x, pos.y);
@@ -233,14 +224,6 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin){
             }
         }
         cameraLongitude = constrainLong(cameraLongitude);
-        
-        
-        /*
-        NSLog(@"----");
-        NSLog(@"IDEAL %f , %f", idealLatitude, idealLongitude);
-        NSLog(@"ACTUAL %f , %f", cameraLatitude, cameraLongitude);
-        NSLog(@"DELTA %f , %f", idealLatitude - cameraLatitude, idealLongitude - cameraLongitude);
-        */
         
     }else{
         
