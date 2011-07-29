@@ -179,20 +179,20 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin){
     if (panToOrigin){
         
         //start rseetting to look at the origin
-        float panSpeed = 0.1f;
-        float zoomSpeed = 0.1f;
+        float panSpeed = 0.12f;
+        float zoomSpeed = 0.12f;
         float idleZoom = 0.9f;
         
         V2 origin = V2();
 
         //we are idle
         idleTicker++;
-        if (idleTicker > 100)
-            idleTicker = 100;
+        if (idleTicker > 50)
+            idleTicker = 50;
         
         
         //adjust pan speed by idle ratio
-        float idleRatio = idleTicker / 100.0f;
+        float idleRatio = idleTicker / 50.0f;
         idleRatio *= idleRatio;
         panSpeed *= idleRatio;
         
@@ -273,24 +273,25 @@ void Camera::reset(){
     pos = lastPos = V3(0.0f, 0.0f, 0.0f);
     
     //zoom
-    zoom = 1.0f;
+    zoom = 0.5f;
     
     
     //inactivity
-    idleTicker = 0.0f;
+    idleTicker = 0;
     
     //bezier
-    hasPath = false;
     pathSpeed = 0.0f;
     currT = 0.0f;
     currNode = 0;
     
-    //point in default direction
+    //path
+    hasPath = false;
+    pathLength = 0;
+    
+    //rotational
     cameraLatitude = 0.0f;
     cameraLongitude = 0.0f;
-    
     V3 unit = sphericalToUnit(cameraLongitude, cameraLatitude);
     cameraMat = fpsRotMat(&unit);
-    //update camera Matrix
 }
     

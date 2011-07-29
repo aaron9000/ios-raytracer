@@ -24,6 +24,7 @@
 		9315D88C13D679A8001B1A70 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87C13D543AB001B1A70 /* Shader.vsh */; };
 		9315D88D13D679A8001B1A70 /* Texture.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87D13D543AB001B1A70 /* Texture.fsh */; };
 		9315D88E13D679A8001B1A70 /* Texture.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87E13D543AB001B1A70 /* Texture.vsh */; };
+		93D7860C13E312E600E97A99 /* Timer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D7860B13E312E500E97A99 /* Timer.mm */; };
 		93EFCD1C13E06E8D00EF3DB6 /* Camera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD0F13E06E8D00EF3DB6 /* Camera.mm */; };
 		93EFCD1D13E06E8D00EF3DB6 /* MathHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD1113E06E8D00EF3DB6 /* MathHelper.mm */; };
 		93EFCD1E13E06E8D00EF3DB6 /* Touch.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD1313E06E8D00EF3DB6 /* Touch.mm */; };
@@ -95,6 +96,8 @@
 		9315D87C13D543AB001B1A70 /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Shader.vsh; path = Shaders/Shader.vsh; sourceTree = "<group>"; };
 		9315D87D13D543AB001B1A70 /* Texture.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Texture.fsh; path = Shaders/Texture.fsh; sourceTree = "<group>"; };
 		9315D87E13D543AB001B1A70 /* Texture.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Texture.vsh; path = Shaders/Texture.vsh; sourceTree = "<group>"; };
+		93D7860A13E312E500E97A99 /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = me/Timer.h; sourceTree = "<group>"; };
+		93D7860B13E312E500E97A99 /* Timer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Timer.mm; path = me/Timer.mm; sourceTree = "<group>"; };
 		93EFCD0E13E06E8D00EF3DB6 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Camera.h; path = me/Camera.h; sourceTree = "<group>"; };
 		93EFCD0F13E06E8D00EF3DB6 /* Camera.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Camera.mm; path = me/Camera.mm; sourceTree = "<group>"; };
 		93EFCD1013E06E8D00EF3DB6 /* MathHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathHelper.h; path = me/MathHelper.h; sourceTree = "<group>"; };
@@ -252,6 +255,8 @@
 		9315D84713D542B8001B1A70 /* me */ = {
 			isa = PBXGroup;
 			children = (
+				93D7860A13E312E500E97A99 /* Timer.h */,
+				93D7860B13E312E500E97A99 /* Timer.mm */,
 				93EFCD0E13E06E8D00EF3DB6 /* Camera.h */,
 				93EFCD0F13E06E8D00EF3DB6 /* Camera.mm */,
 				93EFCD1013E06E8D00EF3DB6 /* MathHelper.h */,
@@ -376,6 +381,7 @@
 				93EFCD2013E06E8D00EF3DB6 /* TouchObj.mm in Sources */,
 				93EFCD2113E06E8D00EF3DB6 /* V2.mm in Sources */,
 				93EFCD2213E06E8D00EF3DB6 /* V3.mm in Sources */,
+				93D7860C13E312E600E97A99 /* Timer.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

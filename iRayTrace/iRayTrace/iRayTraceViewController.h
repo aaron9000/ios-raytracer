@@ -14,11 +14,10 @@
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 
-#include <mach/mach_time.h>
-
 #import "Texture2D.h"
 #import "TouchController.h"
 #import "Camera.h"
+#import "Timer.h"
 #import "mat4.h"
 
 
@@ -51,11 +50,8 @@
     NSInteger animationFrameInterval;
     CADisplayLink *displayLink;
     
-    
-    //timing stuff
-    int ticks;
-    uint64_t oldTime;
-    double timingFactor;
+    //timing
+    Timer* perfTimer;
     
     //touch and input
     UIAccelerometer *accelerometer;
@@ -66,14 +62,8 @@
 
 }
 
-
 //step method
 - (void) update;
-
-//timing
-- (void)startTiming;
-- (void)endTiming:(NSString*) message;
-- (void)setupTiming;
 
 //helpers
 - (float)getScreenDistance;
@@ -82,7 +72,8 @@
 @property (retain, nonatomic) EAGLContext *context;
 - (BOOL)setupGL;
 - (BOOL)tearDownGL;
-- (void) drawFrame;
+- (void)drawFrame;
+
 //textures
 - (BOOL)loadTextures;
 - (BOOL)unloadTextures;

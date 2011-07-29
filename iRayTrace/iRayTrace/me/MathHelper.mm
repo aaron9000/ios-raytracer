@@ -4,23 +4,6 @@
 ////////////////////
 /*HELPER FUNCTIONS*/
 ////////////////////
-//reflection
-/*
-V2 reflection2(V2* unit,V2* normal,V3* friction) {
-	//friction
-	//x = air friction
-	//y = slide friction
-	//z = bounce friction
-	float dotProd=dot2(unit,normal);
-	float factor=2*(.5*(friction->y/friction->z)+.5);
-	float ratio=fabs(dotProd);
-	float dampening=ratio*friction->z+(1-ratio)*friction->y;
-	V2 ret=mult2(normal,dotProd*factor);
-	ret=sub2(unit,&ret);
-	ret=mult2(&ret,dampening);
-	return (ret);
-}
- */
 //random sign +/- 1.0f
 float randSign(){
 	if (rand() % 2 == 0){

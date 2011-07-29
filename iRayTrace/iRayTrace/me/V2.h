@@ -7,12 +7,6 @@ public:
 	float x;
 	float y;
 	
-	//methods
-	/*
-	inline V2();
-	inline V2(float val_x, float val_y);
-	inline V2(const V2& source); 
-	*/
 	//2d point class
 	inline V2(){
 		x=0.0f;

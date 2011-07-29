@@ -8,17 +8,6 @@ public:
 	float y;
 	float z;
 	
-	//methods
-	/*
-	V3();
-	V3(float val_x, float val_y, float val_z);
-	V3(const V3& source); 
-	
-	const V3& operator=(const V3& source);
-	bool operator==(const V3 &other) const;	
-	bool operator!=(const V3 &other) const;
-	void copy(const V3& source);
-	 */
 	inline V3(){
 		x=0.0f;
 		y=0.0f;

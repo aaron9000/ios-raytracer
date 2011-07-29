@@ -19,9 +19,6 @@ const float degToRad = pi/180;
 ////////////////////
 /*HELPER FUNCTIONS*/
 ////////////////////
-
-//BOOL intersectBoundary(V2* to,V2* from,float radius,V2* intersectPoint);
-
 //random functions
 float fRand();
 float randSign();

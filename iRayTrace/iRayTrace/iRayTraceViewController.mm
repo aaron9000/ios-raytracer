@@ -56,67 +56,63 @@
 - (void)viewDidLoad
 {
     
-    [self setupTiming];
-    
     [self setupScene];
-    
     [self setupGL];
-    
     [self setupNotifications];
-    
     [self setupInput];
-    
     [self setupCamera];
-    
     [self setupDisplayLink];
-    
     [self setupBuffers];
-    
     [self loadShaders];
-    
     [self loadTextures];
+    
+    perfTimer = [[[Timer alloc] init] retain];
      
 }
 - (void)dealloc
 {
     
-    [self unloadShaders];
-    
     [self unloadTextures];
-    
+    [self unloadShaders];
     [self tearDownBuffers];
-    
-    [self tearDownGL];
-    
-    [self tearDownInput];
-    
+    //[self tearDownDisplayLink]
     [self tearDownCamera];
-    
+    [self tearDownInput];
     [self tearDownNotifications];
-    
+    [self tearDownGL];
     [self tearDownScene];
+    
+    [perfTimer release];
     
     [super dealloc];
     
     
 }
+
 - (void) update{
-    //do timing
-    ticks++;
     
-    /*
-     [self endTiming:@"render MS = "];
-     [self startTiming];
-     */
-    
+    //timer
+    //[perfTimer endTiming:@"render MS = "];
+    //[perfTimer startTiming];
+    //[perfTimer tick];
+    //
+     
     //camera stuff
     [self updateCamera];
     
     //render
     [self drawFrame];
     
+    //randomize on double tap
+    if ([touchController getDoubleTaps:nil] > 0){
+        [self setupScene];
+        [self setupCamera];
+    }
+        
+    
     //touch controller stuff
     [touchController recievedTaps];
+    
 }
 ////////////
 //GL STUFF//
@@ -215,14 +211,7 @@
 
 - (void)viewDidUnload   {
 	
-    [self unloadShaders];
-    
-    [self unloadTextures];
-    
-    [self tearDownGL];
-    
     [super viewDidUnload];
-    
     
 }
 
@@ -388,11 +377,6 @@
     
     
     //set neg light dir uniform
-    /*
-    x = 0.624f;
-    y = 0.78f;
-    z = 0.06f;
-    */
     x = lightDir.x;
     y = lightDir.y;
     z = lightDir.z;
@@ -510,6 +494,7 @@
     [renderUniformDict setValue:zero forKey:@"cameraPos"];
     [renderUniformDict setValue:zero forKey:@"matrix"];
     [renderUniformDict setValue:zero forKey:@"zoom"];
+    
     self.renderAttributeDict = [[NSMutableDictionary alloc] init];
     [renderAttributeDict setValue:one forKey:@"vertex"];
     
@@ -540,11 +525,10 @@
         return NO;
     }
     
+    //create gl shader
     *shader = glCreateShader(type);
     glShaderSource(*shader, 1, &source, NULL);
-    [self startTiming];
     glCompileShader(*shader);
-    [self endTiming:@"Compile shader MS = "];
     
     //error check
     GLint logLength;
@@ -696,35 +680,6 @@
     return dist;
 }
 
-////////////////
-//TIMING STUFF//
-////////////////
-- (void) setupTiming{
-    //
-    ticks = 0;
-    mach_timebase_info_data_t info;
-    mach_timebase_info(&info);
-    timingFactor=1e-9 *((double)info.numer)/((double)info.denom);
-    oldTime=mach_absolute_time();
-}
-- (void)startTiming{
-    //
-	int64_t currTime = mach_absolute_time();
-   	oldTime = currTime;
-	
-    
-}
-- (void)endTiming:(NSString*) message{
-    //
-    int64_t currTime = mach_absolute_time();
-    int64_t dt = currTime - oldTime;
-	int framerate = 60;
-	if (dt > 0)
-		framerate = ((1.0f / (dt * timingFactor)) + 0.5f);
-    //NSLog(@"FPS = %i", (int)framerate);
-    NSLog(@"%@ %i",message, (int)(dt * timingFactor * 1000));
-}
-
 /////////////////////////////////
 /*TouchController communication*/
 /////////////////////////////////
@@ -745,17 +700,25 @@
 - (void)pinchRecognizer:(UIPinchGestureRecognizer *)recognizer 
 {
    
+    
+    //consts
+    float scaleSpeed = 0.25f;
+    float minZoom = 0.45f;
+    float maxZoom = 3.6f;
+    
     //update pinch info
     float oldScale = touchController.oldPinchScale = touchController.pinchScale;
     float newScale = touchController.pinchScale = recognizer.scale;
-    
-    
     float deltaScale = fabsf(newScale - oldScale);
     
-    if (deltaScale > 0.2f)
-        deltaScale = 0.2f;
-    deltaScale *= 1.20f;
+    //we arent idle
+    cam.idleTicker = 0;
     
+    //clamp max scalespeed
+    if (deltaScale > scaleSpeed)
+        deltaScale = scaleSpeed;
+    
+    //if its zero then we dont have valid oldPinch data so defer another frame
     if (oldScale != 0.0f){
         if (newScale > oldScale) {
             newScale = cam.zoom + deltaScale;
@@ -766,24 +729,24 @@
         newScale = cam.zoom;
     }
     
-    if (newScale < 0.45f)
-        newScale = 0.45f;
     
-    if (newScale > 3.6f)
-        newScale = 3.6f;
+    //keep new scale value in bounds
+    if (newScale < minZoom)
+        newScale = minZoom;
     
+    if (newScale > maxZoom)
+        newScale = maxZoom;
+    
+    //update camera
     cam.zoom = newScale;
     
-    if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled){
-        
+    //on pinch state change wipe pinchData
+    if (recognizer.state == UIGestureRecognizerStateEnded 
+        || recognizer.state == UIGestureRecognizerStateCancelled
+        || recognizer.state == UIGestureRecognizerStateBegan)
         touchController.oldPinchScale = touchController.pinchScale = 0.0f;
-        NSLog(@"ended");
-        return;
-        
-    }
+ 
     
-
-
 }
 - (void)linkTouchController:(TouchController*) linkedController{
 	touchController = linkedController;
@@ -882,62 +845,27 @@
 
 - (void) updateCamera{
     
-    //test
-    /*
-    V2 z = V2();
-    
-    V2 straightRightVec = V2(1.0f, 0.0f);
-    V2 straightLeftVec = V2(-1.0f, 0.0f);
-    V2 straightDownVec = V2(0.0f, -1.0f);
-    V2 straightUpVec = V2(0.0f, 1.0f);
-    
-    V2 oneVec = V2(0.8f, 0.12f);
-    V2 twoVec = V2(0.12f, 0.8f);
-    V2 threeVec = V2(-0.12f, 0.8f);
-    V2 fourVec = V2(-0.8f, 0.12f);
-    V2 fiveVec = V2(-0.8f, -0.12f);
-    V2 sixVec = V2(-0.12f, -0.8f);
-    V2 sevenVec = V2(0.12f, -0.8f);
-    V2 eightVec = V2(0.8f, -0.12f);
-    
-    float straightRight = dir2(&straightRightVec, &z);
-    float straightLeft = dir2(&straightLeftVec, &z);
-    float straightDown = dir2(&straightDownVec, &z);
-    float straightUp = dir2(&straightUpVec, &z);
-    
-    float one = dir2(&oneVec, &z);
-    float two = dir2(&twoVec, &z);
-    float three = dir2(&threeVec, &z);
-    float four = dir2(&fourVec, &z);
-    
-    float five = dir2(&fiveVec, &z);
-    float six = dir2(&sixVec, &z);
-    float seven = dir2(&sevenVec, &z);
-    float eight = dir2(&eightVec, &z);
-    
-    NSLog(@"%f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f", 
-          straightRight, one, two, 
-          straightUp, three, four, 
-          straightLeft, five, six, 
-          straightDown, seven, eight);
-    */
-    
     //consts
     float sensitivity = 0.008f;
     
-    //get inout
-    Touch* touch = [touchController getTouchWithIndex:4];
-    
+    //local
     float deltaX = 0.0f;
     float deltaY = 0.0f;
     bool pan = true;
-    //early return if its not an active touch
-    if (touch->down){
-        deltaX = touch->currVelocity.x * sensitivity;
-        deltaY = touch->currVelocity.y * sensitivity;
-        pan = false;
+    int touches[5];
+    int count = [touchController getDown:touches];
+    
+    //single finger panning
+    if (count == 1){
+        Touch* touch = [touchController getTouchWithIndex:touches[0]];
+        
+        //early return if its not an active touch
+        if (touch->down){
+            deltaX = touch->currVelocity.x * sensitivity;
+            deltaY = touch->currVelocity.y * sensitivity;
+            pan = false;
+        }
     }
-
     
     
     //update camera object with input
@@ -950,11 +878,11 @@
 }
 - (BOOL) setupCamera{
     
-    V3 origin = V3(0.0f, 0.0f, 2.0f);
+    V3 origin = V3(0.0f, 0.0f, 0.0f);
     
     //init camera
     cam = Camera();
-    cam.followPath(&origin, 20, 8.0f, 0.25f);
+    cam.followPath(&origin, 24, 10.0f, 0.3f);
     
     return true;
     
