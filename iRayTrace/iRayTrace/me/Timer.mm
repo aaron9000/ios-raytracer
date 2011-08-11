@@ -42,15 +42,22 @@
 	
     
 }
-- (void)endTiming:(NSString*) message{
+- (int)endTiming:(NSString*) message{
     //
     int64_t currTime = mach_absolute_time();
     int64_t dt = currTime - oldTime;
 	int framerate = 60;
 	if (dt > 0)
 		framerate = ((1.0f / (dt * timingFactor)) + 0.5f);
-    //NSLog(@"FPS = %i", (int)framerate);
-    NSLog(@"%@ %i",message, (int)(dt * timingFactor * 1000));
+    
+    
+    //if you pass in a non null message it will output text
+    if (message)
+        NSLog(@"%@ %i",message, (int)(dt * timingFactor * 1000));
+    
+    
+    return framerate;
+    
 }
 
 

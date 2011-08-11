@@ -25,6 +25,10 @@
     //gl stuff
     EAGLContext *context;
     
+    //Additional view for hud
+    UIView* hudView;
+    UILabel* controlsLabel;
+    UILabel* emailLabel;
     
     //shaders
     GLuint renderShader;
@@ -51,6 +55,7 @@
     CADisplayLink *displayLink;
     
     //timing
+    int ticks;
     Timer* perfTimer;
     
     //touch and input
@@ -67,6 +72,18 @@
 
 //helpers
 - (float)getScreenDistance;
+
+//timing
+- (BOOL) setupTiming;
+- (BOOL) tearDownTiming;
+- (void) updateTiming;
+
+//hud
+@property (retain, nonatomic) UIView* hudView;
+@property (retain, nonatomic) UILabel* controlsLabel;
+@property (retain, nonatomic) UILabel* emailLabel;
+- (BOOL) setupHud;
+- (BOOL) tearDownHud;
 
 //gl
 @property (retain, nonatomic) EAGLContext *context;
@@ -115,8 +132,7 @@
 //touch and input
 @property (readonly, nonatomic) UIAccelerometer* accelerometer;
 - (void) linkTouchController:(TouchController*) controller;
-- (BOOL)setupInput;
-- (BOOL)tearDownInput;
+- (void) updateInput;
 
 //camera
 - (void) updateCamera;

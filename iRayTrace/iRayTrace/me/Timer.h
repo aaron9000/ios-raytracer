@@ -22,6 +22,6 @@
 //timing
 - (void)tick;
 - (void)startTiming;
-- (void)endTiming:(NSString*) message;
+- (int)endTiming:(NSString*) message;
 
 @end

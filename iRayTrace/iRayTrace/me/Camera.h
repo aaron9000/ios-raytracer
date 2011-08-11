@@ -34,7 +34,7 @@ class Camera{
         Camera(V3 position, float inLongitude);
         void followPath(V3* center, int nodes, float spacing, float speed);
         V3 getBezierPos();
-        void control(float deltaX, float deltaY, bool panToOrigin);
+        void control(float deltaX, float deltaY, bool panToOrigin, float targetZoom);
     
         float constrainLong(float longitude);
         float constrainLat(float latitude);

@@ -21,10 +21,11 @@
 	
 	int activeTouchIndices[128];
 	int activeTouchIndicesCount;
-	
-	double timingFactor;
+    int idleTicker;
     
-    float pinchScale;
+    uint64_t timingFactor;
+    
+    float pinchValue;
 	
 	V3 currAccel,lastAccel;
 	BOOL shaken;
@@ -33,8 +34,8 @@
 //properties
 @property V3 currAccel;
 @property BOOL shaken;
-@property float pinchScale;
-@property float oldPinchScale;
+@property float pinchValue;
+@property int idleTicker;
 
 //usable things
 - (int) getTouchAtPoint:(V2*) point withinRadius:(float) radius;
@@ -53,6 +54,13 @@
 - (int) getClosestToPos:(V2*) pos;
 - (int) nextAvailable;
 - (void) updateActive;
+
+//pinches
+- (void) updatePinches;
+
+//
+- (void) update;
+
 
 @end
 #endif

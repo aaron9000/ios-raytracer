@@ -14,8 +14,14 @@
 #define ShakeDeltaG 2
 
 
-@implementation TouchController
+//consts
+#define MinPinch 0.45f
+#define MaxPinch 3.6f
+#define MinPinchDist 120.0f
+#define MaxPinchDist 360.0f
 
+@implementation TouchController
+@synthesize idleTicker;
 //////////////////////////
 /* GET TOUCHES AND INFO */
 //////////////////////////
@@ -36,7 +42,7 @@
 	return count;
 }
 - (int) getTaps:(int*) touchIndexArray{
-int index;
+    int index;
 	int count=0;
 	int i;
 	int len=activeTouchIndicesCount;
@@ -44,7 +50,7 @@ int index;
 		index=activeTouchIndices[i];
 		if (touchArray[index].tapping && !touchArray[index].doubleTapped){
 				if (touchIndexArray != nil)
-                    touchIndexArray[count]=index;
+                    touchIndexArray[count] = index;
 				count++;
 		}
 	}	
@@ -79,7 +85,7 @@ int index;
 }
 - (Touch*) getTouchWithIndex:(int) index{
 	//get pointer to the touch with index
-	if (index>=HWMaxTouches || index<0){
+	if (index >= HWMaxTouches || index < 0){
 		NSLog(@"TouchController:getTouchWithIndex: index out of range");
 		return nil;
 	}else{
@@ -108,11 +114,6 @@ int index;
 	}
 	return ret;
 }
-///////////
-/* PINCH */
-///////////
-@synthesize pinchScale;
-@synthesize oldPinchScale;
 /////////
 /*ACCEL*/
 /////////
@@ -124,20 +125,66 @@ int index;
 	lastAccel=currAccel;
 	currAccel=*accel;
 	
+    
 	//see if shaking
 	float lastMag=mag3(&currAccel);
 	float mag=mag3(&lastAccel);
-	shaken=BOOL(fabs(mag)>ShakeGs || fabs(lastMag-mag)>ShakeDeltaG);
+	shaken = BOOL(fabs(mag)>ShakeGs || fabs(lastMag-mag)>ShakeDeltaG);
 
+    if (shaken)
+        idleTicker = 0;
+    
 }
+//////////////
+/* PINCHING */
+//////////////
+@synthesize pinchValue;
+- (void) updatePinches{
+    
+    //check for and record 2 active touches
+    Touch* t = nil;
+    Touch* t1 = nil;
+    Touch* t2 = nil;
+    int i = 0;
+    int count = 0;
+    for (i = 0; i < HWMaxTouches; i++){
+        t = [self getTouchWithIndex:i];
+        if (t->down){
+            count++;
+            if (!t1){
+                t1 = t;
+            }else{
+                t2 = t;
+            }
+        }
+    }
+    
+    //if we have active touches find the scale
+    if (t1 && t2){
+        
+        float dist = dist2(&t1->pos, &t2->pos);
+        dist = MAX(dist, MinPinchDist);
+        dist = MIN(dist, MaxPinchDist);
+        
+        float spread = MaxPinchDist - MinPinchDist;
+        float ratio = (dist - MinPinchDist) / spread;
+        
+        float pinchSpread = MaxPinch - MinPinch;
+        pinchValue = MinPinch + pinchSpread * ratio;
+
+    }
+    
+}
+
 ///////////
 /*HANDLERS*/
 ///////////
 - (void) recievedTaps{
 	int i;
-	for (i=0;i<HWMaxTouches;i++)
+	for (i = 0; i < HWMaxTouches; i++)
 		touchArray[i].tapping=false;
-		
+    
+    //
 }
 
 - (void) startTouchWithObj:(TouchObj*) obj{
@@ -187,6 +234,9 @@ int index;
 	
 	//no owner at start
 	t->hasOwner=false;
+    
+    //idle
+    idleTicker = 0;
 	
 	//must redo active vec
 	[self updateActive];
@@ -269,6 +319,9 @@ int index;
 	//get position
 	t->pos=loc;
 	
+    //idle
+    idleTicker = 0;
+    
 }
 /////////////
 /* HELPERS */
@@ -319,6 +372,16 @@ int index;
 ///////////
 /*GENERIC*/
 ///////////
+- (void) update{
+    
+    if ([self getDown:nil] == 0)
+        idleTicker++;
+    
+    [self recievedTaps];
+    
+    [self updatePinches];
+    
+}
 - (id)init {
     if (self == [super init]) {
 		
@@ -335,7 +398,13 @@ int index;
 		mach_timebase_info_data_t info;
 		mach_timebase_info(&info);
 		timingFactor=1e-9 *((double)info.numer)/((double)info.denom);
+        
+        //pinch stuff
+        pinchValue = 1.0f;
 		
+        //idle
+        idleTicker = 0;
+        
 		//accel
 		currAccel=lastAccel=V3();
 		shaken=FALSE;

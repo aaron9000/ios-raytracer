@@ -23,7 +23,6 @@
 
 @implementation iRayTraceViewController
 
-
 //display link
 @synthesize animating;
 
@@ -49,6 +48,8 @@
 //do not change
 #define HWMaxTouches 5
 
+//hud
+#define HudAlpha 0.35f
 
 ////////
 //MAIN//
@@ -56,19 +57,30 @@
 - (void)viewDidLoad
 {
     
+    if (!touchController){
+        NSLog(@"touchController not linked");
+        return;   
+    }
+    
+  
+    
+    [self setupTiming];
+    [self setupHud];
     [self setupScene];
     [self setupGL];
     [self setupNotifications];
-    [self setupInput];
     [self setupCamera];
     [self setupDisplayLink];
     [self setupBuffers];
     [self loadShaders];
     [self loadTextures];
+
     
-    perfTimer = [[[Timer alloc] init] retain];
-     
+    
+
+
 }
+
 - (void)dealloc
 {
     
@@ -77,47 +89,113 @@
     [self tearDownBuffers];
     //[self tearDownDisplayLink]
     [self tearDownCamera];
-    [self tearDownInput];
     [self tearDownNotifications];
     [self tearDownGL];
     [self tearDownScene];
+    [self tearDownHud];
+    [self tearDownTiming];
     
-    [perfTimer release];
     
+
     [super dealloc];
     
     
 }
 
 - (void) update{
+   
+    //timing
+    [self updateTiming];
     
-    //timer
-    //[perfTimer endTiming:@"render MS = "];
-    //[perfTimer startTiming];
-    //[perfTimer tick];
-    //
-     
     //camera stuff
     [self updateCamera];
     
     //render
     [self drawFrame];
     
-    //randomize on double tap
-    if ([touchController getDoubleTaps:nil] > 0){
-        [self setupScene];
-        [self setupCamera];
-    }
-        
+    //input
+    [self updateInput];
     
-    //touch controller stuff
-    [touchController recievedTaps];
+
     
 }
 ////////////
+/* TIMING */
+////////////
+- (BOOL) setupTiming {
+    
+    perfTimer = [[[Timer alloc] init] retain];
+    ticks = 0;
+    
+    return true;
+}
+- (BOOL) tearDownTiming {
+    
+    [perfTimer release];
+    
+    return true;
+}
+- (void) updateTiming{
+    
+    //int fps = [perfTimer endTiming:nil];
+    [perfTimer startTiming];
+    [perfTimer tick];
+    ticks++;
+
+}
+
+/////////////
+//HUD STUFF//
+/////////////
+@synthesize hudView;
+@synthesize controlsLabel;
+@synthesize emailLabel;
+
+- (BOOL) setupHud{
+    
+    //common
+    UIFont* labelFont = [UIFont fontWithName:@"Arial" size:12.0f];
+    
+    //init the UIView that we will add HUD controls to
+    self.hudView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 768.0f, 1024.0f)];
+    
+    self.emailLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 768.0f, 16.0f)];
+    [emailLabel setTextColor:[UIColor yellowColor]];
+    [emailLabel setTextAlignment:UITextAlignmentCenter];
+    [emailLabel setBackgroundColor:[UIColor darkGrayColor]];
+    [emailLabel setText:@"Aaron Geisler @ slothproductions.org"];
+    [emailLabel setFont:labelFont];
+    
+    self.controlsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 1024.0f - 16.0f, 768.0f, 16.0f)];
+    [controlsLabel setTextColor:[UIColor yellowColor]];
+    [controlsLabel setTextAlignment:UITextAlignmentCenter];
+    [controlsLabel setBackgroundColor:[UIColor darkGrayColor]];
+    [controlsLabel setFont:labelFont];
+    [controlsLabel setText:@"[ drag to pan - pinch to zoom ]"];
+    
+    
+    //add controls to the view
+    [hudView addSubview:controlsLabel];
+    [hudView addSubview:emailLabel];
+    [hudView setMultipleTouchEnabled:true]; 
+    
+    //add as a subview over the rendered scene
+    [self.view addSubview:hudView];
+    
+ 
+    
+    return true;
+    
+}
+- (BOOL) tearDownHud{
+
+    return true;
+}
+
+////////////
 //GL STUFF//
 ////////////
-- (BOOL) setupGL{
+- (BOOL) setupGL {
     
     EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     
@@ -125,7 +203,7 @@
         aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
     }
     
-    if (!aContext){
+    if (!aContext) {
         NSLog(@"Failed to create ES context");
         return false;
     }else if (![EAGLContext setCurrentContext:aContext]){
@@ -211,6 +289,7 @@
 
 - (void)viewDidUnload   {
 	
+    
     [super viewDidUnload];
     
 }
@@ -290,6 +369,7 @@
 }
 - (void)startAnimation {
     if (!animating) {
+        
         CADisplayLink *aDisplayLink = [[UIScreen mainScreen] displayLinkWithTarget:self selector:@selector(update)];
         [aDisplayLink setFrameInterval:animationFrameInterval];
         [aDisplayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -315,6 +395,7 @@
         NSLog(@"OpenGLES 2.0 not supported");
         return;
     }
+    
     /*
      if (![self validateProgram:renderShader]) {
      NSLog(@"Failed to validate program: %d", renderShader);
@@ -682,91 +763,34 @@
 /////////////////////////////////
 /*TouchController communication*/
 /////////////////////////////////
-- (BOOL)setupInput{
+- (void) updateInput{
     
-    //pinch recognition
-    UIPinchGestureRecognizer *pinchRecognizer = 
-    [[[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchRecognizer:)] autorelease];
-    [[self view] addGestureRecognizer:pinchRecognizer];
-    
-    
-    return true;
-}
-- (BOOL)tearDownInput{
-    return true;
-}
-
-- (void)pinchRecognizer:(UIPinchGestureRecognizer *)recognizer 
-{
-   
-    
-    //consts
-    float scaleSpeed = 0.25f;
-    float minZoom = 0.45f;
-    float maxZoom = 3.6f;
-    
-    //update pinch info
-    float oldScale = touchController.oldPinchScale = touchController.pinchScale;
-    float newScale = touchController.pinchScale = recognizer.scale;
-    float deltaScale = fabsf(newScale - oldScale);
-    
-    //we arent idle
-    cam.idleTicker = 0;
-    
-    //clamp max scalespeed
-    if (deltaScale > scaleSpeed)
-        deltaScale = scaleSpeed;
-    
-    //if its zero then we dont have valid oldPinch data so defer another frame
-    if (oldScale != 0.0f){
-        if (newScale > oldScale) {
-            newScale = cam.zoom + deltaScale;
-        }else{
-            newScale = cam.zoom - deltaScale;
-        }   
-    }else{
-        newScale = cam.zoom;
-    }
-    
-    
-    //keep new scale value in bounds
-    if (newScale < minZoom)
-        newScale = minZoom;
-    
-    if (newScale > maxZoom)
-        newScale = maxZoom;
-    
-    //update camera
-    cam.zoom = newScale;
-    
-    //on pinch state change wipe pinchData
-    if (recognizer.state == UIGestureRecognizerStateEnded 
-        || recognizer.state == UIGestureRecognizerStateCancelled
-        || recognizer.state == UIGestureRecognizerStateBegan)
-        touchController.oldPinchScale = touchController.pinchScale = 0.0f;
- 
+    //call step method on touch controller
+    [touchController update];
     
 }
-
 - (void)linkTouchController:(TouchController*) linkedController{
+
 	touchController = linkedController;
+    
 }
 
 - (void) touchHelper:(NSSet *)touches{
-	int i,len;
+    
+	int i, len;
 	SEL selector;
 	UITouch *touch; 
 	CGPoint touchPoint;	
-	TouchObj* passObj=[[TouchObj alloc] init];
-	len=[touches count];
+	TouchObj* passObj = [[TouchObj alloc] init];
+	len = [touches count];
 	
 	//bound max touches
-	if (len>HWMaxTouches)
-		len=HWMaxTouches;
+	if (len > HWMaxTouches)
+		len = HWMaxTouches;
 	
 	
 	//for each touch 
-	for (i=0;i<len;i++){
+	for (i = 0; i < len; i++){
 		
 		//get the touch out of set
 		touch = [[touches allObjects] objectAtIndex:i];
@@ -832,27 +856,27 @@
 ///////////
 /* SCENE */
 ///////////
-- (BOOL) setupScene{
+- (BOOL) setupScene {
+    
+    
     lightDir = randUnit3(1.0f);
     
     return true;
 }
+
 - (BOOL) tearDownScene{
     return true;
 }
+
 //////////
 /*CAMERA*/
 //////////
-
 - (void) updateCamera{
-    
-    //consts
-    float sensitivity = 0.008f;
-    
+        
     //local
+    bool pan = true;
     float deltaX = 0.0f;
     float deltaY = 0.0f;
-    bool pan = true;
     int touches[5];
     int count = [touchController getDown:touches];
     
@@ -862,15 +886,15 @@
         
         //early return if its not an active touch
         if (touch->down){
-            deltaX = touch->currVelocity.x * sensitivity;
-            deltaY = touch->currVelocity.y * sensitivity;
+            deltaX = touch->currVelocity.x;
+            deltaY = touch->currVelocity.y;
             pan = false;
         }
     }
     
     
     //update camera object with input
-    cam.control(deltaX, deltaY, pan);
+    cam.control(deltaX, deltaY, pan, touchController.pinchValue);
     
     //follow path
     cam.pos = cam.getBezierPos();

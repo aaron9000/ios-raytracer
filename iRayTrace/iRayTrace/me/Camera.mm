@@ -1,5 +1,9 @@
 #include "Camera.h"
 
+#define Sensitivity 0.0065f
+#define PanSpeed 0.12f
+#define FocusSpeed 0.1f
+#define IdleTicks 50
 
 Camera::Camera(){
     reset();
@@ -173,54 +177,50 @@ V3 Camera::getBezierPos(){
     return(bezierPos);
 }
                     
-void Camera::control(float deltaX, float deltaY, bool panToOrigin){
+void Camera::control(float deltaX, float deltaY, bool panToOrigin, float targetZoom){
 
-   
+   //zooming
+    if (fabsf(targetZoom - zoom) < FocusSpeed){
+        zoom = targetZoom;
+    }else{
+        if ((targetZoom - zoom) > 0.0f){
+            zoom += FocusSpeed;
+        }else{
+            zoom -= FocusSpeed;
+        }
+    }
+    
+    
+    
+    //auto centering
     if (panToOrigin){
         
         //start rseetting to look at the origin
-        float panSpeed = 0.12f;
-        float zoomSpeed = 0.12f;
-        float idleZoom = 0.9f;
-        
         V2 origin = V2();
 
         //we are idle
+
         idleTicker++;
-        if (idleTicker > 50)
-            idleTicker = 50;
+        if (idleTicker > IdleTicks)
+            idleTicker = IdleTicks;
         
-        
-        //adjust pan speed by idle ratio
-        float idleRatio = idleTicker / 50.0f;
+        //find idle ratio
+        float idleRatio = (float)idleTicker / (float)IdleTicks;
         idleRatio *= idleRatio;
-        panSpeed *= idleRatio;
         
-        
-        //zoom
-        zoomSpeed *= idleRatio;
-        if (fabsf(idleZoom - zoom) < zoomSpeed){
-            zoom = idleZoom;
-        }else{
-            if (zoom > idleZoom){
-                zoom -= zoomSpeed;
-            }else{
-                zoom += zoomSpeed;
-            }
-        }
         
         //longitude
         V2 pos2 = V2(pos.x, pos.y);
         float idealLongitude = constrainLong(dir2(&pos2, &origin));
         float deltaLong = findDir(cameraLongitude, idealLongitude);
-        if (fabs(deltaLong) <= panSpeed){
+        if (fabs(deltaLong) <= PanSpeed){
             cameraLongitude = idealLongitude;
             
         }else{
             if (deltaLong > 0.0f){
-                cameraLongitude -= panSpeed;
+                cameraLongitude -= PanSpeed * idleRatio;
             }else{
-                cameraLongitude += panSpeed;
+                cameraLongitude += PanSpeed * idleRatio;
             }
         }
         cameraLongitude = constrainLong(cameraLongitude);
@@ -231,8 +231,8 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin){
             idleTicker = 0;
             
         //update camrea
-        cameraLongitude += deltaX;
-        cameraLatitude -= deltaY;
+        cameraLongitude += deltaX * Sensitivity;
+        cameraLatitude -= deltaY * Sensitivity;
         
         //make sure they are in bounds
         cameraLongitude = constrainLong(cameraLongitude);
@@ -259,7 +259,7 @@ float Camera::constrainLong(float longitude){
 }
 
 float Camera::constrainLat(float latitude){
-    float amt = halfPi*0.95f;
+    float amt = halfPi * 0.95f;
     if (latitude <= -amt)
         latitude = -amt; 
     if (latitude >= amt)
