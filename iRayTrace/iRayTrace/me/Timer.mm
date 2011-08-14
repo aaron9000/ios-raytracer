@@ -30,7 +30,7 @@
 {
     [super dealloc];
 }
-
+@synthesize ticks;
 - (void) tick{
     ticks++;
 }

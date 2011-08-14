@@ -18,6 +18,7 @@
     double timingFactor;
 }
 
+@property(nonatomic, readonly) int ticks;
 
 //timing
 - (void)tick;

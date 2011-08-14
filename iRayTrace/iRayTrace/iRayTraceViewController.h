@@ -45,6 +45,7 @@
     
     //scene
     V3 lightDir;
+    float angle;
     
     //buffers
     GLuint halfFrameBuffer;
@@ -55,7 +56,6 @@
     CADisplayLink *displayLink;
     
     //timing
-    int ticks;
     Timer* perfTimer;
     
     //touch and input
@@ -74,6 +74,7 @@
 - (float)getScreenDistance;
 
 //timing
+@property (retain, nonatomic) Timer* perfTimer;
 - (BOOL) setupTiming;
 - (BOOL) tearDownTiming;
 - (void) updateTiming;
@@ -102,6 +103,7 @@
 //scene
 - (BOOL) setupScene;
 - (BOOL) tearDownScene;
+- (void) updateScene;
 
 //shaders
 @property (retain, nonatomic) NSMutableDictionary* renderUniformDict;
@@ -132,7 +134,6 @@
 //touch and input
 @property (readonly, nonatomic) UIAccelerometer* accelerometer;
 - (void) linkTouchController:(TouchController*) controller;
-- (void) updateInput;
 
 //camera
 - (void) updateCamera;

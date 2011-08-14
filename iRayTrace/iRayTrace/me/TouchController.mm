@@ -17,8 +17,8 @@
 //consts
 #define MinPinch 0.45f
 #define MaxPinch 3.6f
-#define MinPinchDist 120.0f
-#define MaxPinchDist 360.0f
+#define MinPinchDist 8.0f
+#define MaxPinchDist 48.0f
 
 @implementation TouchController
 @synthesize idleTicker;
@@ -162,16 +162,35 @@
     //if we have active touches find the scale
     if (t1 && t2){
         
+        
         float dist = dist2(&t1->pos, &t2->pos);
-        dist = MAX(dist, MinPinchDist);
-        dist = MIN(dist, MaxPinchDist);
         
-        float spread = MaxPinchDist - MinPinchDist;
-        float ratio = (dist - MinPinchDist) / spread;
         
-        float pinchSpread = MaxPinch - MinPinch;
-        pinchValue = MinPinch + pinchSpread * ratio;
+        //early return for first time pinching
+        if (prevDist == 0.0f){
+            prevDist  = dist;
+            return;
+        }
+        
+        //see change in dist
+        float delta = dist - prevDist;
+        if (fabs(delta) > MaxPinchDist)
+            delta = (fabs(delta) / delta) * MaxPinchDist;
+        
+        
+        float ratio = delta * 0.01f;
+        pinchValue += ratio;
+        pinchValue = MAX(MinPinch, pinchValue);
+        pinchValue = MIN(MaxPinch, pinchValue);
+        
+        NSLog(@"%f", delta);
 
+        //update prev dist
+        prevDist = dist;
+
+
+    }else{
+        prevDist = 0.0f;
     }
     
 }
@@ -404,6 +423,7 @@
 		
         //idle
         idleTicker = 0;
+        prevDist = 0.0f;
         
 		//accel
 		currAccel=lastAccel=V3();

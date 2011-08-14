@@ -62,8 +62,6 @@
         return;   
     }
     
-  
-    
     [self setupTiming];
     [self setupHud];
     [self setupScene];
@@ -74,10 +72,6 @@
     [self setupBuffers];
     [self loadShaders];
     [self loadTextures];
-
-    
-    
-
 
 }
 
@@ -104,8 +98,15 @@
 
 - (void) update{
    
+    
+    //input
+    [touchController update];
+    
     //timing
     [self updateTiming];
+    
+    //scene
+    [self updateScene];
     
     //camera stuff
     [self updateCamera];
@@ -113,19 +114,17 @@
     //render
     [self drawFrame];
     
-    //input
-    [self updateInput];
-    
 
+    
     
 }
 ////////////
 /* TIMING */
 ////////////
+@synthesize perfTimer;
 - (BOOL) setupTiming {
     
-    perfTimer = [[[Timer alloc] init] retain];
-    ticks = 0;
+    self.perfTimer = [[Timer alloc] init];
     
     return true;
 }
@@ -137,10 +136,9 @@
 }
 - (void) updateTiming{
     
-    //int fps = [perfTimer endTiming:nil];
+    [perfTimer endTiming:nil];
     [perfTimer startTiming];
     [perfTimer tick];
-    ticks++;
 
 }
 
@@ -154,7 +152,9 @@
 - (BOOL) setupHud{
     
     //common
+    float shade = 0.1f;
     UIFont* labelFont = [UIFont fontWithName:@"Arial" size:12.0f];
+    UIColor* backColor = [UIColor colorWithRed:shade green:shade blue:shade alpha:1.0f];
     
     //init the UIView that we will add HUD controls to
     self.hudView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 768.0f, 1024.0f)];
@@ -162,14 +162,14 @@
     self.emailLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 768.0f, 16.0f)];
     [emailLabel setTextColor:[UIColor yellowColor]];
     [emailLabel setTextAlignment:UITextAlignmentCenter];
-    [emailLabel setBackgroundColor:[UIColor darkGrayColor]];
+    [emailLabel setBackgroundColor:backColor];
     [emailLabel setText:@"Aaron Geisler @ slothproductions.org"];
     [emailLabel setFont:labelFont];
     
     self.controlsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 1024.0f - 16.0f, 768.0f, 16.0f)];
     [controlsLabel setTextColor:[UIColor yellowColor]];
     [controlsLabel setTextAlignment:UITextAlignmentCenter];
-    [controlsLabel setBackgroundColor:[UIColor darkGrayColor]];
+    [controlsLabel setBackgroundColor:backColor];
     [controlsLabel setFont:labelFont];
     [controlsLabel setText:@"[ drag to pan - pinch to zoom ]"];
     
@@ -763,12 +763,6 @@
 /////////////////////////////////
 /*TouchController communication*/
 /////////////////////////////////
-- (void) updateInput{
-    
-    //call step method on touch controller
-    [touchController update];
-    
-}
 - (void)linkTouchController:(TouchController*) linkedController{
 
 	touchController = linkedController;
@@ -858,10 +852,18 @@
 ///////////
 - (BOOL) setupScene {
     
+    angle = fRand() * twoPi;
+    lightDir = V3(1.0f, 0.0f, 0.0f);
     
-    lightDir = randUnit3(1.0f);
     
     return true;
+}
+- (void) updateScene {
+    
+    angle += 0.02f;
+    lightDir = V3(0.0f, cosf(angle), sinf(angle));
+    lightDir = unit3(&lightDir);
+    
 }
 
 - (BOOL) tearDownScene{
@@ -907,7 +909,7 @@
     
     //init camera
     cam = Camera();
-    cam.followPath(&origin, 24, 10.0f, 0.3f);
+    cam.followPath(&origin, 32, 9.5f, 0.3f);
     
     return true;
     

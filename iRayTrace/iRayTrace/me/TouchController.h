@@ -26,6 +26,7 @@
     uint64_t timingFactor;
     
     float pinchValue;
+    float prevDist;
 	
 	V3 currAccel,lastAccel;
 	BOOL shaken;

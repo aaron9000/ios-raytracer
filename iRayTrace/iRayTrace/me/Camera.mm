@@ -1,8 +1,8 @@
 #include "Camera.h"
 
 #define Sensitivity 0.0065f
-#define PanSpeed 0.12f
-#define FocusSpeed 0.1f
+#define PanSpeed 0.03f
+#define FocusSpeed 0.15f
 #define IdleTicks 50
 
 Camera::Camera(){
@@ -273,7 +273,7 @@ void Camera::reset(){
     pos = lastPos = V3(0.0f, 0.0f, 0.0f);
     
     //zoom
-    zoom = 0.5f;
+    zoom = 1.0f;
     
     
     //inactivity
