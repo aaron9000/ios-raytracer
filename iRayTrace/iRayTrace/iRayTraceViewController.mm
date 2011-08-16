@@ -126,6 +126,8 @@
     
     self.perfTimer = [[Timer alloc] init];
     
+    srand((uint)[perfTimer getTime]);
+    
     return true;
 }
 - (BOOL) tearDownTiming {
@@ -152,7 +154,7 @@
 - (BOOL) setupHud{
     
     //common
-    float shade = 0.1f;
+    float shade = 0.05f;
     UIFont* labelFont = [UIFont fontWithName:@"Arial" size:12.0f];
     UIColor* backColor = [UIColor colorWithRed:shade green:shade blue:shade alpha:1.0f];
     
@@ -904,6 +906,8 @@
     
 }
 - (BOOL) setupCamera{
+    
+    
     
     V3 origin = V3(0.0f, 0.0f, 0.0f);
     

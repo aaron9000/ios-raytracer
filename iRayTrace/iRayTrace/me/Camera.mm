@@ -2,7 +2,9 @@
 
 #define Sensitivity 0.0065f
 #define PanSpeed 0.03f
-#define FocusSpeed 0.15f
+
+//#define FocusSpeed 0.35f
+
 #define IdleTicks 50
 
 Camera::Camera(){
@@ -26,6 +28,8 @@ void Camera::followPath(V3* center, int nodes, float spacing, float speed){
     //if ok then start pathing!
     if (nodes > 4 && nodes < 128 && speed > 0.0f && spacing > speed){
 
+        //
+        
         //reset apth
         pathLength = 0;
         
@@ -36,7 +40,7 @@ void Camera::followPath(V3* center, int nodes, float spacing, float speed){
         for (k = 0; k < nodes; k++){
             
             //find position of new node
-            randDir = randUnit3(0.5f);
+            randDir = randUnit3(0.45f);
             randDir = mult3(&randDir, spacing);
             prev = add3(&prev, &randDir);
             
@@ -61,6 +65,10 @@ V3 Camera::getBezierPos(){
     //////////////////////
     //temp vars
     //////////////////////
+    
+    V3 oldPosition = pos;
+    
+    
     V3 bezierPos=V3();
     
     //one for each node
@@ -85,7 +93,7 @@ V3 Camera::getBezierPos(){
     //////////////////////
     
     //if we have a path
-    if (hasPath && pathSpeed > 0){
+    if (hasPath && pathSpeed > 0.0f){
         while (!done){
             
             //////////////////////
@@ -174,23 +182,16 @@ V3 Camera::getBezierPos(){
         
     }
     
+    float delta = dist3(&oldPosition, &bezierPos);
+    NSLog(@"%f", delta);
+    
     return(bezierPos);
 }
                     
 void Camera::control(float deltaX, float deltaY, bool panToOrigin, float targetZoom){
 
    //zooming
-    if (fabsf(targetZoom - zoom) < FocusSpeed){
-        zoom = targetZoom;
-    }else{
-        if ((targetZoom - zoom) > 0.0f){
-            zoom += FocusSpeed;
-        }else{
-            zoom -= FocusSpeed;
-        }
-    }
-    
-    
+    zoom = targetZoom;
     
     //auto centering
     if (panToOrigin){

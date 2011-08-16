@@ -52,8 +52,8 @@ void raySphereIntersect(Ray r, mediump vec4 sphereMat, highp vec4 sphereDef, ino
 	highp float k = (distFromRay * distFromRay) - (sphereDef.w * sphereDef.w);
 	highp float det = dotProd * dotProd - k;
 
-	//facing the right way
-	if (det <= 0.0)
+	//facing the right way and not inside the sphere
+	if (det <= 0.0 || distFromRay <= sphereDef.w)
 		return;
 
 	//ok to sqrt now
@@ -85,6 +85,42 @@ void raySphereIntersect(Ray r, mediump vec4 sphereMat, highp vec4 sphereDef, ino
 	c.material = sphereMat;
 }
 
+void rayBoundaryIntersect(Ray r, highp vec4 sphereDef, inout Collision c){
+    
+    //math
+	highp float dotProd = dot(r.dir, (r.origin - sphereDef.xyz));
+	highp float distFromRay = distance(r.origin, sphereDef.xyz);
+	highp float k = (distFromRay * distFromRay) - (sphereDef.w * sphereDef.w);
+	highp float det = dotProd * dotProd - k;
+    
+	//ok to sqrt now
+	det = sqrt(det);
+    
+	//calculate things
+	highp float i1 = (- dotProd - det);
+	highp float i2 = ((-dotProd) + det);
+    
+	//use i2 in this case
+	if (i1 <= 0.0)
+		i1 = HUGE;
+	
+	//find distance
+	highp float dist = min(i2, i1);
+    
+	//early distance return
+	if (dist <= 0.0 || c.dist < dist)
+		return;
+    
+	//////////////////////////////////
+	//-we actually have a collision-//
+	//////////////////////////////////
+    
+	//adjust collision
+	c.dist = dist;
+    c.intersectPos = r.dir * dist + r.origin;;
+	c.normal = normalize(c.intersectPos - sphereDef.xyz);
+	c.material = vec4(1.0, 1.0, 1.0, 0.0);
+}
 
 
 Collision intersectionCheck(Ray r){
@@ -103,7 +139,7 @@ Collision intersectionCheck(Ray r){
         raySphereIntersect(r, vec4(1.0, 1.0, 1.0, 0.8), vec4(0.0, 0.0, 0.0, 1), c);
     
         //enclosing sphere
-        raySphereIntersect(r, vec4(1.0, 1.0, 1.0, 0.0), vec4(-120.0, -40.0, 32.0, 256), c);
+        rayBoundaryIntersect(r, vec4(-120.0, -40.0, 32.0, 256), c);
 
 
 	return c;

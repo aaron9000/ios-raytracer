@@ -24,5 +24,5 @@
 - (void)tick;
 - (void)startTiming;
 - (int)endTiming:(NSString*) message;
-
+- (uint64_t) getTime;
 @end

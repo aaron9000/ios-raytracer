@@ -34,6 +34,9 @@
 - (void) tick{
     ticks++;
 }
+- (uint64_t) getTime {
+    return mach_absolute_time();
+}
 
 - (void)startTiming{
     //

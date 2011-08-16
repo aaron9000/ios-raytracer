@@ -17,6 +17,7 @@
 //consts
 #define MinPinch 0.45f
 #define MaxPinch 3.6f
+#define PinchRatio 0.01f
 #define MinPinchDist 8.0f
 #define MaxPinchDist 48.0f
 
@@ -142,26 +143,12 @@
 - (void) updatePinches{
     
     //check for and record 2 active touches
-    Touch* t = nil;
-    Touch* t1 = nil;
-    Touch* t2 = nil;
-    int i = 0;
-    int count = 0;
-    for (i = 0; i < HWMaxTouches; i++){
-        t = [self getTouchWithIndex:i];
-        if (t->down){
-            count++;
-            if (!t1){
-                t1 = t;
-            }else{
-                t2 = t;
-            }
-        }
-    }
+    int touches[5];
+    int count = [self getDown:touches];
     
-    //if we have active touches find the scale
-    if (t1 && t2){
-        
+    if (count == 2){
+        Touch* t1 = [self getTouchWithIndex:touches[0]];
+        Touch* t2 = [self getTouchWithIndex:touches[1]];
         
         float dist = dist2(&t1->pos, &t2->pos);
         
@@ -178,13 +165,11 @@
             delta = (fabs(delta) / delta) * MaxPinchDist;
         
         
-        float ratio = delta * 0.01f;
+        float ratio = delta * PinchRatio;
         pinchValue += ratio;
         pinchValue = MAX(MinPinch, pinchValue);
         pinchValue = MIN(MaxPinch, pinchValue);
         
-        NSLog(@"%f", delta);
-
         //update prev dist
         prevDist = dist;
 
