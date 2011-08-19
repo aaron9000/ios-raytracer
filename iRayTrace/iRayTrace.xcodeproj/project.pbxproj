@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		93105F2F13FDEEDE00C9AF1A /* BezierPath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93105F2D13FDEEDE00C9AF1A /* BezierPath.mm */; };
 		9315D81B13D5417A001B1A70 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9315D81A13D5417A001B1A70 /* UIKit.framework */; };
 		9315D81D13D5417A001B1A70 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9315D81C13D5417A001B1A70 /* Foundation.framework */; };
 		9315D81F13D5417A001B1A70 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9315D81E13D5417A001B1A70 /* CoreGraphics.framework */; };
@@ -45,6 +46,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		93105F2D13FDEEDE00C9AF1A /* BezierPath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = BezierPath.mm; path = me/BezierPath.mm; sourceTree = "<group>"; };
+		93105F2E13FDEEDE00C9AF1A /* BezierPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BezierPath.h; path = me/BezierPath.h; sourceTree = "<group>"; };
 		9315D81613D5417A001B1A70 /* iRayTrace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iRayTrace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9315D81A13D5417A001B1A70 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9315D81C13D5417A001B1A70 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -271,6 +274,8 @@
 				93EFCD1913E06E8D00EF3DB6 /* V2.mm */,
 				93EFCD1A13E06E8D00EF3DB6 /* V3.h */,
 				93EFCD1B13E06E8D00EF3DB6 /* V3.mm */,
+				93105F2E13FDEEDE00C9AF1A /* BezierPath.h */,
+				93105F2D13FDEEDE00C9AF1A /* BezierPath.mm */,
 			);
 			name = me;
 			sourceTree = "<group>";
@@ -382,6 +387,7 @@
 				93EFCD2113E06E8D00EF3DB6 /* V2.mm in Sources */,
 				93EFCD2213E06E8D00EF3DB6 /* V3.mm in Sources */,
 				93D7860C13E312E600E97A99 /* Timer.mm in Sources */,
+				93105F2F13FDEEDE00C9AF1A /* BezierPath.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
