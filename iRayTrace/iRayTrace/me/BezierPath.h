@@ -13,8 +13,6 @@
 class BezierPath{
 public:
     
-    //positional
-    V3 pos,lastPos;
     
     //bezier
     float pathSpeed;
@@ -31,7 +29,7 @@ public:
     BezierPath();
     
     //methods
-    void followPath(V3* center, int nodes, float spacing, float speed);
+    void createPath(V3* center, int nodes, float spacing, float speed);
     V3 getBezierPos();
     void control(float deltaX, float deltaY, bool panToOrigin, float targetZoom);    
     void reset();

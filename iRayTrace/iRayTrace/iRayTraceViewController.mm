@@ -900,8 +900,6 @@
     //update camera object with input
     cam.control(deltaX, deltaY, pan, touchController.pinchValue);
     
-    //follow path
-    cam.pos = cam.getBezierPos();
    
     
 }
@@ -913,7 +911,6 @@
     
     //init camera
     cam = Camera();
-    cam.followPath(&origin, 32, 9.5f, 0.3f);
     
     return true;
     
