@@ -16,8 +16,8 @@ public:
     
     //bezier
     float pathSpeed;
-    float currT;
-    unsigned int currNode;
+    float t;
+    unsigned int node;
     
     //path
     bool hasPath;
@@ -30,7 +30,8 @@ public:
     
     //methods
     void createPath(V3* center, int nodes, float spacing, float speed);
-    V3 getBezierPos();
+    V3 getBezierPos(float dt, bool copy);
+    V3 getPathPos();
     void control(float deltaX, float deltaY, bool panToOrigin, float targetZoom);    
     void reset();
     

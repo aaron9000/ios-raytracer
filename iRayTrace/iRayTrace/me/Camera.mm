@@ -82,7 +82,8 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin, float targetZ
     
     
     //follow path
-    pos = path.getBezierPos();
+    pos = path.getPathPos();
+    
 }
        
 
@@ -126,6 +127,6 @@ void Camera::reset(){
     //bezier path
     V3 origin = V3();
     path = BezierPath();
-    path.createPath(&origin, 24, 9.0f, 0.1f);
+    path.createPath(&origin, 24, 8.0f, 0.1f);
 }
     
