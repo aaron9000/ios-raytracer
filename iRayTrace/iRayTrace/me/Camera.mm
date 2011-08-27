@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 #define Sensitivity 0.0065f
-#define PanSpeed 0.03f
+#define PanSpeed 0.01f
 
 //#define FocusSpeed 0.35f
 
@@ -35,9 +35,7 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin, float targetZ
         V2 origin = V2();
 
         //we are idle
-        idleTicker++;
-        if (idleTicker > IdleTicks)
-            idleTicker = IdleTicks;
+        idleTicker = MAX(idleTicker++, IdleTicks);
         
         //find idle ratio
         float idleRatio = (float)idleTicker / (float)IdleTicks;
@@ -98,7 +96,7 @@ float Camera::constrainLong(float longitude){
 }
 
 float Camera::constrainLat(float latitude){
-    float amt = halfPi * 0.95f;
+    float amt = halfPi * 0.975f;
     if (latitude <= -amt)
         latitude = -amt; 
     if (latitude >= amt)
@@ -127,6 +125,6 @@ void Camera::reset(){
     //bezier path
     V3 origin = V3();
     path = BezierPath();
-    path.createPath(&origin, 24, 8.0f, 0.1f);
+    path.createPath(&origin, 20, 4.0f, 0.08f);
 }
     

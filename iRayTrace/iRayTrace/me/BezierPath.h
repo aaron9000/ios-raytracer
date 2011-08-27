@@ -16,6 +16,7 @@ public:
     
     //bezier
     float pathSpeed;
+    float nodeSpacing;
     float t;
     unsigned int node;
     
@@ -34,6 +35,9 @@ public:
     V3 getPathPos();
     void control(float deltaX, float deltaY, bool panToOrigin, float targetZoom);    
     void reset();
+    
+    //helpers
+    unsigned int getNextNode(unsigned int node);
     
 private:
 };

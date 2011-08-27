@@ -40,15 +40,14 @@ V3 unit3(V3* a){
 V3 cross3( V3* a, V3* b ) {
 	return  V3((b->y * a->z) - (b->z * a->y), (b->z * a->x) - (b->x * a->z), (b->x * a->y) - (b->y * a->x));
 }
-V3 randUnit3(float zScale){
+V3 randUnit3(){
     float phi = fRand() * twoPi;
     float z = (2.0f * fRand()) - 1.0f;
     float cosPhi = cosf(phi);
     float sinPhi = sinf(phi);
-    V3 vec = V3(cosPhi, sinPhi, 0.0f);
+    V3 vec = V3(cosPhi, sinPhi, z);
     vec = mult3(&vec, sqrtf(1.0f - (z * z)));
-    vec.z = z * zScale;
-    vec = unit3(&vec);
+
 	return(vec);
 }
 V3 sphericalToUnit(float longitude, float latitude){

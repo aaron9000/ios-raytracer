@@ -48,6 +48,8 @@
 //do not change
 #define HWMaxTouches 5
 
+#define LightRotateSpeed 0.015f
+
 //hud
 #define HudAlpha 0.35f
 
@@ -98,6 +100,8 @@
 
 - (void) update{
    
+    //camera stuff
+    [self updateCamera];
     
     //input
     [touchController update];
@@ -107,9 +111,6 @@
     
     //scene
     [self updateScene];
-    
-    //camera stuff
-    [self updateCamera];
     
     //render
     [self drawFrame];
@@ -862,7 +863,7 @@
 }
 - (void) updateScene {
     
-    angle += 0.02f;
+    angle += LightRotateSpeed;
     lightDir = V3(0.0f, cosf(angle), sinf(angle));
     lightDir = unit3(&lightDir);
     
@@ -894,6 +895,13 @@
             deltaY = touch->currVelocity.y;
             pan = false;
         }
+    }
+    
+    
+    //double tap path reset
+    if ([touchController getDoubleTaps:nil] > 0){
+        cam.reset();
+        
     }
     
     

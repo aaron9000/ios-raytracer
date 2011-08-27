@@ -8,19 +8,28 @@
 
 #include "BezierPath.h"
 
+#define LengthEstimationSteps 50
+#define PathScaleZ 0.5f
+#define PathSmoothIterations 5
 
 BezierPath::BezierPath(){
     reset();
 }
 void BezierPath::createPath(V3* center, int nodes, float spacing, float speed){
     
+    
     //if ok then start pathing!
     if (nodes > 4 && nodes < MaxPathLength && speed > 0.0f && spacing > speed){
         
-        //
+        //reset everything
+        reset();
         
-        //reset apth
-        pathLength = 0;
+        //set vars
+        nodeSpacing = spacing;
+        pathSpeed = speed;
+        node = 0;
+        t = 0.0f;
+        hasPath = true;
         
         //make path
         int k;
@@ -29,44 +38,105 @@ void BezierPath::createPath(V3* center, int nodes, float spacing, float speed){
         for (k = 0; k < nodes; k++){
             
             //find position of new node
-            randDir = randUnit3(0.45f);
+            randDir = randUnit3();
+            randDir.z *= PathScaleZ;
+            randDir = unit3(&randDir);
             randDir = mult3(&randDir, spacing);
             prev = add3(&prev, &randDir);
             
-            ////add to path
+            //add to path
             path[pathLength] = prev;
             pathLength++;
             
         }
         
-        //path position
-        pathSpeed = speed;
-        node = 0;
-        t = 0.0f;
-        hasPath = true;
+        //verlet the points a bit
+        float dist = 0.0f;
+        float offsetMag = 0.0f;
+        int j = 0;
+        int z = 0;
+        V3 n0 = V3();
+        V3 n1 = V3();
+        V3 delta = V3();
+        for (z = 0; z < PathSmoothIterations; z++){
+            for (k = 0; k < pathLength; k++){
+                n0 = path[k];
+                for (j = k + 1; j < pathLength; j++){
+                    n1 = path[j];
+                    dist = dist3(&n0, &n1);
+                    offsetMag = nodeSpacing - dist;
+                    if (offsetMag > 0.0f){
+                        //do verlet
+                        delta = sub3(&n0, &n1);
+                        delta = unit3(&delta);
+                        delta = mult3(&delta, (nodeSpacing - dist) * 0.5f);
+                        path[k] = add3(&path[k], &delta);
+                        path[j] = sub3(&path[j], &delta);
+                        
+                    }
+                }
+            }
+        }
+        
+        V3 pos = V3();
+        for (k = 0; k < pathLength; k++){
+            pos = path[k];
+            NSLog(@"%f  %f  %f", pos.x, pos.y, pos.z);
+        }
         
     }else{
         NSLog(@"Camera: bad path args \n");
     }
 }
 V3 BezierPath::getPathPos(){
-    //iteratively find the distance
-    const float stepSize = 0.005f;
-    float testDt = 0.0f;
-    float testDist = 0.0f;
+    
+    
+    //estimate
+    float idealDt = (pathSpeed / nodeSpacing);
+    float idealStepDistance = (pathSpeed / LengthEstimationSteps);
+
+    //test estimated dt
     V3 oldPos = getBezierPos(0.0f, false);
-    V3 testPos = oldPos;
+    V3 testPos = getBezierPos(idealDt, false);
+    float testDist = dist3(&testPos, &oldPos);
+    
+    //refine dt estimate
+    idealDt /= testDist / idealStepDistance;
+
+    //iteratively find the distance
+    float dtAccum = 0.0f;
+    float distAccum = 0.0f;
+    
+    //default return val
+    testPos = oldPos;
+
     int i = 0;
-    for (i = 0; i < 100; i++){
+    int steps = LengthEstimationSteps * 2;
+    for (i = 0; i < steps; i++){
+            
+        
+        //get points
+        if (i != 0) {
+            oldPos = testPos;
+            testPos = getBezierPos(dtAccum, false);
+            testDist = dist3(&testPos, &oldPos);
+        } else {
+            testDist = 0.0f;
+            
+        }
+        
         //increment and test
-        testDt += stepSize;
-        testPos = getBezierPos(testDt, false);
-        testDist += dist3(&testPos, &oldPos);
-        oldPos = testPos;
-        if (testDist > pathSpeed)
-            return getBezierPos(testDt, true);
+        dtAccum += idealDt;
+        distAccum += testDist;
+
+        //weve reached our goal
+        if (distAccum > pathSpeed){
+            getBezierPos(dtAccum, true);
+            return testPos;
+        }
+
     }
-    return oldPos;
+    return testPos;
     
 }
 V3 BezierPath::getBezierPos(float dt, bool copy){
@@ -96,10 +166,7 @@ V3 BezierPath::getBezierPos(float dt, bool copy){
         currT += dt;
         if (currT >= 1.0f){
             currT -= 1.0f;
-            currNode++;
-            if (currNode >= pathLength)
-                currNode = 0;
-            
+            currNode = getNextNode(currNode);
         }
     
         //get nodes we are working with
@@ -172,8 +239,16 @@ void BezierPath::reset(){
     pathLength = 0;
     
     int i;
-    for (i = 0; i < MaxPathLength; i++){
+    for (i = 0; i < MaxPathLength; i++)
         path[i] = V3();
-    }
+    
 	
+}
+
+unsigned int BezierPath::getNextNode(unsigned int node){
+    node++;
+    if (node >= pathLength)
+        node = 0;
+    
+    return node;
 }
