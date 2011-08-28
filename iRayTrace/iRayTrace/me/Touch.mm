@@ -2,6 +2,8 @@
 
 //touch class
 Touch::Touch(){
+    
+    //
 	hasOwner = false;
 	initialPos = pos = currVelocity = V2();
 	down = doubleTapped = tapping = false;

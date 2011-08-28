@@ -8,7 +8,12 @@
 #import "MathHelper.h"
 #import "mat4.h"
 
+
+//consts
 #define MaxPathLength 128
+#define LengthEstimationSteps 50
+#define PathScaleZ 0.5f
+#define PathSmoothIterations 5
 
 class BezierPath{
 public:

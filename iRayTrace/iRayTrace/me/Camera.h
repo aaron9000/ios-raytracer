@@ -1,6 +1,13 @@
 #import "MathHelper.h"
 #import "mat4.h"
 #import "BezierPath.h"
+
+//consts
+#define Sensitivity 0.0065f
+#define PanSpeed 0.01f
+#define IdleTicks 50
+
+
 class Camera{
 	public:
 		

@@ -38,19 +38,10 @@
 /////////////
 //CONSTANTS//
 /////////////
-//must be less than 512 x 512
-#define INTERNAL_WIDTH 384
-#define INTERNAL_HEIGHT 512
-
-//must be integer >= 1
-#define FRAMERATE_DIVIDER 3
-
-//do not change
-#define HWMaxTouches 5
-
+#define InternalWidth 384
+#define InternalHeight 512
+#define FramerateDivider 3
 #define LightRotateSpeed 0.015f
-
-//hud
 #define HudAlpha 0.35f
 
 ////////
@@ -91,11 +82,7 @@
     [self tearDownHud];
     [self tearDownTiming];
     
-    
-
     [super dealloc];
-    
-    
 }
 
 - (void) update{
@@ -114,9 +101,6 @@
     
     //render
     [self drawFrame];
-    
-
-    
     
 }
 ////////////
@@ -142,7 +126,6 @@
     [perfTimer endTiming:nil];
     [perfTimer startTiming];
     [perfTimer tick];
-
 }
 
 /////////////
@@ -174,8 +157,7 @@
     [controlsLabel setTextAlignment:UITextAlignmentCenter];
     [controlsLabel setBackgroundColor:backColor];
     [controlsLabel setFont:labelFont];
-    [controlsLabel setText:@"[ drag to pan - pinch to zoom ]"];
-    
+    [controlsLabel setText:@"[ drag to pan - pinch to zoom - tap for new path ]"];
     
     //add controls to the view
     [hudView addSubview:controlsLabel];
@@ -184,8 +166,6 @@
     
     //add as a subview over the rendered scene
     [self.view addSubview:hudView];
-    
- 
     
     return true;
     
@@ -324,7 +304,7 @@
 - (BOOL) loadTextures {
     
     //init internal texture
-    internalTexture = [[Texture2D alloc] initWithData:0 pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:512 pixelsHigh:512 contentSize:CGSizeMake(INTERNAL_WIDTH , INTERNAL_HEIGHT)];
+    internalTexture = [[Texture2D alloc] initWithData:0 pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:512 pixelsHigh:512 contentSize:CGSizeMake(InternalWidth , InternalHeight)];
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, halfFrameBuffer);
     glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D , internalTexture.name, 0);
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, 1);
@@ -352,7 +332,7 @@
 - (BOOL) setupDisplayLink{
     
     animating = NO;
-    animationFrameInterval = FRAMERATE_DIVIDER;
+    animationFrameInterval = FramerateDivider;
     displayLink = nil;
     
     return true;   
@@ -428,11 +408,13 @@
         1.0f,  1.0f,
     };
     
+    float u = InternalWidth/512.0f;
+    float v = InternalHeight/512.0f;
     GLfloat texCoords[] = {
         0.0f, 0.0f,
-        INTERNAL_WIDTH/512.0f, 0.0f,
-        0.0f, INTERNAL_HEIGHT/512.0f,
-        INTERNAL_WIDTH/512.0f, INTERNAL_HEIGHT/512.0f,
+        u,    0.0f,
+        0.0f, v,
+        u,    v,
         
     };
     GLfloat x = 0.0f;
@@ -444,21 +426,18 @@
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
-    
     ////////////////////////////////
     //RENDER TO TEXTURE INTERNALLY//
     ////////////////////////////////
     //setup
     glUseProgram(renderShader);
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, halfFrameBuffer);
-    glViewport(0, 0, INTERNAL_WIDTH, INTERNAL_HEIGHT);
-    
+    glViewport(0, 0, InternalWidth, InternalHeight);
     
     //vertex attribute
     vertex = [[renderAttributeDict valueForKey:@"vertex"] unsignedIntValue];
     glEnableVertexAttribArray(vertex);
     glVertexAttribPointer(vertex, 3, GL_FLOAT, 0, 0, screenVertices);
-    
     
     //set neg light dir uniform
     x = lightDir.x;
@@ -858,7 +837,6 @@
     angle = fRand() * twoPi;
     lightDir = V3(1.0f, 0.0f, 0.0f);
     
-    
     return true;
 }
 - (void) updateScene {
@@ -897,24 +875,17 @@
         }
     }
     
-    
     //double tap path reset
     if ([touchController getDoubleTaps:nil] > 0){
         cam.reset();
         
     }
     
-    
     //update camera object with input
     cam.control(deltaX, deltaY, pan, touchController.pinchValue);
-    
-   
-    
 }
 - (BOOL) setupCamera{
-    
-    
-    
+
     V3 origin = V3(0.0f, 0.0f, 0.0f);
     
     //init camera

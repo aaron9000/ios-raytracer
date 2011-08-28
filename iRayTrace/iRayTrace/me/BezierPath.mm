@@ -8,85 +8,75 @@
 
 #include "BezierPath.h"
 
-#define LengthEstimationSteps 50
-#define PathScaleZ 0.5f
-#define PathSmoothIterations 5
-
 BezierPath::BezierPath(){
     reset();
 }
 void BezierPath::createPath(V3* center, int nodes, float spacing, float speed){
     
     
-    //if ok then start pathing!
-    if (nodes > 4 && nodes < MaxPathLength && speed > 0.0f && spacing > speed){
+    //invaid paths
+    if (nodes < 4 || nodes > MaxPathLength || speed <= 0.0f || spacing <= speed){
+        NSLog(@"Camera: bad path args \n");
+        return;
+    }
+
+    //reset everything
+    reset();
+    
+    //set vars
+    nodeSpacing = spacing;
+    pathSpeed = speed;
+    node = 0;
+    t = 0.0f;
+    hasPath = true;
+    
+    //make path
+    int k;
+    V3 prev = *center;
+    V3 randDir = V3();
+    for (k = 0; k < nodes; k++){
         
-        //reset everything
-        reset();
+        //find position of new node
+        randDir = randUnit3();
+        randDir.z *= PathScaleZ;
+        randDir = unit3(&randDir);
+        randDir = mult3(&randDir, spacing);
+        prev = add3(&prev, &randDir);
         
-        //set vars
-        nodeSpacing = spacing;
-        pathSpeed = speed;
-        node = 0;
-        t = 0.0f;
-        hasPath = true;
+        //add to path
+        path[pathLength] = prev;
+        pathLength++;
         
-        //make path
-        int k;
-        V3 prev = *center;
-        V3 randDir = V3();
-        for (k = 0; k < nodes; k++){
-            
-            //find position of new node
-            randDir = randUnit3();
-            randDir.z *= PathScaleZ;
-            randDir = unit3(&randDir);
-            randDir = mult3(&randDir, spacing);
-            prev = add3(&prev, &randDir);
-            
-            //add to path
-            path[pathLength] = prev;
-            pathLength++;
-            
-        }
-        
-        //verlet the points a bit
-        float dist = 0.0f;
-        float offsetMag = 0.0f;
-        int j = 0;
-        int z = 0;
-        V3 n0 = V3();
-        V3 n1 = V3();
-        V3 delta = V3();
-        for (z = 0; z < PathSmoothIterations; z++){
-            for (k = 0; k < pathLength; k++){
-                n0 = path[k];
-                for (j = k + 1; j < pathLength; j++){
-                    n1 = path[j];
-                    dist = dist3(&n0, &n1);
-                    offsetMag = nodeSpacing - dist;
-                    if (offsetMag > 0.0f){
-                        //do verlet
-                        delta = sub3(&n0, &n1);
-                        delta = unit3(&delta);
-                        delta = mult3(&delta, (nodeSpacing - dist) * 0.5f);
-                        path[k] = add3(&path[k], &delta);
-                        path[j] = sub3(&path[j], &delta);
-                        
-                    }
+    }
+    
+    //verlet the points a bit
+    float dist = 0.0f;
+    float offsetMag = 0.0f;
+    int j = 0;
+    int z = 0;
+    V3 n0 = V3();
+    V3 n1 = V3();
+    V3 delta = V3();
+    for (z = 0; z < PathSmoothIterations; z++){
+        for (k = 0; k < pathLength; k++){
+            n0 = path[k];
+            for (j = k + 1; j < pathLength; j++){
+                n1 = path[j];
+                dist = dist3(&n0, &n1);
+                offsetMag = nodeSpacing - dist;
+                if (offsetMag > 0.0f){
+                    //do verlet
+                    delta = sub3(&n0, &n1);
+                    delta = unit3(&delta);
+                    delta = mult3(&delta, (nodeSpacing - dist) * 0.5f);
+                    path[k] = add3(&path[k], &delta);
+                    path[j] = sub3(&path[j], &delta);
+                    
                 }
             }
         }
-        
-        V3 pos = V3();
-        for (k = 0; k < pathLength; k++){
-            pos = path[k];
-            NSLog(@"%f  %f  %f", pos.x, pos.y, pos.z);
-        }
-        
-    }else{
-        NSLog(@"Camera: bad path args \n");
     }
+
 }
 V3 BezierPath::getPathPos(){
     
@@ -217,12 +207,6 @@ V3 BezierPath::getBezierPos(float dt, bool copy){
         }
             
     }
-    
-    
-    //REMOVE ME LATER//
-    //float delta = dist3(&oldPosition, &bezierPos);
-    //NSLog(@"%f", delta);
-    //
     
     return(bezierPos);
 }

@@ -9,17 +9,6 @@
 
 #import "TouchController.h"
 
-#define HWMaxTouches 5
-#define ShakeGs 2
-#define ShakeDeltaG 2
-
-
-//consts
-#define MinPinch 0.45f
-#define MaxPinch 3.6f
-#define PinchRatio 0.01f
-#define MinPinchDist 8.0f
-#define MaxPinchDist 48.0f
 
 @implementation TouchController
 @synthesize idleTicker;

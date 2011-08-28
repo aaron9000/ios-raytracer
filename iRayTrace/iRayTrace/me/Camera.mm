@@ -1,11 +1,5 @@
 #include "Camera.h"
 
-#define Sensitivity 0.0065f
-#define PanSpeed 0.01f
-
-//#define FocusSpeed 0.35f
-
-#define IdleTicks 50
 
 Camera::Camera(){
     reset();
