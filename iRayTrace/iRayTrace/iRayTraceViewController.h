@@ -29,6 +29,7 @@
     UIView* hudView;
     UILabel* controlsLabel;
     UILabel* emailLabel;
+    UILabel* titleLabel;
     
     //shaders
     GLuint renderShader;
@@ -73,6 +74,10 @@
 //helpers
 - (float)getScreenDistance;
 
+//device meta
+- (bool) checkDevice;
+
+
 //timing
 @property (retain, nonatomic) Timer* perfTimer;
 - (BOOL) setupTiming;
@@ -83,6 +88,7 @@
 @property (retain, nonatomic) UIView* hudView;
 @property (retain, nonatomic) UILabel* controlsLabel;
 @property (retain, nonatomic) UILabel* emailLabel;
+@property (retain, nonatomic) UILabel* titleLabel;
 - (BOOL) setupHud;
 - (BOOL) tearDownHud;
 
@@ -123,13 +129,6 @@
 - (BOOL)setupDisplayLink;
 - (void)startAnimation;
 - (void)stopAnimation;
-
-//event handlers
-- (BOOL)setupNotifications;
-- (BOOL)tearDownNotifications;
-- (void)applicationWillResignActive:(NSNotification *)notification;
-- (void)applicationDidBecomeActive:(NSNotification *)notification;
-- (void)applicationWillTerminate:(NSNotification *)notification;
 
 //touch and input
 @property (readonly, nonatomic) UIAccelerometer* accelerometer;

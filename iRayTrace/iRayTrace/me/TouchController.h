@@ -7,6 +7,8 @@
 //
 #ifndef TOUCHCONTROLLER
 #define TOUCHCONTROLLER
+
+//includes
 #import <UIKit/UIKit.h>
 #import <CoreFoundation/CoreFoundation.h>
 #import <mach/mach_time.h>
@@ -20,8 +22,8 @@
 #define HWMaxTouches 5
 #define ShakeGs 2
 #define ShakeDeltaG 2
-#define MinPinch 0.45f
-#define MaxPinch 3.6f
+#define MinPinch 1.0f
+#define MaxPinch 5.0f
 #define PinchRatio 0.01f
 #define MinPinchDist 8.0f
 #define MaxPinchDist 48.0f

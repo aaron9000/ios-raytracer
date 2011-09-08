@@ -370,7 +370,7 @@
     if ([self getDown:nil] == 0)
         idleTicker++;
     
-    [self recievedTaps];
+    //[self recievedTaps];
     
     [self updatePinches];
     

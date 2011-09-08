@@ -1,13 +1,9 @@
-//
-//  Timer.h
-//  iRayTrace
-//
-//  Created by Aaron on 7/29/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
-//
+
+#ifndef TIMER
+#define TIMER
 
 #import <Foundation/Foundation.h>
-#include <mach/mach_time.h>
+#import <mach/mach_time.h>
 
 @interface Timer : NSObject {
 @private
@@ -26,3 +22,5 @@
 - (int)endTiming:(NSString*) message;
 - (uint64_t) getTime;
 @end
+
+#endif

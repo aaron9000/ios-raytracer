@@ -1,3 +1,7 @@
+
+#ifndef CAMERA
+#define CAMERA
+
 #import "MathHelper.h"
 #import "mat4.h"
 #import "BezierPath.h"
@@ -30,7 +34,7 @@ class Camera{
 
         //constructor
         Camera();
-        Camera(V3 position, float inLongitude); 
+        Camera(V3* position, float inLongitude); 
         
         //methods
         void control(float deltaX, float deltaY, bool panToOrigin, float targetZoom);
@@ -41,3 +45,5 @@ class Camera{
             
 	private:
 };
+
+#endif

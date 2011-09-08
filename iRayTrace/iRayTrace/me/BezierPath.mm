@@ -11,7 +11,7 @@
 BezierPath::BezierPath(){
     reset();
 }
-void BezierPath::createPath(V3* center, int nodes, float spacing, float speed){
+void BezierPath::createPath(V3* center, int nodes, float spacing, float speed, float rotation){
     
     
     //invaid paths
@@ -19,7 +19,7 @@ void BezierPath::createPath(V3* center, int nodes, float spacing, float speed){
         NSLog(@"Camera: bad path args \n");
         return;
     }
-
+    
     //reset everything
     reset();
     
@@ -32,16 +32,29 @@ void BezierPath::createPath(V3* center, int nodes, float spacing, float speed){
     
     //make path
     int k;
+    float radius = 0.0f;
+    float rot = 0.0f;
+    V2 c = V2(center->x, center->y);
+    V2 p = V2();
     V3 prev = *center;
     V3 randDir = V3();
     for (k = 0; k < nodes; k++){
         
-        //find position of new node
+        //randomly place new node in radius around previous
         randDir = randUnit3();
         randDir.z *= PathScaleZ;
         randDir = unit3(&randDir);
         randDir = mult3(&randDir, spacing);
         prev = add3(&prev, &randDir);
+        
+        //2D rotate a bit
+        p.x = prev.x;
+        p.y = prev.y;
+        radius = dist2(&c, &p);
+        rot = dir2(&c, &p);
+        rot += rotation;
+        prev.x = c.x + radius * cosf(rot);
+        prev.y = c.y + radius * sinf(rot);
         
         //add to path
         path[pathLength] = prev;
@@ -68,7 +81,7 @@ void BezierPath::createPath(V3* center, int nodes, float spacing, float speed){
                     //do verlet
                     delta = sub3(&n0, &n1);
                     delta = unit3(&delta);
-                    delta = mult3(&delta, (nodeSpacing - dist) * 0.5f);
+                    delta = mult3(&delta, offsetMag * 0.5f);
                     path[k] = add3(&path[k], &delta);
                     path[j] = sub3(&path[j], &delta);
                     
@@ -76,15 +89,19 @@ void BezierPath::createPath(V3* center, int nodes, float spacing, float speed){
             }
         }
     }
-
+ 
+    for (k = 0; k < pathLength; k++){
+            NSLog(@"PATH NODE %f   %f   %f", path[k].x, path[k].y, path[k].z);
+        
+    }
 }
 V3 BezierPath::getPathPos(){
     
     
     //estimate
-    float idealDt = (pathSpeed / nodeSpacing);
+    float idealDt = (pathSpeed / (nodeSpacing * 4.0f));
     float idealStepDistance = (pathSpeed / LengthEstimationSteps);
-
+    
     //test estimated dt
     V3 oldPos = getBezierPos(0.0f, false);
     V3 testPos = getBezierPos(idealDt, false);
@@ -92,19 +109,17 @@ V3 BezierPath::getPathPos(){
     
     //refine dt estimate
     idealDt /= testDist / idealStepDistance;
-
+    
     //iteratively find the distance
     float dtAccum = 0.0f;
     float distAccum = 0.0f;
     
     //default return val
     testPos = oldPos;
-
+    
     int i = 0;
-    int steps = LengthEstimationSteps * 2;
+    int steps = LengthEstimationSteps * 3;
     for (i = 0; i < steps; i++){
-            
-        
         //get points
         if (i != 0) {
             oldPos = testPos;
@@ -112,35 +127,31 @@ V3 BezierPath::getPathPos(){
             testDist = dist3(&testPos, &oldPos);
         } else {
             testDist = 0.0f;
-            
         }
         
         //increment and test
-        dtAccum += idealDt;
         distAccum += testDist;
-
+        
         //weve reached our goal
         if (distAccum > pathSpeed){
             getBezierPos(dtAccum, true);
             return testPos;
+        }else{
+            dtAccum += idealDt;
         }
-
+        
     }
     return testPos;
     
 }
 V3 BezierPath::getBezierPos(float dt, bool copy){
-
+    
     
     V3 bezierPos=V3();
     
     //one for each node
     unsigned int nodeIndex[4];
     V3 nodePos[4];
-    
-    //ratios
-    float f0, f1, f2, f3;
-    Vec4 px, py, pz;
     
     //local
     float currT = t;
@@ -158,7 +169,7 @@ V3 BezierPath::getBezierPos(float dt, bool copy){
             currT -= 1.0f;
             currNode = getNextNode(currNode);
         }
-    
+        
         //get nodes we are working with
         for (i = 0; i < 4; i++){
             //indices
@@ -173,42 +184,45 @@ V3 BezierPath::getBezierPos(float dt, bool copy){
             //pos
             nodePos[i] = path[nodeIndex[i]];
         }
-          
-        //UNIFORM CUBIC B SPLINE////////////////////
-        float t1 = currT;
-        float t2 = t1 * t1;
-        float t3 = t2 * t1;
-        
-        f0 = -t3 + 3.0f * t2 -3.0f * t1 + 1.0f;
-        f1 = 3.0f * t3 -6.0f * t2 + 4.0f;
-        f2 = -3.0f * t3 + 3.0f * t2 + 3.0f * t1 + 1.0f;
-        f3 = t3;
-        
-        //times 1/6
-        float sixth = 1.0f / 6.0f;
-        f0 *= sixth;
-        f1 *= sixth;
-        f2 *= sixth;
-        f3 *= sixth;
-        
-        px = Vec4(nodePos[0].x, nodePos[1].x, nodePos[2].x, nodePos[3].x);
-        py = Vec4(nodePos[0].y, nodePos[1].y, nodePos[2].y, nodePos[3].y);
-        pz = Vec4(nodePos[0].z, nodePos[1].z, nodePos[2].z, nodePos[3].z);
         
         //get position
-        bezierPos.x = f0 * px[0] + f1 * px[1] + f2 * px[2] + f3 * px[3];
-        bezierPos.y = f0 * py[0] + f1 * py[1] + f2 * py[2] + f3 * py[3];
-        bezierPos.z = f0 * pz[0] + f1 * pz[1] + f2 * pz[2] + f3 * pz[3];
-        //UNIFORM CUBIC B SPLINE////////////////////
-
+        bezierPos = blend(&nodePos[0], &nodePos[1], &nodePos[2], &nodePos[3], currT);
+        
         if (copy){
+            NSLog(@"%f   %i", t, node);
             t = currT;
             node = currNode;
         }
-            
+        
     }
     
     return(bezierPos);
+}
+
+V3 BezierPath::blend(V3* x0, V3* x1, V3* x2, V3* x3, float t){
+    V3 ret = V3();
+    
+    float u = 1.0f - t;
+    float t2 = t * t;
+    float u2 = u * u;
+    float u3 = u2 * u;
+    float t3 = t2 * t;
+    
+    float b0 = u3 / 6.0f;
+    float b1 = (3.0f * t3 - 6.0f * t2 + 4.0f) / 6.0f;
+    float b2 = (-3.0f * t3 + 3.0f * t2 + 3.0f * t + 1.0f) / 6.0f;
+    float b3 = t3 / 6.0f;
+    
+    V3 p0 = mult3(x0, b0);
+    V3 p1 = mult3(x1, b1); 
+    V3 p2 = mult3(x2, b2); 
+    V3 p3 = mult3(x3, b3);
+    
+    ret = add3(&p0, &p1);
+    ret = add3(&ret, &p2);
+    ret = add3(&ret, &p3);
+    
+    return ret;
 }
 
 void BezierPath::reset(){
@@ -232,7 +246,7 @@ void BezierPath::reset(){
 unsigned int BezierPath::getNextNode(unsigned int node){
     node++;
     if (node >= pathLength)
-        node = 0;
+        node -=pathLength;
     
     return node;
 }

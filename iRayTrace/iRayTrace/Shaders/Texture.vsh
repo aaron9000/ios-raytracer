@@ -1,7 +1,7 @@
-attribute highp vec4 vertex;
-attribute highp vec4 uvCoord;
+attribute mediump vec4 vertex;
+attribute mediump vec4 uvCoord;
 
-varying highp vec2 textureCoordinate;
+varying mediump vec2 textureCoordinate;
 void main() {
     gl_Position = vertex;
     

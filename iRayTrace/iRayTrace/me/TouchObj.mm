@@ -21,7 +21,7 @@
 /*GENERIC*/
 ///////////
 - (id)init {
-    if (self = [super init]) {
+    if (self == [super init]) {
 		taps=0;
 		point = CGPointMake(0.0f,0.0f);
 	}

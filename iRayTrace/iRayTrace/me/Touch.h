@@ -1,6 +1,8 @@
 #ifndef TOUCH_H
 #define TOUCH_H
+
 #include "V2.h"
+
 //touch class for storing touch data
 class Touch{
 	public:

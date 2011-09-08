@@ -5,15 +5,21 @@ Camera::Camera(){
     reset();
 }
     
-Camera::Camera(V3 position,float inLongitude){
+Camera::Camera(V3* position, float inLongitude){
         
     reset();
 
     //pass in args
-    pos = lastPos = position;
+    pos = lastPos = *position;
     
     //point in default direction
     cameraLongitude = inLongitude;
+
+    //make a real path
+    float sceneRotationVelocity = (fRand() * 0.32f + 0.32f) * randSign();
+    path.createPath(position, 24, 1.5f, 0.065f, sceneRotationVelocity);
+    
+    NSLog(@"CAMERA START = %f %f %f", position->x,  position->y, position->z);
 }
     
                     
@@ -29,12 +35,13 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin, float targetZ
         V2 origin = V2();
 
         //we are idle
-        idleTicker = MAX(idleTicker++, IdleTicks);
+        idleTicker++;
+        idleTicker = MIN(idleTicker, IdleTicks);
         
         //find idle ratio
         float idleRatio = (float)idleTicker / (float)IdleTicks;
         idleRatio *= idleRatio;
-        
+          
         //longitude
         V2 pos2 = V2(pos.x, pos.y);
         float idealLongitude = constrainLong(dir2(&pos2, &origin));
@@ -53,28 +60,31 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin, float targetZ
         
     }else{
         
+        //zoom ratio
+        float zoomRatio = 1.0f / zoom;
+        
+        //no longer idle in this case
         if (fabs(deltaX) > 0.01f || fabs(deltaY) > 0.01f)
             idleTicker = 0;
             
         //update camrea
-        cameraLongitude += deltaX * Sensitivity;
-        cameraLatitude -= deltaY * Sensitivity;
+        cameraLongitude += deltaX * Sensitivity * zoomRatio;
+        cameraLatitude -= deltaY * Sensitivity * zoomRatio;
         
         //make sure they are in bounds
         cameraLongitude = constrainLong(cameraLongitude);
         cameraLatitude = constrainLat(cameraLatitude);
         
     }
-    
-
-    
+        
     //construct rotation matrix
     V3 unit = sphericalToUnit(cameraLongitude, cameraLatitude);
     cameraMat = fpsRotMat(&unit);
     
-    
     //follow path
     pos = path.getPathPos();
+
+    return;
     
 }
        
@@ -102,7 +112,7 @@ float Camera::constrainLat(float latitude){
 void Camera::reset(){
     
     //set pos to origin
-    pos = lastPos = V3(0.0f, 0.0f, 0.0f);
+    pos = lastPos = V3();
     
     //zoom
     zoom = 1.0f;
@@ -119,6 +129,6 @@ void Camera::reset(){
     //bezier path
     V3 origin = V3();
     path = BezierPath();
-    path.createPath(&origin, 20, 4.0f, 0.08f);
+   
 }
     

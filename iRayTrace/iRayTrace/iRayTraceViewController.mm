@@ -50,6 +50,16 @@
 - (void)viewDidLoad
 {
     
+    //check what device the user has
+    if (![self checkDevice]){
+        NSString* title = @"Unsupported Device";
+        NSString* message = @"You need an iPad 2 with iOS 4.3+ to run this app. Press home to exit the application.";
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:nil otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+        
+    }
+    
     if (!touchController){
         NSLog(@"touchController not linked");
         return;   
@@ -59,7 +69,6 @@
     [self setupHud];
     [self setupScene];
     [self setupGL];
-    [self setupNotifications];
     [self setupCamera];
     [self setupDisplayLink];
     [self setupBuffers];
@@ -74,9 +83,7 @@
     [self unloadTextures];
     [self unloadShaders];
     [self tearDownBuffers];
-    //[self tearDownDisplayLink]
     [self tearDownCamera];
-    [self tearDownNotifications];
     [self tearDownGL];
     [self tearDownScene];
     [self tearDownHud];
@@ -87,11 +94,13 @@
 
 - (void) update{
    
+    //input
+    [touchController update];
+    
     //camera stuff
     [self updateCamera];
     
-    //input
-    [touchController update];
+    [touchController recievedTaps];
     
     //timing
     [self updateTiming];
@@ -103,6 +112,50 @@
     [self drawFrame];
     
 }
+/////////////////
+/* DEVICE META */
+/////////////////
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	//Ok clicked
+    //kill program
+}
+- (bool) checkDevice{
+    
+	//scaling and hi res support
+	//UIScreen* screen = [UIScreen mainScreen];
+	//bool retina = (BOOL)screen.scale == 2.0f;
+    
+	//OS version
+	NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
+	float osVersion = [currSysVer floatValue];
+    
+	//what kind of device
+	NSString* model = [UIDevice currentDevice].model;
+	NSString* deviceType = @"Uknown";
+	if ([model rangeOfString:@"iPad"].location != NSNotFound)
+        deviceType=@"iPad";
+	if ([model rangeOfString:@"iPod"].location != NSNotFound)
+        deviceType=@"iPod";
+	if ([model rangeOfString:@"iPhone"].location != NSNotFound)
+        deviceType=@"iPhone";
+    
+    //device model
+    float modelNumber = 2.0f;
+    /* pull model number from modelString */
+    
+    //old version of iOS
+    if (osVersion < 4.3f)
+        return false;
+    
+    //not an iPad2
+    if (![deviceType isEqualToString:@"iPad"] || modelNumber < 2.0f)
+        return false;
+    
+    //default 
+    return true;
+}
+
+
 ////////////
 /* TIMING */
 ////////////
@@ -134,7 +187,7 @@
 @synthesize hudView;
 @synthesize controlsLabel;
 @synthesize emailLabel;
-
+@synthesize titleLabel;
 - (BOOL) setupHud{
     
     //common
@@ -145,14 +198,21 @@
     //init the UIView that we will add HUD controls to
     self.hudView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 768.0f, 1024.0f)];
     
-    self.emailLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 768.0f, 16.0f)];
+    self.emailLabel = [[UILabel alloc] initWithFrame:CGRectMake(768.0f - 168.0f, 0.0f, 168.0f, 16.0f)];
     [emailLabel setTextColor:[UIColor yellowColor]];
-    [emailLabel setTextAlignment:UITextAlignmentCenter];
+    [emailLabel setTextAlignment:UITextAlignmentRight];
     [emailLabel setBackgroundColor:backColor];
-    [emailLabel setText:@"Aaron Geisler @ slothproductions.org"];
+    [emailLabel setText:@"aaron.geisler.sloth@gmail.com"];
     [emailLabel setFont:labelFont];
     
-    self.controlsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 1024.0f - 16.0f, 768.0f, 16.0f)];
+    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 72.0f, 16.0f)];
+    [titleLabel setTextColor:[UIColor yellowColor]];
+    [titleLabel setTextAlignment:UITextAlignmentLeft];
+    [titleLabel setBackgroundColor:backColor];
+    [titleLabel setText:@"iSpheres 1.0"];
+    [titleLabel setFont:labelFont];
+    
+    self.controlsLabel = [[UILabel alloc] initWithFrame:CGRectMake(384.0f - 134.0f, 1024.0f - 16.0f, 268.0f, 16.0f)];
     [controlsLabel setTextColor:[UIColor yellowColor]];
     [controlsLabel setTextAlignment:UITextAlignmentCenter];
     [controlsLabel setBackgroundColor:backColor];
@@ -162,6 +222,7 @@
     //add controls to the view
     [hudView addSubview:controlsLabel];
     [hudView addSubview:emailLabel];
+    [hudView addSubview:titleLabel];
     [hudView setMultipleTouchEnabled:true]; 
     
     //add as a subview over the rendered scene
@@ -172,6 +233,10 @@
 }
 - (BOOL) tearDownHud{
 
+    [emailLabel release];
+    [titleLabel release];
+    [controlsLabel release];
+    
     return true;
 }
 
@@ -209,72 +274,6 @@
 	self.context = nil;	
     
     return true;
-}
-
-
-//////////////////
-//EVENT HANDLING//
-//////////////////
-- (BOOL) tearDownNotifications{
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    return true;
-}
-- (BOOL) setupNotifications {
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
-    
-    return true;
-}
-
-- (void)applicationWillResignActive:(NSNotification *)notification  {
-    if ([self isViewLoaded] && self.view.window) {
-        [self stopAnimation];
-    }
-}
-
-- (void)applicationDidBecomeActive:(NSNotification *)notification
-{
-    if ([self isViewLoaded] && self.view.window) {
-        [self startAnimation];
-    }
-}
-
-- (void)applicationWillTerminate:(NSNotification *)notification
-{
-    if ([self isViewLoaded] && self.view.window) {
-        [self stopAnimation];
-    }
-}
-
-- (void)didReceiveMemoryWarning {
-    
-    [super didReceiveMemoryWarning];
-    // Release any cached data, images, etc. that aren't in use.
-}
-
-- (void)viewWillAppear:(BOOL)animated   {
-    
-    [self startAnimation];
-    
-    [super viewWillAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated    {
-    
-    [self stopAnimation];
-    
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidUnload   {
-	
-    
-    [super viewDidUnload];
-    
 }
 
 ///////////
@@ -332,8 +331,8 @@
 - (BOOL) setupDisplayLink{
     
     animating = NO;
-    animationFrameInterval = FramerateDivider;
     displayLink = nil;
+    [self setAnimationFrameInterval:FramerateDivider];
     
     return true;   
 }
@@ -344,10 +343,11 @@
     if (frameInterval >= 1) {
         animationFrameInterval = frameInterval;
         
-        if (animating) {
+        if (animating) 
             [self stopAnimation];
-            [self startAnimation];
-        }
+        
+        [self startAnimation];
+        
     }
 }
 - (void)startAnimation {
@@ -513,9 +513,6 @@
     
     //draw
     [(EAGLView *)self.view presentFramebuffer];
-    
-
-    
     
 }
 
@@ -876,20 +873,26 @@
     }
     
     //double tap path reset
-    if ([touchController getDoubleTaps:nil] > 0){
-        cam.reset();
+    if ([touchController getDoubleTaps:nil] > 0)
+        [self setupCamera];
         
-    }
     
     //update camera object with input
     cam.control(deltaX, deltaY, pan, touchController.pinchValue);
 }
 - (BOOL) setupCamera{
 
-    V3 origin = V3(0.0f, 0.0f, 0.0f);
     
+    V3 p3 = randUnit3();
+    p3 = mult3(&p3, fRand() * 4.0f + 4.0f);
+    
+    V2 p2 = V2(p3.x, p3.y);
+    V2 o2 = V2();
+    
+    float dir = dir2(&p2, &o2);
+
     //init camera
-    cam = Camera();
+    cam = Camera(&p3, dir);
     
     return true;
     

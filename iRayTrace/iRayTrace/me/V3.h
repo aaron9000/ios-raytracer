@@ -1,4 +1,4 @@
-//3d point class
+
 #ifndef V3_H
 #define V3_H
 class V3{

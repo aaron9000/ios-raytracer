@@ -1,4 +1,4 @@
-//2d point class
+
 #ifndef V2_H
 #define V2_H
 class V2{
