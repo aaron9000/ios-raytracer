@@ -16,8 +16,8 @@ Camera::Camera(V3* position, float inLongitude){
     cameraLongitude = inLongitude;
 
     //make a real path
-    float sceneRotationVelocity = (fRand() * 0.32f + 0.32f) * randSign();
-    path.createPath(position, 24, 1.5f, 0.065f, sceneRotationVelocity);
+    float sceneRotationVelocity = (fRand() * 0.3f + 0.4f) * randSign();
+    path.createPath(position, 24, 1.6f, 0.08f, sceneRotationVelocity);
     
     NSLog(@"CAMERA START = %f %f %f", position->x,  position->y, position->z);
 }
@@ -61,15 +61,15 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin, float targetZ
     }else{
         
         //zoom ratio
-        float zoomRatio = 1.0f / zoom;
+        float zoomRatio = 1.0f / sqrtf(zoom);
         
         //no longer idle in this case
         if (fabs(deltaX) > 0.01f || fabs(deltaY) > 0.01f)
             idleTicker = 0;
             
         //update camrea
-        cameraLongitude += deltaX * Sensitivity * zoomRatio;
-        cameraLatitude -= deltaY * Sensitivity * zoomRatio;
+        cameraLongitude += deltaX * XSensitivity * zoomRatio;
+        cameraLatitude -= deltaY * YSensitivity * zoomRatio;
         
         //make sure they are in bounds
         cameraLongitude = constrainLong(cameraLongitude);

@@ -7,7 +7,8 @@
 #import "BezierPath.h"
 
 //consts
-#define Sensitivity 0.0065f
+#define XSensitivity 0.0048f
+#define YSensitivity 0.0032f
 #define PanSpeed 0.01f
 #define IdleTicks 50
 

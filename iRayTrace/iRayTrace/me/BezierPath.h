@@ -7,7 +7,7 @@
 //consts
 #define MaxPathLength 128
 #define LengthEstimationSteps 30
-#define PathScaleZ 0.5f
+#define PathScaleZ 0.65f
 #define PathSmoothIterations 5
 
 class BezierPath{

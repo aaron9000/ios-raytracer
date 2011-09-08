@@ -76,7 +76,7 @@ void BezierPath::createPath(V3* center, int nodes, float spacing, float speed, f
             for (j = k + 1; j < pathLength; j++){
                 n1 = path[j];
                 dist = dist3(&n0, &n1);
-                offsetMag = nodeSpacing - dist;
+                offsetMag = (nodeSpacing * 1.5f) - dist;
                 if (offsetMag > 0.0f){
                     //do verlet
                     delta = sub3(&n0, &n1);
@@ -96,7 +96,6 @@ void BezierPath::createPath(V3* center, int nodes, float spacing, float speed, f
     }
 }
 V3 BezierPath::getPathPos(){
-    
     
     //estimate
     float idealDt = (pathSpeed / (nodeSpacing * 4.0f));
