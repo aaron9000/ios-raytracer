@@ -7,40 +7,36 @@
 //consts
 #define MaxPathLength 128
 #define LengthEstimationSteps 30
-#define PathScaleZ 0.65f
-#define PathSmoothIterations 5
+#define PathSmoothIterations 4
+#define NodePlacementVariation 0.65f
 
 class BezierPath{
 public:
     
+    //default constructor
+    BezierPath();
     
-    //bezier
+    //public methods
+    void createPath(V3* center, int nodes, float spacing, float speed, float rotation);
+    V3 getPathPos();
+    
+private:
+    
+    //vars
     float pathSpeed;
     float nodeSpacing;
     float t;
     unsigned int node;
-    
-    //path
     bool hasPath;
     int pathLength;
     V3 path[MaxPathLength];
 	
-    
-    //default constructor
-    BezierPath();
-    
-    //methods
-    void createPath(V3* center, int nodes, float spacing, float speed, float rotation);
+	//helper methods
+	void reset();
     V3 getBezierPos(float dt, bool copy);
-    V3 getPathPos();
     V3 blend(V3* x0, V3* x1, V3* x2, V3* x3, float t);
-    void control(float deltaX, float deltaY, bool panToOrigin, float targetZoom);    
-    void reset();
-    
-    //helpers
     unsigned int getNextNode(unsigned int node);
     
-private:
 };
 
 #endif

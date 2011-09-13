@@ -1,31 +1,26 @@
 #include "Camera.h"
-
-
 Camera::Camera(){
     reset();
 }
-    
-Camera::Camera(V3* position, float inLongitude){
-        
-    reset();
 
+Camera::Camera(V3* position, float inLongitude){
+    reset();
+    
     //pass in args
     pos = lastPos = *position;
     
     //point in default direction
     cameraLongitude = inLongitude;
-
+    
     //make a real path
-    float sceneRotationVelocity = (fRand() * 0.3f + 0.4f) * randSign();
-    path.createPath(position, 24, 1.6f, 0.08f, sceneRotationVelocity);
-    
-    NSLog(@"CAMERA START = %f %f %f", position->x,  position->y, position->z);
+    float sceneRotationVelocity = (fRand() * 0.32f + 0.32f) * randSign();
+    path.createPath(position, 24, 3.2f, 0.08f, sceneRotationVelocity);
 }
-    
-                    
-void Camera::control(float deltaX, float deltaY, bool panToOrigin, float targetZoom){
 
-   //zooming
+
+void Camera::control(float deltaX, float deltaY, bool panToOrigin, float targetZoom){
+    
+    //zooming
     zoom = targetZoom;
     
     //auto centering
@@ -33,27 +28,25 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin, float targetZ
         
         //start rseetting to look at the origin
         V2 origin = V2();
-
+        
         //we are idle
         idleTicker++;
         idleTicker = MIN(idleTicker, IdleTicks);
-        
-        //find idle ratio
         float idleRatio = (float)idleTicker / (float)IdleTicks;
         idleRatio *= idleRatio;
-          
-        //longitude
+        
+        //longitude adjustments
         V2 pos2 = V2(pos.x, pos.y);
         float idealLongitude = constrainLong(dir2(&pos2, &origin));
         float deltaLong = findDir(cameraLongitude, idealLongitude);
-        if (fabs(deltaLong) <= PanSpeed){
+		float adjustedPanSpeed = PanSpeed * fabsf(deltaLong / pi);
+        if (fabs(deltaLong) <= adjustedPanSpeed){
             cameraLongitude = idealLongitude;
-            
         }else{
             if (deltaLong > 0.0f){
-                cameraLongitude -= PanSpeed * idleRatio;
+                cameraLongitude -= adjustedPanSpeed * idleRatio;
             }else{
-                cameraLongitude += PanSpeed * idleRatio;
+                cameraLongitude += adjustedPanSpeed * idleRatio;
             }
         }
         cameraLongitude = constrainLong(cameraLongitude);
@@ -66,7 +59,7 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin, float targetZ
         //no longer idle in this case
         if (fabs(deltaX) > 0.01f || fabs(deltaY) > 0.01f)
             idleTicker = 0;
-            
+        
         //update camrea
         cameraLongitude += deltaX * XSensitivity * zoomRatio;
         cameraLatitude -= deltaY * YSensitivity * zoomRatio;
@@ -76,19 +69,26 @@ void Camera::control(float deltaX, float deltaY, bool panToOrigin, float targetZ
         cameraLatitude = constrainLat(cameraLatitude);
         
     }
-        
+    
     //construct rotation matrix
     V3 unit = sphericalToUnit(cameraLongitude, cameraLatitude);
     cameraMat = fpsRotMat(&unit);
     
     //follow path
     pos = path.getPathPos();
-
-    return;
-    
 }
-       
 
+float Camera::getZoom(){
+	return zoom;
+}
+
+V3 Camera::getPos(){
+	return pos;
+}
+Mat4 Camera::getRotationMat(){
+    return cameraMat;
+
+}
 float Camera::constrainLong(float longitude){
     
     if (longitude < -pi)
@@ -129,6 +129,5 @@ void Camera::reset(){
     //bezier path
     V3 origin = V3();
     path = BezierPath();
-   
-}
     
+}

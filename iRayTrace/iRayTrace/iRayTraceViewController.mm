@@ -7,19 +7,17 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
-
 #import "iRayTraceViewController.h"
-
 #import "EAGLView.h"
-
 #import "TouchController.h"
-
 #import "Texture2D.h"
-
 #import "TouchObj.h"
-
 #import "V3.h"
 
+#define InternalWidth 384
+#define InternalHeight 512
+#define FramerateDivider 3
+#define LightRotateSpeed 0.015f
 
 @implementation iRayTraceViewController
 
@@ -35,25 +33,16 @@
 @synthesize textureAttributeDict;
 @synthesize textureUniformDict;
 
-/////////////
-//CONSTANTS//
-/////////////
-#define InternalWidth 384
-#define InternalHeight 512
-#define FramerateDivider 3
-#define LightRotateSpeed 0.015f
-#define HudAlpha 0.35f
-
 ////////
 //MAIN//
 ////////
 - (void)viewDidLoad
 {
-    
     //check what device the user has
+    screenDivider = 1;
     if (![self checkDevice]){
         NSString* title = @"Unsupported Device";
-        NSString* message = @"You need an iPad 2 with iOS 4.3+ to run this app. Press home to exit the application.";
+        NSString* message = @"You need an iPad with iOS 4.0+ to run this app. Press home to exit the application.";
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:nil otherButtonTitles:nil, nil];
         [alert show];
         return;
@@ -74,7 +63,7 @@
     [self setupBuffers];
     [self loadShaders];
     [self loadTextures];
-
+    
 }
 
 - (void)dealloc
@@ -93,7 +82,7 @@
 }
 
 - (void) update{
-   
+    
     //input
     [touchController update];
     
@@ -115,10 +104,6 @@
 /////////////////
 /* DEVICE META */
 /////////////////
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-	//Ok clicked
-    //kill program
-}
 - (bool) checkDevice{
     
 	//scaling and hi res support
@@ -134,36 +119,29 @@
 	NSString* deviceType = @"Uknown";
 	if ([model rangeOfString:@"iPad"].location != NSNotFound)
         deviceType=@"iPad";
-	if ([model rangeOfString:@"iPod"].location != NSNotFound)
-        deviceType=@"iPod";
-	if ([model rangeOfString:@"iPhone"].location != NSNotFound)
-        deviceType=@"iPhone";
     
-    //device model
-    float modelNumber = 2.0f;
-    /* pull model number from modelString */
+    //old ipad scale internal texture
+    if ([model rangeOfString:@"1,"].location != NSNotFound || [model rangeOfString:@"Simulator"].location != NSNotFound)
+        screenDivider = 2;
     
     //old version of iOS
-    if (osVersion < 4.3f)
+    if (osVersion < 4.0f)
         return false;
     
     //not an iPad2
-    if (![deviceType isEqualToString:@"iPad"] || modelNumber < 2.0f)
+    if (![deviceType isEqualToString:@"iPad"])
         return false;
     
     //default 
     return true;
 }
 
-
 ////////////
 /* TIMING */
 ////////////
 @synthesize perfTimer;
 - (BOOL) setupTiming {
-    
     self.perfTimer = [[Timer alloc] init];
-    
     srand((uint)[perfTimer getTime]);
     
     return true;
@@ -229,10 +207,9 @@
     [self.view addSubview:hudView];
     
     return true;
-    
 }
 - (BOOL) tearDownHud{
-
+    
     [emailLabel release];
     [titleLabel release];
     [controlsLabel release];
@@ -260,7 +237,7 @@
     }
     
     self.context = aContext;
-
+    
     [(EAGLView *)self.view setContext:context];
     [(EAGLView *)self.view setFramebuffer];
     
@@ -283,7 +260,7 @@
     
     //half resolution internal frame buffer
     glGenFramebuffersOES(1, &halfFrameBuffer);
-
+    
     return true;
 }
 
@@ -303,7 +280,7 @@
 - (BOOL) loadTextures {
     
     //init internal texture
-    internalTexture = [[Texture2D alloc] initWithData:0 pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:512 pixelsHigh:512 contentSize:CGSizeMake(InternalWidth , InternalHeight)];
+    internalTexture = [[Texture2D alloc] initWithData:0 pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:512 pixelsHigh:512 contentSize:CGSizeMake(InternalWidth / screenDivider , InternalHeight / screenDivider)];
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, halfFrameBuffer);
     glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D , internalTexture.name, 0);
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, 1);
@@ -315,12 +292,7 @@
 }
 - (BOOL) unloadTextures {
     
-    //halfFrameBuffer
-    glDeleteFramebuffersOES(1, &halfFrameBuffer);
-    
-    
     [internalTexture dealloc];
-    
     
     return true;
 }
@@ -388,7 +360,7 @@
      NSLog(@"Failed to validate program: %d", textureShader);
      return;
      }
-    */
+     */
     
     //temp vars
     GLuint vertex = 0;
@@ -408,8 +380,8 @@
         1.0f,  1.0f,
     };
     
-    float u = InternalWidth/512.0f;
-    float v = InternalHeight/512.0f;
+    float u = InternalWidth / (screenDivider * 512.0f);
+    float v = InternalHeight / (screenDivider * 512.0f);
     GLfloat texCoords[] = {
         0.0f, 0.0f,
         u,    0.0f,
@@ -432,7 +404,7 @@
     //setup
     glUseProgram(renderShader);
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, halfFrameBuffer);
-    glViewport(0, 0, InternalWidth, InternalHeight);
+    glViewport(0, 0, InternalWidth / screenDivider, InternalHeight / screenDivider);
     
     //vertex attribute
     vertex = [[renderAttributeDict valueForKey:@"vertex"] unsignedIntValue];
@@ -448,22 +420,20 @@
     
     //zoom uniform
     GLuint zoom = [[renderUniformDict   valueForKey:@"zoom"] unsignedIntValue];
-    glUniform1f(zoom, cam.zoom);
+    glUniform1f(zoom, cam.getZoom());
     
     //camera position uniform
-    x = cam.pos.x;
-    y = cam.pos.y;
-    z = cam.pos.z;
-
+    V3 cameraPosition = cam.getPos();
     GLuint cameraPos = [[renderUniformDict valueForKey:@"cameraPos"] unsignedIntValue];
-    glUniform3f(cameraPos, x, y, z);
+    glUniform3f(cameraPos, cameraPosition.x, cameraPosition.y, cameraPosition.z);
     
     //view rotation matrix uniform
     //rotates [1, 0 , 0] 
+    Mat4 cameraMat = cam.getRotationMat();
     GLfloat rot[] = {
-        cam.cameraMat[0][0],   cam.cameraMat[1][0],   cam.cameraMat[2][0],      
-        cam.cameraMat[0][1],   cam.cameraMat[1][1],   cam.cameraMat[2][1],      
-        cam.cameraMat[0][2],   cam.cameraMat[1][2],   cam.cameraMat[2][2],      
+        cameraMat[0][0],   cameraMat[1][0],   cameraMat[2][0],      
+        cameraMat[0][1],   cameraMat[1][1],   cameraMat[2][1],      
+        cameraMat[0][2],   cameraMat[1][2],   cameraMat[2][2],      
     };
     
     GLuint matrix = [[renderUniformDict valueForKey:@"matrix"] unsignedIntValue];
@@ -495,12 +465,10 @@
     glVertexAttribPointer(vertex, 2, GL_FLOAT, 0, 0, squareVertices);
     glEnableVertexAttribArray(vertex);
     
-    
     //uv coord attribute
     uvCoord = [[textureAttributeDict valueForKey:@"uvCoord"] unsignedIntValue];
     glVertexAttribPointer(uvCoord, 2, GL_FLOAT, 0, 0, texCoords);
     glEnableVertexAttribArray(uvCoord);
-    
     
     //action
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -533,11 +501,9 @@
 }
 - (BOOL) loadShaders{
     
-    
     //error check
     if ([context API] != kEAGLRenderingAPIOpenGLES2)
         return false;
-    
     
     //temp vars
     NSNumber* zero = [NSNumber numberWithUnsignedInt:0];
@@ -597,7 +563,6 @@
         NSLog(@"Shader compile log:\n%s", log);
         free(log);
     }
-    
     
     glGetShaderiv(*shader, GL_COMPILE_STATUS, &status);
     if (status == 0)    {
@@ -730,20 +695,11 @@
     return YES;
 }
 
-///////////
-//HELPERS//
-///////////
-- (float) getScreenDistance{
-    float fov = 3.14f * 0.5f;
-    float dist = cosf(fov * 0.5f)/sinf(fov * 0.5f);
-    return dist;
-}
-
 /////////////////////////////////
 /*TouchController communication*/
 /////////////////////////////////
 - (void)linkTouchController:(TouchController*) linkedController{
-
+    
 	touchController = linkedController;
     
 }
@@ -794,7 +750,7 @@
 		touchPoint = [touch locationInView:self.view];
 		
 		touchPoint.y = -(touchPoint.y-1024.0f);
-				
+        
 		[passObj setPoint:touchPoint];
 		
 		
@@ -852,7 +808,7 @@
 /*CAMERA*/
 //////////
 - (void) updateCamera{
-        
+    
     //local
     bool pan = true;
     float deltaX = 0.0f;
@@ -875,13 +831,12 @@
     //double tap path reset
     if ([touchController getDoubleTaps:nil] > 0)
         [self setupCamera];
-        
+    
     
     //update camera object with input
     cam.control(deltaX, deltaY, pan, touchController.pinchValue);
 }
 - (BOOL) setupCamera{
-
     
     V3 p3 = randUnit3();
     p3 = mult3(&p3, fRand() * 4.0f + 4.0f);
@@ -890,7 +845,7 @@
     V2 o2 = V2();
     
     float dir = dir2(&p2, &o2);
-
+    
     //init camera
     cam = Camera(&p3, dir);
     

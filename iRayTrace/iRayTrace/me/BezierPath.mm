@@ -42,9 +42,7 @@ void BezierPath::createPath(V3* center, int nodes, float spacing, float speed, f
         
         //randomly place new node in radius around previous
         randDir = randUnit3();
-        randDir.z *= PathScaleZ;
-        randDir = unit3(&randDir);
-        randDir = mult3(&randDir, spacing);
+        randDir = mult3(&randDir, NodePlacementVariation * spacing);
         prev = add3(&prev, &randDir);
         
         //2D rotate a bit
@@ -76,7 +74,7 @@ void BezierPath::createPath(V3* center, int nodes, float spacing, float speed, f
             for (j = k + 1; j < pathLength; j++){
                 n1 = path[j];
                 dist = dist3(&n0, &n1);
-                offsetMag = (nodeSpacing * 1.5f) - dist;
+                offsetMag = nodeSpacing - dist;
                 if (offsetMag > 0.0f){
                     //do verlet
                     delta = sub3(&n0, &n1);
@@ -88,11 +86,6 @@ void BezierPath::createPath(V3* center, int nodes, float spacing, float speed, f
                 }
             }
         }
-    }
- 
-    for (k = 0; k < pathLength; k++){
-            NSLog(@"PATH NODE %f   %f   %f", path[k].x, path[k].y, path[k].z);
-        
     }
 }
 V3 BezierPath::getPathPos(){
@@ -188,7 +181,6 @@ V3 BezierPath::getBezierPos(float dt, bool copy){
         bezierPos = blend(&nodePos[0], &nodePos[1], &nodePos[2], &nodePos[3], currT);
         
         if (copy){
-            NSLog(@"%f   %i", t, node);
             t = currT;
             node = currNode;
         }

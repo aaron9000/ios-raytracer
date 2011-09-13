@@ -20,10 +20,12 @@
 #import "Timer.h"
 #import "mat4.h"
 
-
 @interface iRayTraceViewController : UIViewController {
     //gl stuff
     EAGLContext *context;
+    
+    //for legacy device scaling
+    int screenDivider;
     
     //Additional view for hud
     UIView* hudView;
@@ -65,18 +67,13 @@
     
     //camera
     Camera cam;
-
 }
 
 //step method
 - (void) update;
 
-//helpers
-- (float)getScreenDistance;
-
 //device meta
 - (bool) checkDevice;
-
 
 //timing
 @property (retain, nonatomic) Timer* perfTimer;
@@ -138,9 +135,5 @@
 - (void) updateCamera;
 - (BOOL) setupCamera;
 - (BOOL) tearDownCamera;
-
-
-
-
 
 @end
