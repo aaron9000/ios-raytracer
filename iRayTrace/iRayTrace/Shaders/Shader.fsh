@@ -74,10 +74,7 @@ void raySphereIntersect(Ray r, mediump vec4 sphereMat, highp vec4 sphereDef, ino
 	if (dist <= 0.0 || c.dist < dist)
 		return;
 
-	//////////////////////////////////
-	//-we actually have a collision-//
-	//////////////////////////////////
-
+    /* we have collision */
 	//adjust collision
 	c.dist = dist;
     c.intersectPos = r.dir * dist + r.origin;;
@@ -111,10 +108,7 @@ void rayBoundaryIntersect(Ray r, highp vec4 sphereDef, inout Collision c){
 	if (dist <= 0.0 || c.dist < dist)
 		return;
     
-	//////////////////////////////////
-	//-we actually have a collision-//
-	//////////////////////////////////
-    
+    /* we have collision */
 	//adjust collision
 	c.dist = dist;
     c.intersectPos = r.dir * dist + r.origin;;
@@ -127,7 +121,6 @@ Collision intersectionCheck(Ray r){
 
 		Collision c = createCollision();
 
-        
 		//each sphere we are going to check against
         raySphereIntersect(r, vec4(0.3, 1.0, 0.0, 0.5), vec4(-7.0, 3.0, -0.0, 2.5), c);	
 		raySphereIntersect(r, vec4(1.0, 0.0, 0.2, 0.3), vec4(5.0, 1.0, 5.0, 2.0), c);

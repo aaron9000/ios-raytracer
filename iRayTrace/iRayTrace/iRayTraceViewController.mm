@@ -42,7 +42,7 @@
     screenDivider = 1;
     if (![self checkDevice]){
         NSString* title = @"Unsupported Device";
-        NSString* message = @"You need an iPad with iOS 4.0+ to run this app. Press home to exit the application.";
+        NSString* message = @"You need an iPad with iOS 4.3+ to run this app. Press home to exit the application.";
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:nil otherButtonTitles:nil, nil];
         [alert show];
         return;
@@ -84,20 +84,9 @@
 - (void) update{
     
     //input
-    [touchController update];
-    
-    //camera stuff
     [self updateCamera];
-    
-    [touchController recievedTaps];
-    
-    //timing
     [self updateTiming];
-    
-    //scene
     [self updateScene];
-    
-    //render
     [self drawFrame];
     
 }
@@ -141,6 +130,7 @@
 ////////////
 @synthesize perfTimer;
 - (BOOL) setupTiming {
+    
     self.perfTimer = [[Timer alloc] init];
     srand((uint)[perfTimer getTime]);
     
@@ -149,7 +139,6 @@
 - (BOOL) tearDownTiming {
     
     [perfTimer release];
-    
     return true;
 }
 - (void) updateTiming{
@@ -209,11 +198,9 @@
     return true;
 }
 - (BOOL) tearDownHud{
-    
     [emailLabel release];
     [titleLabel release];
     [controlsLabel release];
-    
     return true;
 }
 
@@ -237,7 +224,6 @@
     }
     
     self.context = aContext;
-    
     [(EAGLView *)self.view setContext:context];
     [(EAGLView *)self.view setFramebuffer];
     
@@ -245,7 +231,6 @@
 }
 
 - (BOOL) tearDownGL{
-    
     if ([EAGLContext currentContext] == context)
         [EAGLContext setCurrentContext:nil];
 	self.context = nil;	
@@ -257,19 +242,14 @@
 //BUFFERS//
 ///////////
 - (BOOL) setupBuffers {
-    
     //half resolution internal frame buffer
     glGenFramebuffersOES(1, &halfFrameBuffer);
-    
     return true;
 }
 
 - (BOOL) tearDownBuffers {
-    
     //frame buffer
     glDeleteFramebuffersOES(1, &halfFrameBuffer);
-    
-    
     return false;
 }
 
@@ -524,7 +504,6 @@
     
     [self loadShaderWithName:@"Shader" shaderId:&renderShader uniformDict:renderUniformDict attributeDict:renderAttributeDict];
     
-    
     //////////////////
     //texture shader//
     //////////////////
@@ -699,9 +678,7 @@
 /*TouchController communication*/
 /////////////////////////////////
 - (void)linkTouchController:(TouchController*) linkedController{
-    
 	touchController = linkedController;
-    
 }
 
 - (void) touchHelper:(NSSet *)touches{
@@ -716,7 +693,6 @@
 	//bound max touches
 	if (len > HWMaxTouches)
 		len = HWMaxTouches;
-	
 	
 	//for each touch 
 	for (i = 0; i < len; i++){
@@ -746,13 +722,9 @@
 		
 		//set properties of passObj
 		[passObj setTaps:[touch tapCount]];
-		
 		touchPoint = [touch locationInView:self.view];
-		
 		touchPoint.y = -(touchPoint.y-1024.0f);
-        
 		[passObj setPoint:touchPoint];
-		
 		
 		//let touch controller do the rest
 		[touchController performSelector:selector withObject:passObj];
@@ -786,18 +758,14 @@
 /* SCENE */
 ///////////
 - (BOOL) setupScene {
-    
     angle = fRand() * twoPi;
     lightDir = V3(1.0f, 0.0f, 0.0f);
-    
     return true;
 }
 - (void) updateScene {
-    
     angle += LightRotateSpeed;
     lightDir = V3(0.0f, cosf(angle), sinf(angle));
     lightDir = unit3(&lightDir);
-    
 }
 
 - (BOOL) tearDownScene{
@@ -808,6 +776,8 @@
 /*CAMERA*/
 //////////
 - (void) updateCamera{
+    
+    [touchController update];
     
     //local
     bool pan = true;
@@ -832,18 +802,18 @@
     if ([touchController getDoubleTaps:nil] > 0)
         [self setupCamera];
     
-    
     //update camera object with input
     cam.control(deltaX, deltaY, pan, touchController.pinchValue);
+    
+    [touchController recievedTaps];
+    
 }
 - (BOOL) setupCamera{
     
     V3 p3 = randUnit3();
     p3 = mult3(&p3, fRand() * 4.0f + 4.0f);
-    
     V2 p2 = V2(p3.x, p3.y);
     V2 o2 = V2();
-    
     float dir = dir2(&p2, &o2);
     
     //init camera
@@ -853,9 +823,7 @@
     
 }
 - (BOOL) tearDownCamera{
-    
     //nothing
-    
     return true;
 }
 @end
