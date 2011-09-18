@@ -122,8 +122,8 @@ Collision intersectionCheck(Ray r){
 		Collision c = createCollision();
 
 		//each sphere we are going to check against
-        raySphereIntersect(r, vec4(0.3, 1.0, 0.0, 0.5), vec4(-7.0, 3.0, -0.0, 2.5), c);	
-		raySphereIntersect(r, vec4(1.0, 0.0, 0.2, 0.3), vec4(5.0, 1.0, 5.0, 2.0), c);
+        raySphereIntersect(r, vec4(0.4, 1.0, 0.0, 0.5), vec4(-7.0, 3.0, -0.0, 2.5), c);	
+		raySphereIntersect(r, vec4(1.0, 0.0, 0.4, 0.3), vec4(5.0, 1.0, 5.0, 2.0), c);
 		raySphereIntersect(r, vec4(0.0, 1.0, 1.0, 0.2), vec4(-9.0, -6.0, -4.0, 2.5), c);	
 		raySphereIntersect(r, vec4(0.5, 0.0, 1.0, 0.9), vec4(1.40, 8.0, 7.0, 3.0), c);
 		raySphereIntersect(r, vec4(0.2, 0.4, 1.0, 0.8), vec4(-3.0, -3.0, 1.0, 2.75), c);

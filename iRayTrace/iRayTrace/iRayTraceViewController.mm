@@ -6,6 +6,9 @@
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
 #import <QuartzCore/QuartzCore.h>
 #import "iRayTraceViewController.h"
 #import "EAGLView.h"
@@ -42,7 +45,7 @@
     screenDivider = 1;
     if (![self checkDevice]){
         NSString* title = @"Unsupported Device";
-        NSString* message = @"You need an iPad with iOS 4.3+ to run this app. Press home to exit the application.";
+        NSString* message = @"You need an iPad with iOS 4.0+ to run this app. Press home to exit the application.";
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:nil otherButtonTitles:nil, nil];
         [alert show];
         return;
@@ -93,6 +96,16 @@
 /////////////////
 /* DEVICE META */
 /////////////////
+
+- (NSString *) getPlatform{
+    size_t size;
+    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+    char* machine = (char*)malloc(size);
+    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+    NSString *platform = [NSString stringWithUTF8String:machine];
+    free(machine);
+    return platform;
+}
 - (bool) checkDevice{
     
 	//scaling and hi res support
@@ -109,8 +122,13 @@
 	if ([model rangeOfString:@"iPad"].location != NSNotFound)
         deviceType=@"iPad";
     
-    //old ipad scale internal texture
-    if ([model rangeOfString:@"1,"].location != NSNotFound || [model rangeOfString:@"Simulator"].location != NSNotFound)
+    //scale internal renderign for old ipads
+    NSString *platform = [self getPlatform];
+    if ([platform rangeOfString:@"1,"].location != NSNotFound)
+        screenDivider = 2;
+    
+    //scale for simulator
+    if ([model rangeOfString:@"Simulator"].location != NSNotFound)
         screenDivider = 2;
     
     //old version of iOS
@@ -271,9 +289,12 @@
     return true;
 }
 - (BOOL) unloadTextures {
-    
     [internalTexture dealloc];
-    
+    /*
+    [internalTextureHalf dealloc];
+    [internalTextureFull dealloc];
+    [internalTextureQuarter dealloc];
+    */
     return true;
 }
 

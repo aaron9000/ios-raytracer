@@ -73,6 +73,7 @@
 - (void) update;
 
 //device meta
+- (NSString*) getPlatform;
 - (bool) checkDevice;
 
 //timing
