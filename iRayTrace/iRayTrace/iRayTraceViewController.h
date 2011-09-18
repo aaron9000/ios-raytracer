@@ -25,7 +25,8 @@
     EAGLContext *context;
     
     //for legacy device scaling
-    int screenDivider;
+    int renderDivider;
+    float displayScaling;
     
     //Additional view for hud
     UIView* hudView;
@@ -43,15 +44,19 @@
     NSMutableDictionary* textureAttributeDict;
     
     //textures
-    Texture2D* internalTexture;
-    Texture2D* testTexture;
+    Texture2D* internalTextureQuarter;
+    Texture2D* internalTextureHalf;
+    Texture2D* internalTextureFull;
+    //Texture2D* testTexture;
     
     //scene
     V3 lightDir;
     float angle;
     
     //buffers
-    GLuint halfFrameBuffer;
+    GLuint frameBufferQuarter;
+    GLuint frameBufferHalf;
+    GLuint frameBufferFull;
     
     //display link
     BOOL animating;
@@ -97,6 +102,7 @@
 - (void)drawFrame;
 
 //textures
+- (Texture2D*) internalTextureWithDivider:(int) divider andBuffer:(GLuint) buffer;
 - (BOOL)loadTextures;
 - (BOOL)unloadTextures;
 

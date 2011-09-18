@@ -17,8 +17,9 @@
 #import "TouchObj.h"
 #import "V3.h"
 
-#define InternalWidth 384
-#define InternalHeight 512
+#define TextureSize  1024
+#define InternalWidth 768
+#define InternalHeight 1024
 #define FramerateDivider 3
 #define LightRotateSpeed 0.015f
 
@@ -42,7 +43,8 @@
 - (void)viewDidLoad
 {
     //check what device the user has
-    screenDivider = 1;
+    renderDivider = 3;
+    displayScaling = 0.25f;
     if (![self checkDevice]){
         NSString* title = @"Unsupported Device";
         NSString* message = @"You need an iPad with iOS 4.0+ to run this app. Press home to exit the application.";
@@ -125,11 +127,7 @@
     //scale internal renderign for old ipads
     NSString *platform = [self getPlatform];
     if ([platform rangeOfString:@"1,"].location != NSNotFound)
-        screenDivider = 2;
-    
-    //scale for simulator
-    if ([model rangeOfString:@"Simulator"].location != NSNotFound)
-        screenDivider = 2;
+        renderDivider = 2;
     
     //old version of iOS
     if (osVersion < 4.0f)
@@ -261,13 +259,17 @@
 ///////////
 - (BOOL) setupBuffers {
     //half resolution internal frame buffer
-    glGenFramebuffersOES(1, &halfFrameBuffer);
+    glGenFramebuffersOES(1, &frameBufferQuarter);
+    glGenFramebuffersOES(1, &frameBufferHalf);
+    glGenFramebuffersOES(1, &frameBufferFull);
     return true;
 }
 
 - (BOOL) tearDownBuffers {
     //frame buffer
-    glDeleteFramebuffersOES(1, &halfFrameBuffer);
+    glDeleteFramebuffersOES(1, &frameBufferQuarter);
+    glDeleteFramebuffersOES(1, &frameBufferHalf);
+    glDeleteFramebuffersOES(1, &frameBufferFull);
     return false;
 }
 
@@ -275,26 +277,45 @@
 ////////////
 //TEXTURES//
 ////////////
-- (BOOL) loadTextures {
+- (Texture2D*) internalTextureWithDivider:(int) divider andBuffer:(GLuint) buffer{
     
-    //init internal texture
-    internalTexture = [[Texture2D alloc] initWithData:0 pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:512 pixelsHigh:512 contentSize:CGSizeMake(InternalWidth / screenDivider , InternalHeight / screenDivider)];
-    glBindFramebufferOES(GL_FRAMEBUFFER_OES, halfFrameBuffer);
-    glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D , internalTexture.name, 0);
+    if (divider <= 0 || buffer == 0)
+        return nil;
+    
+    glBindFramebufferOES(GL_FRAMEBUFFER_OES, buffer);
+    
+    int texSize = TextureSize / divider;
+    Texture2D* ret = [[Texture2D alloc] initWithData:0 pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:texSize pixelsHigh:texSize contentSize:CGSizeMake(InternalWidth / divider , InternalHeight / divider)];
+
+    glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D , ret.name, 0);
+    
+    return ret;
+}
+- (BOOL) loadTextures {
+
+    //quarter res
+    internalTextureQuarter = [self internalTextureWithDivider:4 andBuffer:frameBufferQuarter];
+   
+    //half res
+    internalTextureHalf = [self internalTextureWithDivider:2 andBuffer:frameBufferHalf];
+    
+    //full res
+    internalTextureFull = [self internalTextureWithDivider:1 andBuffer:frameBufferFull];    
+    
+    //reset to default
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, 1);
     
     //init test texture
-    testTexture = [[Texture2D alloc] initWithImage:[UIImage imageNamed:@"Test.png"]];
+    //testTexture = [[Texture2D alloc] initWithImage:[UIImage imageNamed:@"Test.png"]];
     
     return true;
 }
 - (BOOL) unloadTextures {
-    [internalTexture dealloc];
-    /*
+   
+    [internalTextureQuarter dealloc];
     [internalTextureHalf dealloc];
     [internalTextureFull dealloc];
-    [internalTextureQuarter dealloc];
-    */
+
     return true;
 }
 
@@ -374,15 +395,15 @@
         -1.0f,  1.0f, 0.45f,
         1.0f,  1.0f, 0.45f,
     };
-    static const GLfloat squareVertices[] = {
-        -1.0f, -1.0f,
-        1.0f, -1.0f,
-        -1.0f,  1.0f,
-        1.0f,  1.0f,
+    GLfloat squareVertices[] = {
+        -displayScaling, -displayScaling,
+        displayScaling, -displayScaling,
+        -displayScaling,  displayScaling,
+        displayScaling,  displayScaling,
     };
     
-    float u = InternalWidth / (screenDivider * 512.0f);
-    float v = InternalHeight / (screenDivider * 512.0f);
+    float u = (float)InternalWidth / (float)TextureSize;
+    float v = (float)InternalHeight / (float)TextureSize;
     GLfloat texCoords[] = {
         0.0f, 0.0f,
         u,    0.0f,
@@ -399,13 +420,33 @@
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
+    ///////////////
+    /* SWITCHING */
+    ///////////////
+    GLuint tex = 0;
+    int frameBuffer = 1;
+    switch (renderDivider){
+        case 1:
+            frameBuffer = frameBufferFull;
+            tex = internalTextureFull.name;
+            break;
+        case 2:
+            frameBuffer = frameBufferHalf;
+            tex = internalTextureHalf.name;
+            break;
+        case 3:
+            frameBuffer = frameBufferQuarter;
+            tex = internalTextureQuarter.name;
+            break;
+    }
+    
     ////////////////////////////////
     //RENDER TO TEXTURE INTERNALLY//
     ////////////////////////////////
     //setup
     glUseProgram(renderShader);
-    glBindFramebufferOES(GL_FRAMEBUFFER_OES, halfFrameBuffer);
-    glViewport(0, 0, InternalWidth / screenDivider, InternalHeight / screenDivider);
+    glBindFramebufferOES(GL_FRAMEBUFFER_OES, frameBuffer);
+    glViewport(0, 0, InternalWidth / renderDivider, InternalHeight / renderDivider);
     
     //vertex attribute
     vertex = [[renderAttributeDict valueForKey:@"vertex"] unsignedIntValue];
@@ -453,7 +494,6 @@
     /////////////////////////
     //setup
     glUseProgram(textureShader);
-    GLuint tex = internalTexture.name;
     glBindTexture(GL_TEXTURE_2D, tex);
     glViewport(0, 0, 768, 1024);
     
