@@ -190,7 +190,6 @@
 @synthesize infoController;
 @synthesize infoButton;
 @synthesize descriptionLabel;
-@synthesize infoLabel;
 - (void) syncInterfaceWithSettings{
     int index = 0; 
     switch (renderDivider){
@@ -225,33 +224,45 @@
             break;
     }
 }
+- (void) pathResetClick:(id) sender {
+    //new random camera path
+    [self setupCamera];
+
+}
+- (BOOL) popoverControllerShouldDismissPopover:(UIPopoverController *) popoverController{
+    [popoverController dismissPopoverAnimated:false];
+    return false;   
+}
 - (void) qualityClick:(id) sender{
     UIPopoverController* controller = [[UIPopoverController alloc] initWithContentViewController:qualityController];
-    [controller setPopoverContentSize:CGSizeMake(PopUpWidth, PopUpHeight)];
+    [controller setPopoverContentSize:CGSizeMake(PopUpWidth, PopUpHeight) animated:false];
+    [controller setDelegate:self];
     [controller presentPopoverFromRect:qualityButton.frame inView:hudView permittedArrowDirections:UIPopoverArrowDirectionAny animated:false];
 }
-
 - (void) sizeClick:(id) sender{
     UIPopoverController* controller = [[UIPopoverController alloc] initWithContentViewController:sizeController];
-    [controller setPopoverContentSize:CGSizeMake(PopUpWidth, PopUpHeight)];
+    [controller setPopoverContentSize:CGSizeMake(PopUpWidth, PopUpHeight) animated:false];
+    [controller setDelegate:self];
     [controller presentPopoverFromRect:sizeButton.frame inView:hudView permittedArrowDirections:UIPopoverArrowDirectionAny animated:false];
 }
 - (void) pathClick:(id) sender{
     UIPopoverController* controller = [[UIPopoverController alloc] initWithContentViewController:pathController];
-    [controller setPopoverContentSize:CGSizeMake(PopUpWidth, PopUpHeight)];
+    [controller setPopoverContentSize:CGSizeMake(PopUpWidth, PopUpHeight) animated:false];
+    [controller setDelegate:self];
     [controller presentPopoverFromRect:pathButton.frame inView:hudView permittedArrowDirections:UIPopoverArrowDirectionAny animated:false];
 }
 
 - (void) infoClick:(id) sender{
     UIPopoverController* controller = [[UIPopoverController alloc] initWithContentViewController:infoController];
-    [controller setPopoverContentSize:CGSizeMake(PopUpWidth, PopUpHeight)];
+    [controller setPopoverContentSize:CGSizeMake(PopUpWidth, PopUpHeight) animated:false];
+    [controller setDelegate:self];
     [controller presentPopoverFromRect:infoButton.frame inView:hudView permittedArrowDirections:UIPopoverArrowDirectionAny animated:false];
 }
 - (BOOL) setupHud{
 
     //hud consts
     float buttonWidth = 64.0f;
-    float buttonHeight = 24.0f;
+    float buttonHeight = 36.0f;
     float buttonAlpha = 0.5f;
     float padding = 8.0f;
     float adjustedWidth = PopUpWidth - (2 * padding);
@@ -259,7 +270,8 @@
     CGRect rect = CGRectMake(0, 0, PopUpWidth, PopUpHeight);
     CGRect topHalfRect = CGRectMake(padding, padding, adjustedWidth, adjustedHeight);
     CGRect bottomHalfRect = CGRectMake(padding, PopUpHeight * 0.5f + padding, adjustedWidth, adjustedHeight);
-    UIColor* color = [UIColor whiteColor];
+    UIColor* color = [UIColor colorWithRed:0.15f green:0.15f blue:0.15f alpha:1.0f];
+    UIColor* textColor = [UIColor colorWithRed:0.8f green:0.8f blue:0.8f alpha:1.0f];
     
     /////////////
     /* QUALITY */
@@ -282,6 +294,9 @@
     //label
         self.qualityLabel = [[UILabel alloc] initWithFrame:topHalfRect];
         [qualityLabel setText:@"Rendering Quality"];
+        [qualityLabel setTextColor:textColor];
+        [qualityLabel setOpaque:false];
+        [qualityLabel setBackgroundColor:[UIColor clearColor]];
         [qualityLabel setTextAlignment:UITextAlignmentCenter];
         [qualityView addSubview:qualityLabel];
         
@@ -311,7 +326,10 @@
     //label
         self.sizeLabel = [[UILabel alloc] initWithFrame:topHalfRect];
         [sizeLabel setText:@"Screen Scaling"];
+        [sizeLabel setTextColor:textColor];
+        [sizeLabel setOpaque:false];
         [sizeLabel setTextAlignment:UITextAlignmentCenter];
+        [sizeLabel setBackgroundColor:[UIColor clearColor]];
         [sizeView addSubview:sizeLabel];
     
     //size button
@@ -332,13 +350,18 @@
     //reset button
         self.pathResetButton = [[UIButton alloc] initWithFrame:bottomHalfRect];
         [pathResetButton setTitle:@"Generate New" forState:UIControlStateNormal];
-        [pathResetButton setBackgroundColor:[UIColor grayColor]];
+        [pathResetButton setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
+        [pathResetButton setBackgroundColor:[UIColor blackColor]];
+        [pathResetButton addTarget:self action:@selector(pathResetClick:) forControlEvents:UIControlEventTouchUpInside];
         [pathView addSubview:pathResetButton];
     
     //label
         self.pathLabel = [[UILabel alloc] initWithFrame:topHalfRect];
         [pathLabel setText:@"Camera Path"];
+        [pathLabel setTextColor:textColor];
         [pathLabel setTextAlignment:UITextAlignmentCenter];
+        [pathLabel setOpaque:false];
+        [pathLabel setBackgroundColor:[UIColor clearColor]];
         [pathView addSubview:pathLabel];
                 
     //path button
@@ -356,16 +379,15 @@
         self.infoController = [[UIViewController alloc] init];
         [infoController setView:infoView];
     
-    //label
-        self.infoLabel = [[UILabel alloc] initWithFrame:topHalfRect];
-        [infoLabel setText:@"Info"];
-        [infoView addSubview:infoLabel];
-    
     //information label
         self.descriptionLabel = [[UILabel alloc] initWithFrame:rect];
         [descriptionLabel setText:@" iSpheres 1.0 \n A real-time iOS ray tracer! \n aaron.geisler.sloth@gmail.com"];
+        [descriptionLabel setTextAlignment:UITextAlignmentCenter];
         [descriptionLabel setLineBreakMode:UILineBreakModeWordWrap];
         [descriptionLabel setNumberOfLines:4];
+        [descriptionLabel setTextColor:textColor];
+        [descriptionLabel setOpaque:false];
+        [descriptionLabel setBackgroundColor:[UIColor clearColor]];
         [infoView addSubview:descriptionLabel];
     
     //info button
@@ -406,8 +428,8 @@
     [pathButton release];
     
     [infoController release];
+    [descriptionLabel release];
     [infoButton release];
-    [infoLabel release];
     
      return true;
 }
@@ -1051,9 +1073,8 @@
         }
     }
     
-    //double tap path reset
-    if ([touchController getDoubleTaps:nil] > 0)
-        [self setupCamera];
+    deltaX *= renderDivider;
+    deltaY *= renderDivider;
     
     //update camera object with input
     cam.control(deltaX, deltaY, pan, touchController.pinchValue);

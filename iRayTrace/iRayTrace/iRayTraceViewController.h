@@ -20,7 +20,7 @@
 #import "Timer.h"
 #import "mat4.h"
 
-@interface iRayTraceViewController : UIViewController {
+@interface iRayTraceViewController : UIViewController<UIPopoverControllerDelegate>{
     //gl stuff
     EAGLContext *context;
     
@@ -43,13 +43,12 @@
     //path menu
     UIViewController* pathController;
     UIButton* pathButton;
-    UIButton* pathResetButotn;
+    UIButton* pathResetButton;
     UILabel* pathLabel;
     //info menu
     UIViewController* infoController;
     UIButton* infoButton;
     UILabel* descriptionLabel;
-    UILabel* infoLabel;
     
     //shaders
     GLuint renderShader;
@@ -124,7 +123,6 @@
 //info menu
 @property (retain, nonatomic) UIViewController* infoController;
 @property (retain, nonatomic) UIButton* infoButton;
-@property (retain, nonatomic) UILabel* infoLabel;
 @property (retain, nonatomic) UILabel* descriptionLabel;
 - (void) syncInterfaceWithSettings;
 - (BOOL) setupHud;
