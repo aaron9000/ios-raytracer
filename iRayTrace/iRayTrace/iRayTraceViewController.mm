@@ -22,6 +22,10 @@
 #define InternalHeight 1024
 #define FramerateDivider 3
 #define LightRotateSpeed 0.015f
+#define PopUpWidth 260.0f
+#define PopUpHeight 100.0f
+#define MinScale 0.25f
+#define MaxScale 1.0f
 
 @implementation iRayTraceViewController
 
@@ -40,11 +44,18 @@
 ////////
 //MAIN//
 ////////
+- (void) lowQuality{
+    renderDivider = 4;
+    displayScaling = MaxScale;
+}
+- (void) highQuality{
+    renderDivider = 2;
+    displayScaling = MaxScale;
+}
 - (void)viewDidLoad
 {
     //check what device the user has
-    renderDivider = 3;
-    displayScaling = 0.25f;
+    [self highQuality];
     if (![self checkDevice]){
         NSString* title = @"Unsupported Device";
         NSString* message = @"You need an iPad with iOS 4.0+ to run this app. Press home to exit the application.";
@@ -109,11 +120,7 @@
     return platform;
 }
 - (bool) checkDevice{
-    
-	//scaling and hi res support
-	//UIScreen* screen = [UIScreen mainScreen];
-	//bool retina = (BOOL)screen.scale == 2.0f;
-    
+
 	//OS version
 	NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
 	float osVersion = [currSysVer floatValue];
@@ -127,7 +134,7 @@
     //scale internal renderign for old ipads
     NSString *platform = [self getPlatform];
     if ([platform rangeOfString:@"1,"].location != NSNotFound)
-        renderDivider = 2;
+        [self lowQuality];
     
     //old version of iOS
     if (osVersion < 4.0f)
@@ -168,56 +175,241 @@
 //HUD STUFF//
 /////////////
 @synthesize hudView;
-@synthesize controlsLabel;
-@synthesize emailLabel;
-@synthesize titleLabel;
+@synthesize qualityController;
+@synthesize qualityButton;
+@synthesize qualityLabel;
+@synthesize qualityControl;
+@synthesize sizeController;
+@synthesize sizeButton;
+@synthesize sizeSlider;
+@synthesize sizeLabel;
+@synthesize pathController;
+@synthesize pathResetButton;
+@synthesize pathLabel;
+@synthesize pathButton;
+@synthesize infoController;
+@synthesize infoButton;
+@synthesize descriptionLabel;
+@synthesize infoLabel;
+- (void) syncInterfaceWithSettings{
+    int index = 0; 
+    switch (renderDivider){
+        case 1:
+            index = 2;
+            break;
+        case 2:
+            index = 1;
+            break;
+        case 4:
+            index = 0;
+            break;
+    }
+    [qualityControl setSelectedSegmentIndex:index];
+    [sizeSlider setValue:displayScaling];
+}
+- (void) sliderChange:(id) sender{
+    displayScaling = [sizeSlider value];
+}
+- (void) qualityControlClick:(id) sender{
+    switch ([qualityControl selectedSegmentIndex]) {
+        case 0:
+            renderDivider = 4;
+            break;
+        case 1:
+            renderDivider = 2;
+            break;            
+        case 2:
+            renderDivider = 1;
+            break;
+        default:
+            break;
+    }
+}
+- (void) qualityClick:(id) sender{
+    UIPopoverController* controller = [[UIPopoverController alloc] initWithContentViewController:qualityController];
+    [controller setPopoverContentSize:CGSizeMake(PopUpWidth, PopUpHeight)];
+    [controller presentPopoverFromRect:qualityButton.frame inView:hudView permittedArrowDirections:UIPopoverArrowDirectionAny animated:false];
+}
+
+- (void) sizeClick:(id) sender{
+    UIPopoverController* controller = [[UIPopoverController alloc] initWithContentViewController:sizeController];
+    [controller setPopoverContentSize:CGSizeMake(PopUpWidth, PopUpHeight)];
+    [controller presentPopoverFromRect:sizeButton.frame inView:hudView permittedArrowDirections:UIPopoverArrowDirectionAny animated:false];
+}
+- (void) pathClick:(id) sender{
+    UIPopoverController* controller = [[UIPopoverController alloc] initWithContentViewController:pathController];
+    [controller setPopoverContentSize:CGSizeMake(PopUpWidth, PopUpHeight)];
+    [controller presentPopoverFromRect:pathButton.frame inView:hudView permittedArrowDirections:UIPopoverArrowDirectionAny animated:false];
+}
+
+- (void) infoClick:(id) sender{
+    UIPopoverController* controller = [[UIPopoverController alloc] initWithContentViewController:infoController];
+    [controller setPopoverContentSize:CGSizeMake(PopUpWidth, PopUpHeight)];
+    [controller presentPopoverFromRect:infoButton.frame inView:hudView permittedArrowDirections:UIPopoverArrowDirectionAny animated:false];
+}
 - (BOOL) setupHud{
+
+    //hud consts
+    float buttonWidth = 64.0f;
+    float buttonHeight = 24.0f;
+    float buttonAlpha = 0.5f;
+    float padding = 8.0f;
+    float adjustedWidth = PopUpWidth - (2 * padding);
+    float adjustedHeight = (PopUpHeight / 2) - (2 * padding);
+    CGRect rect = CGRectMake(0, 0, PopUpWidth, PopUpHeight);
+    CGRect topHalfRect = CGRectMake(padding, padding, adjustedWidth, adjustedHeight);
+    CGRect bottomHalfRect = CGRectMake(padding, PopUpHeight * 0.5f + padding, adjustedWidth, adjustedHeight);
+    UIColor* color = [UIColor whiteColor];
     
-    //common
-    float shade = 0.05f;
-    UIFont* labelFont = [UIFont fontWithName:@"Arial" size:12.0f];
-    UIColor* backColor = [UIColor colorWithRed:shade green:shade blue:shade alpha:1.0f];
+    /////////////
+    /* QUALITY */
+    /////////////
+    //view and controller
+        UIView* qualityView = [[UIView alloc] initWithFrame:rect];
+        [qualityView setBackgroundColor:color];
+        self.qualityController = [[UIViewController alloc] init];
+        [qualityController setView:qualityView];
+        
+    //segment control
+        self.qualityControl = [[UISegmentedControl alloc] initWithFrame:bottomHalfRect];
+        [qualityControl insertSegmentWithTitle:@"Low" atIndex:0 animated:true];
+        [qualityControl insertSegmentWithTitle:@"Medium" atIndex:1 animated:true];
+        [qualityControl insertSegmentWithTitle:@"High" atIndex:2 animated:true];
+        [qualityControl setSegmentedControlStyle:UISegmentedControlStyleBar];
+        [qualityControl addTarget:self action:@selector(qualityControlClick:) forControlEvents:UIControlEventValueChanged];
+        [qualityView addSubview:qualityControl];
+        
+    //label
+        self.qualityLabel = [[UILabel alloc] initWithFrame:topHalfRect];
+        [qualityLabel setText:@"Rendering Quality"];
+        [qualityLabel setTextAlignment:UITextAlignmentCenter];
+        [qualityView addSubview:qualityLabel];
+        
+    //quality button
+        self.qualityButton = [[UIButton alloc] initWithFrame:CGRectMake(16, 16, buttonWidth, buttonHeight)];
+        [qualityButton setTitle:@"Quality" forState:UIControlStateNormal];
+        [qualityButton setAlpha:buttonAlpha];
+        [qualityButton addTarget:self action:@selector(qualityClick:) forControlEvents:UIControlEventTouchUpInside];
+    
+    //////////
+    /* SIZE */
+    //////////
+    //view and controller
+        UIView* sizeView = [[UIView alloc] initWithFrame:rect];
+        [sizeView setBackgroundColor:color];
+        self.sizeController = [[UIViewController alloc] init];
+        [sizeController setView:sizeView];
+    
+    //slider
+        self.sizeSlider = [[UISlider alloc] initWithFrame:bottomHalfRect];
+        [sizeSlider setMaximumValue:MaxScale];
+        [sizeSlider setMinimumValue:MinScale];
+        [sizeSlider setValue:displayScaling];
+        [sizeSlider addTarget:self action:@selector(sliderChange:) forControlEvents:UIControlEventValueChanged];
+        [sizeView addSubview:sizeSlider];
+    
+    //label
+        self.sizeLabel = [[UILabel alloc] initWithFrame:topHalfRect];
+        [sizeLabel setText:@"Screen Scaling"];
+        [sizeLabel setTextAlignment:UITextAlignmentCenter];
+        [sizeView addSubview:sizeLabel];
+    
+    //size button
+        self.sizeButton = [[UIButton alloc] initWithFrame:CGRectMake(232, 16, buttonWidth, buttonHeight)];
+        [sizeButton setTitle:@"Screen" forState:UIControlStateNormal];
+        [sizeButton setAlpha:buttonAlpha];
+        [sizeButton addTarget:self action:@selector(sizeClick:) forControlEvents:UIControlEventTouchUpInside];
+    
+    //////////
+    /* PATH */
+    //////////
+    //view and controller
+        UIView* pathView = [[UIView alloc] initWithFrame:rect];
+        [pathView setBackgroundColor:color];
+        self.pathController = [[UIViewController alloc] init];
+        [pathController setView:pathView];
+    
+    //reset button
+        self.pathResetButton = [[UIButton alloc] initWithFrame:bottomHalfRect];
+        [pathResetButton setTitle:@"Generate New" forState:UIControlStateNormal];
+        [pathResetButton setBackgroundColor:[UIColor grayColor]];
+        [pathView addSubview:pathResetButton];
+    
+    //label
+        self.pathLabel = [[UILabel alloc] initWithFrame:topHalfRect];
+        [pathLabel setText:@"Camera Path"];
+        [pathLabel setTextAlignment:UITextAlignmentCenter];
+        [pathView addSubview:pathLabel];
+                
+    //path button
+        self.pathButton = [[UIButton alloc] initWithFrame:CGRectMake(472, 16, buttonWidth, buttonHeight)];
+        [pathButton setTitle:@"Cam" forState:UIControlStateNormal];
+        [pathButton setAlpha:buttonAlpha];
+        [pathButton addTarget:self action:@selector(pathClick:) forControlEvents:UIControlEventTouchUpInside];
+    
+    //////////
+    /* INFO */
+    //////////
+    //view and controller
+        UIView* infoView = [[UIView alloc] initWithFrame:rect];
+        [infoView setBackgroundColor:color];
+        self.infoController = [[UIViewController alloc] init];
+        [infoController setView:infoView];
+    
+    //label
+        self.infoLabel = [[UILabel alloc] initWithFrame:topHalfRect];
+        [infoLabel setText:@"Info"];
+        [infoView addSubview:infoLabel];
+    
+    //information label
+        self.descriptionLabel = [[UILabel alloc] initWithFrame:rect];
+        [descriptionLabel setText:@" iSpheres 1.0 \n A real-time iOS ray tracer! \n aaron.geisler.sloth@gmail.com"];
+        [descriptionLabel setLineBreakMode:UILineBreakModeWordWrap];
+        [descriptionLabel setNumberOfLines:4];
+        [infoView addSubview:descriptionLabel];
+    
+    //info button
+        self.infoButton = [[UIButton alloc] initWithFrame:CGRectMake(688, 16, buttonWidth, buttonHeight)];
+        [infoButton setTitle:@"Info" forState:UIControlStateNormal];
+        [infoButton setAlpha:buttonAlpha];
+        [infoButton addTarget:self action:@selector(infoClick:) forControlEvents:UIControlEventTouchUpInside];
     
     //init the UIView that we will add HUD controls to
     self.hudView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 768.0f, 1024.0f)];
-    
-    self.emailLabel = [[UILabel alloc] initWithFrame:CGRectMake(768.0f - 168.0f, 0.0f, 168.0f, 16.0f)];
-    [emailLabel setTextColor:[UIColor yellowColor]];
-    [emailLabel setTextAlignment:UITextAlignmentRight];
-    [emailLabel setBackgroundColor:backColor];
-    [emailLabel setText:@"aaron.geisler.sloth@gmail.com"];
-    [emailLabel setFont:labelFont];
-    
-    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 72.0f, 16.0f)];
-    [titleLabel setTextColor:[UIColor yellowColor]];
-    [titleLabel setTextAlignment:UITextAlignmentLeft];
-    [titleLabel setBackgroundColor:backColor];
-    [titleLabel setText:@"iSpheres 1.0"];
-    [titleLabel setFont:labelFont];
-    
-    self.controlsLabel = [[UILabel alloc] initWithFrame:CGRectMake(384.0f - 134.0f, 1024.0f - 16.0f, 268.0f, 16.0f)];
-    [controlsLabel setTextColor:[UIColor yellowColor]];
-    [controlsLabel setTextAlignment:UITextAlignmentCenter];
-    [controlsLabel setBackgroundColor:backColor];
-    [controlsLabel setFont:labelFont];
-    [controlsLabel setText:@"[ drag to pan - pinch to zoom - tap for new path ]"];
-    
-    //add controls to the view
-    [hudView addSubview:controlsLabel];
-    [hudView addSubview:emailLabel];
-    [hudView addSubview:titleLabel];
+    [hudView addSubview:qualityButton];
+    [hudView addSubview:sizeButton];
+    [hudView addSubview:pathButton];
+    [hudView addSubview:infoButton];
     [hudView setMultipleTouchEnabled:true]; 
-    
-    //add as a subview over the rendered scene
     [self.view addSubview:hudView];
+    
+    //sync controls with the settings
+    [self syncInterfaceWithSettings];
     
     return true;
 }
 - (BOOL) tearDownHud{
-    [emailLabel release];
-    [titleLabel release];
-    [controlsLabel release];
-    return true;
+    
+    [qualityController release];
+    [qualityButton release];
+    [qualityLabel release];
+    [qualityControl release];
+    
+    [sizeController release];
+    [sizeButton release];
+    [sizeLabel release];
+    [sizeSlider release];
+    
+    [pathController release];
+    [pathLabel release];
+    [pathResetButton release];
+    [pathButton release];
+    
+    [infoController release];
+    [infoButton release];
+    [infoLabel release];
+    
+     return true;
 }
 
 ////////////
@@ -417,7 +609,7 @@
     
     //clear buffer
     [(EAGLView *)self.view setFramebuffer];
-    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
     ///////////////
@@ -434,7 +626,7 @@
             frameBuffer = frameBufferHalf;
             tex = internalTextureHalf.name;
             break;
-        case 3:
+        case 4:
             frameBuffer = frameBufferQuarter;
             tex = internalTextureQuarter.name;
             break;

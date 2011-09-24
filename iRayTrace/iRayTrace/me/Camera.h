@@ -14,8 +14,6 @@
 
 class Camera{
 public:
-
-    
     //constructor
     Camera();
     Camera(V3* position, float inLongitude); 

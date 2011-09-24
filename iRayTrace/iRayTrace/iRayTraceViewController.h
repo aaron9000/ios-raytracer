@@ -30,9 +30,26 @@
     
     //Additional view for hud
     UIView* hudView;
-    UILabel* controlsLabel;
-    UILabel* emailLabel;
-    UILabel* titleLabel;
+    //quality menu
+    UIViewController* qualityController;
+    UIButton* qualityButton;
+    UILabel* qualityLabel;
+    UISegmentedControl* qualityControl;
+    //size menu
+    UIViewController* sizeController;
+    UIButton* sizeButton;
+    UISlider* sizeSlider;
+    UILabel* sizeLabel;
+    //path menu
+    UIViewController* pathController;
+    UIButton* pathButton;
+    UIButton* pathResetButotn;
+    UILabel* pathLabel;
+    //info menu
+    UIViewController* infoController;
+    UIButton* infoButton;
+    UILabel* descriptionLabel;
+    UILabel* infoLabel;
     
     //shaders
     GLuint renderShader;
@@ -89,9 +106,27 @@
 
 //hud
 @property (retain, nonatomic) UIView* hudView;
-@property (retain, nonatomic) UILabel* controlsLabel;
-@property (retain, nonatomic) UILabel* emailLabel;
-@property (retain, nonatomic) UILabel* titleLabel;
+//quality menu
+@property (retain, nonatomic) UIViewController* qualityController;
+@property (retain, nonatomic) UIButton* qualityButton;
+@property (retain, nonatomic) UILabel* qualityLabel;
+@property (retain, nonatomic) UISegmentedControl* qualityControl;
+//size menu
+@property (retain, nonatomic) UIViewController* sizeController;
+@property (retain, nonatomic) UIButton* sizeButton;
+@property (retain, nonatomic) UILabel* sizeLabel;
+@property (retain, nonatomic) UISlider* sizeSlider;
+//path menu
+@property (retain, nonatomic) UIViewController* pathController;
+@property (retain, nonatomic) UIButton* pathButton;
+@property (retain, nonatomic) UILabel* pathLabel;
+@property (retain, nonatomic) UIButton* pathResetButton;
+//info menu
+@property (retain, nonatomic) UIViewController* infoController;
+@property (retain, nonatomic) UIButton* infoButton;
+@property (retain, nonatomic) UILabel* infoLabel;
+@property (retain, nonatomic) UILabel* descriptionLabel;
+- (void) syncInterfaceWithSettings;
 - (BOOL) setupHud;
 - (BOOL) tearDownHud;
 

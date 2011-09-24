@@ -12,8 +12,6 @@ BezierPath::BezierPath(){
     reset();
 }
 void BezierPath::createPath(V3* center, int nodes, float spacing, float speed, float rotation){
-    
-    
     //invaid paths
     if (nodes < 4 || nodes > MaxPathLength || speed <= 0.0f || spacing <= speed){
         NSLog(@"Camera: bad path args \n");
@@ -137,8 +135,6 @@ V3 BezierPath::getPathPos(){
     
 }
 V3 BezierPath::getBezierPos(float dt, bool copy){
-    
-    
     V3 bezierPos=V3();
     
     //one for each node
@@ -230,8 +226,6 @@ void BezierPath::reset(){
     int i;
     for (i = 0; i < MaxPathLength; i++)
         path[i] = V3();
-    
-	
 }
 
 unsigned int BezierPath::getNextNode(unsigned int node){
