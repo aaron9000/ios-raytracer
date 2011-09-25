@@ -26,6 +26,7 @@
 		9315D88D13D679A8001B1A70 /* Texture.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87D13D543AB001B1A70 /* Texture.fsh */; };
 		9315D88E13D679A8001B1A70 /* Texture.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87E13D543AB001B1A70 /* Texture.vsh */; };
 		93D7860C13E312E600E97A99 /* Timer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D7860B13E312E500E97A99 /* Timer.mm */; };
+		93E4DFF8142F720100EE62E7 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 93E4DFF7142F720100EE62E7 /* Default.png */; };
 		93EFCD1C13E06E8D00EF3DB6 /* Camera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD0F13E06E8D00EF3DB6 /* Camera.mm */; };
 		93EFCD1D13E06E8D00EF3DB6 /* MathHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD1113E06E8D00EF3DB6 /* MathHelper.mm */; };
 		93EFCD1E13E06E8D00EF3DB6 /* Touch.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD1313E06E8D00EF3DB6 /* Touch.mm */; };
@@ -101,6 +102,7 @@
 		9315D87E13D543AB001B1A70 /* Texture.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Texture.vsh; path = Shaders/Texture.vsh; sourceTree = "<group>"; };
 		93D7860A13E312E500E97A99 /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = me/Timer.h; sourceTree = "<group>"; };
 		93D7860B13E312E500E97A99 /* Timer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Timer.mm; path = me/Timer.mm; sourceTree = "<group>"; };
+		93E4DFF7142F720100EE62E7 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		93EFCD0E13E06E8D00EF3DB6 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Camera.h; path = me/Camera.h; sourceTree = "<group>"; };
 		93EFCD0F13E06E8D00EF3DB6 /* Camera.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Camera.mm; path = me/Camera.mm; sourceTree = "<group>"; };
 		93EFCD1013E06E8D00EF3DB6 /* MathHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathHelper.h; path = me/MathHelper.h; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 		9315D82413D5417A001B1A70 /* iRayTrace */ = {
 			isa = PBXGroup;
 			children = (
+				93E4DFF7142F720100EE62E7 /* Default.png */,
 				93EFCD0D13E06E3A00EF3DB6 /* cocoas2d */,
 				9315D84613D542AE001B1A70 /* Textures */,
 				9315D87A13D54397001B1A70 /* Shaders */,
@@ -355,6 +358,7 @@
 				9315D83213D5417B001B1A70 /* MainWindow.xib in Resources */,
 				9315D83F13D5417B001B1A70 /* iRayTraceViewController.xib in Resources */,
 				93EFCD2413E06EAF00EF3DB6 /* Test.png in Resources */,
+				93E4DFF8142F720100EE62E7 /* Default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

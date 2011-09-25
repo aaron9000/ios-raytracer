@@ -333,7 +333,7 @@
         [sizeView addSubview:sizeLabel];
     
     //size button
-        self.sizeButton = [[UIButton alloc] initWithFrame:CGRectMake(232, 16, buttonWidth, buttonHeight)];
+        self.sizeButton = [[UIButton alloc] initWithFrame:CGRectMake(240, 16, buttonWidth, buttonHeight)];
         [sizeButton setTitle:@"Screen" forState:UIControlStateNormal];
         [sizeButton setAlpha:buttonAlpha];
         [sizeButton addTarget:self action:@selector(sizeClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -365,7 +365,7 @@
         [pathView addSubview:pathLabel];
                 
     //path button
-        self.pathButton = [[UIButton alloc] initWithFrame:CGRectMake(472, 16, buttonWidth, buttonHeight)];
+        self.pathButton = [[UIButton alloc] initWithFrame:CGRectMake(464, 16, buttonWidth, buttonHeight)];
         [pathButton setTitle:@"Cam" forState:UIControlStateNormal];
         [pathButton setAlpha:buttonAlpha];
         [pathButton addTarget:self action:@selector(pathClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -381,7 +381,7 @@
     
     //information label
         self.descriptionLabel = [[UILabel alloc] initWithFrame:rect];
-        [descriptionLabel setText:@" iSpheres 1.0 \n A real-time iOS ray tracer! \n aaron.geisler.sloth@gmail.com"];
+        [descriptionLabel setText:@" Spheres! 1.0 \n A realtime iOS ray tracer! \n aaron.geisler.sloth@gmail.com"];
         [descriptionLabel setTextAlignment:UITextAlignmentCenter];
         [descriptionLabel setLineBreakMode:UILineBreakModeWordWrap];
         [descriptionLabel setNumberOfLines:4];
