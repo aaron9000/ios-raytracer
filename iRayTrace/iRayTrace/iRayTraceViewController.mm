@@ -381,7 +381,7 @@
     
     //information label
         self.descriptionLabel = [[UILabel alloc] initWithFrame:rect];
-        [descriptionLabel setText:@" Spheres! 1.0 \n A realtime iOS ray tracer! \n aaron.geisler.sloth@gmail.com"];
+        [descriptionLabel setText:@"Spheres! 1.0 \n A real-time iOS ray tracer! \n aaron.geisler.sloth@gmail.com"];
         [descriptionLabel setTextAlignment:UITextAlignmentCenter];
         [descriptionLabel setLineBreakMode:UILineBreakModeWordWrap];
         [descriptionLabel setNumberOfLines:4];
@@ -456,6 +456,8 @@
     self.context = aContext;
     [(EAGLView *)self.view setContext:context];
     [(EAGLView *)self.view setFramebuffer];
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
     
     return true;
 }
