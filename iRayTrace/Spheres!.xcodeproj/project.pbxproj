@@ -25,6 +25,10 @@
 		9315D88C13D679A8001B1A70 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87C13D543AB001B1A70 /* Shader.vsh */; };
 		9315D88D13D679A8001B1A70 /* Texture.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87D13D543AB001B1A70 /* Texture.fsh */; };
 		9315D88E13D679A8001B1A70 /* Texture.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9315D87E13D543AB001B1A70 /* Texture.vsh */; };
+		932DBFC81432EBE9008BEA2E /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 932DBFC41432EBE9008BEA2E /* Icon-72.png */; };
+		932DBFC91432EBE9008BEA2E /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 932DBFC51432EBE9008BEA2E /* Icon-Small-50.png */; };
+		932DBFCA1432EBE9008BEA2E /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 932DBFC61432EBE9008BEA2E /* Icon-Small.png */; };
+		932DBFCB1432EBE9008BEA2E /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 932DBFC71432EBE9008BEA2E /* iTunesArtwork.png */; };
 		93D7860C13E312E600E97A99 /* Timer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D7860B13E312E500E97A99 /* Timer.mm */; };
 		93E4DFF8142F720100EE62E7 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 93E4DFF7142F720100EE62E7 /* Default.png */; };
 		93EFCD1C13E06E8D00EF3DB6 /* Camera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD0F13E06E8D00EF3DB6 /* Camera.mm */; };
@@ -49,15 +53,15 @@
 /* Begin PBXFileReference section */
 		93105F2D13FDEEDE00C9AF1A /* BezierPath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = BezierPath.mm; path = me/BezierPath.mm; sourceTree = "<group>"; };
 		93105F2E13FDEEDE00C9AF1A /* BezierPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BezierPath.h; path = me/BezierPath.h; sourceTree = "<group>"; };
-		9315D81613D5417A001B1A70 /* iRayTrace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iRayTrace.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9315D81613D5417A001B1A70 /* Spheres!.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Spheres!.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9315D81A13D5417A001B1A70 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9315D81C13D5417A001B1A70 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9315D81E13D5417A001B1A70 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		9315D82013D5417A001B1A70 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		9315D82213D5417A001B1A70 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		9315D82613D5417B001B1A70 /* iRayTrace-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iRayTrace-Info.plist"; sourceTree = "<group>"; };
+		9315D82613D5417B001B1A70 /* Spheres!-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Spheres!-Info.plist"; sourceTree = "<group>"; };
 		9315D82813D5417B001B1A70 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		9315D82A13D5417B001B1A70 /* iRayTrace-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iRayTrace-Prefix.pch"; sourceTree = "<group>"; };
+		9315D82A13D5417B001B1A70 /* Spheres!-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Spheres!-Prefix.pch"; sourceTree = "<group>"; };
 		9315D82B13D5417B001B1A70 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		9315D82D13D5417B001B1A70 /* iRayTraceAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iRayTraceAppDelegate.h; sourceTree = "<group>"; };
 		9315D82E13D5417B001B1A70 /* iRayTraceAppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = iRayTraceAppDelegate.mm; sourceTree = "<group>"; };
@@ -100,6 +104,10 @@
 		9315D87C13D543AB001B1A70 /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Shader.vsh; path = Shaders/Shader.vsh; sourceTree = "<group>"; };
 		9315D87D13D543AB001B1A70 /* Texture.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Texture.fsh; path = Shaders/Texture.fsh; sourceTree = "<group>"; };
 		9315D87E13D543AB001B1A70 /* Texture.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Texture.vsh; path = Shaders/Texture.vsh; sourceTree = "<group>"; };
+		932DBFC41432EBE9008BEA2E /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		932DBFC51432EBE9008BEA2E /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-50.png"; sourceTree = "<group>"; };
+		932DBFC61432EBE9008BEA2E /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
+		932DBFC71432EBE9008BEA2E /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 		93D7860A13E312E500E97A99 /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = me/Timer.h; sourceTree = "<group>"; };
 		93D7860B13E312E500E97A99 /* Timer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Timer.mm; path = me/Timer.mm; sourceTree = "<group>"; };
 		93E4DFF7142F720100EE62E7 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -157,7 +165,7 @@
 		9315D81713D5417A001B1A70 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9315D81613D5417A001B1A70 /* iRayTrace.app */,
+				9315D81613D5417A001B1A70 /* Spheres!.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -177,6 +185,10 @@
 		9315D82413D5417A001B1A70 /* iRayTrace */ = {
 			isa = PBXGroup;
 			children = (
+				932DBFC41432EBE9008BEA2E /* Icon-72.png */,
+				932DBFC51432EBE9008BEA2E /* Icon-Small-50.png */,
+				932DBFC61432EBE9008BEA2E /* Icon-Small.png */,
+				932DBFC71432EBE9008BEA2E /* iTunesArtwork.png */,
 				93E4DFF7142F720100EE62E7 /* Default.png */,
 				93EFCD0D13E06E3A00EF3DB6 /* cocoas2d */,
 				9315D84613D542AE001B1A70 /* Textures */,
@@ -199,9 +211,9 @@
 		9315D82513D5417A001B1A70 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				9315D82613D5417B001B1A70 /* iRayTrace-Info.plist */,
+				9315D82613D5417B001B1A70 /* Spheres!-Info.plist */,
 				9315D82713D5417B001B1A70 /* InfoPlist.strings */,
-				9315D82A13D5417B001B1A70 /* iRayTrace-Prefix.pch */,
+				9315D82A13D5417B001B1A70 /* Spheres!-Prefix.pch */,
 				9315D82B13D5417B001B1A70 /* main.mm */,
 			);
 			name = "Supporting Files";
@@ -306,9 +318,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9315D81513D5417A001B1A70 /* iRayTrace */ = {
+		9315D81513D5417A001B1A70 /* Spheres! */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9315D84213D5417B001B1A70 /* Build configuration list for PBXNativeTarget "iRayTrace" */;
+			buildConfigurationList = 9315D84213D5417B001B1A70 /* Build configuration list for PBXNativeTarget "Spheres!" */;
 			buildPhases = (
 				9315D81213D5417A001B1A70 /* Sources */,
 				9315D81313D5417A001B1A70 /* Frameworks */,
@@ -318,9 +330,9 @@
 			);
 			dependencies = (
 			);
-			name = iRayTrace;
+			name = "Spheres!";
 			productName = iRayTrace;
-			productReference = 9315D81613D5417A001B1A70 /* iRayTrace.app */;
+			productReference = 9315D81613D5417A001B1A70 /* Spheres!.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -328,7 +340,7 @@
 /* Begin PBXProject section */
 		9315D80D13D5417A001B1A70 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 9315D81013D5417A001B1A70 /* Build configuration list for PBXProject "iRayTrace" */;
+			buildConfigurationList = 9315D81013D5417A001B1A70 /* Build configuration list for PBXProject "Spheres!" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -340,7 +352,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9315D81513D5417A001B1A70 /* iRayTrace */,
+				9315D81513D5417A001B1A70 /* Spheres! */,
 			);
 		};
 /* End PBXProject section */
@@ -359,6 +371,10 @@
 				9315D83F13D5417B001B1A70 /* iRayTraceViewController.xib in Resources */,
 				93EFCD2413E06EAF00EF3DB6 /* Test.png in Resources */,
 				93E4DFF8142F720100EE62E7 /* Default.png in Resources */,
+				932DBFC81432EBE9008BEA2E /* Icon-72.png in Resources */,
+				932DBFC91432EBE9008BEA2E /* Icon-Small-50.png in Resources */,
+				932DBFCA1432EBE9008BEA2E /* Icon-Small.png in Resources */,
+				932DBFCB1432EBE9008BEA2E /* iTunesArtwork.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,10 +482,10 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "iRayTrace/iRayTrace-Prefix.pch";
+				GCC_PREFIX_HEADER = "iRayTrace/Spheres!-Prefix.pch";
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
-				INFOPLIST_FILE = "iRayTrace/iRayTrace-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "iRayTrace/Spheres!-Info.plist";
+				PRODUCT_NAME = "Spheres!";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -480,10 +496,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "iRayTrace/iRayTrace-Prefix.pch";
+				GCC_PREFIX_HEADER = "iRayTrace/Spheres!-Prefix.pch";
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
-				INFOPLIST_FILE = "iRayTrace/iRayTrace-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "iRayTrace/Spheres!-Info.plist";
+				PRODUCT_NAME = "Spheres!";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};
@@ -492,7 +508,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9315D81013D5417A001B1A70 /* Build configuration list for PBXProject "iRayTrace" */ = {
+		9315D81013D5417A001B1A70 /* Build configuration list for PBXProject "Spheres!" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9315D84013D5417B001B1A70 /* Debug */,
@@ -501,7 +517,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9315D84213D5417B001B1A70 /* Build configuration list for PBXNativeTarget "iRayTrace" */ = {
+		9315D84213D5417B001B1A70 /* Build configuration list for PBXNativeTarget "Spheres!" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9315D84313D5417B001B1A70 /* Debug */,

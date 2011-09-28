@@ -350,7 +350,9 @@
     //reset button
         self.pathResetButton = [[UIButton alloc] initWithFrame:bottomHalfRect];
         [pathResetButton setTitle:@"Generate New" forState:UIControlStateNormal];
+        [pathResetButton setTitle:@"[Generate New]" forState:UIControlStateHighlighted];
         [pathResetButton setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
+        [pathResetButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [pathResetButton setBackgroundColor:[UIColor blackColor]];
         [pathResetButton addTarget:self action:@selector(pathResetClick:) forControlEvents:UIControlEventTouchUpInside];
         [pathView addSubview:pathResetButton];
