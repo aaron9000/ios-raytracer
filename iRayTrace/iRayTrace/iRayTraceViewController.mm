@@ -62,7 +62,6 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:nil otherButtonTitles:nil, nil];
         [alert show];
         return;
-        
     }
     
     if (!touchController){

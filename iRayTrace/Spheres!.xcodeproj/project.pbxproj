@@ -29,6 +29,7 @@
 		932DBFC91432EBE9008BEA2E /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 932DBFC51432EBE9008BEA2E /* Icon-Small-50.png */; };
 		932DBFCA1432EBE9008BEA2E /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 932DBFC61432EBE9008BEA2E /* Icon-Small.png */; };
 		932DBFCB1432EBE9008BEA2E /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 932DBFC71432EBE9008BEA2E /* iTunesArtwork.png */; };
+		932DBFD71433EF78008BEA2E /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 932DBFD61433EF78008BEA2E /* Icon.png */; };
 		93D7860C13E312E600E97A99 /* Timer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D7860B13E312E500E97A99 /* Timer.mm */; };
 		93E4DFF8142F720100EE62E7 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 93E4DFF7142F720100EE62E7 /* Default.png */; };
 		93EFCD1C13E06E8D00EF3DB6 /* Camera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93EFCD0F13E06E8D00EF3DB6 /* Camera.mm */; };
@@ -108,6 +109,7 @@
 		932DBFC51432EBE9008BEA2E /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-50.png"; sourceTree = "<group>"; };
 		932DBFC61432EBE9008BEA2E /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
 		932DBFC71432EBE9008BEA2E /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
+		932DBFD61433EF78008BEA2E /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		93D7860A13E312E500E97A99 /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = me/Timer.h; sourceTree = "<group>"; };
 		93D7860B13E312E500E97A99 /* Timer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Timer.mm; path = me/Timer.mm; sourceTree = "<group>"; };
 		93E4DFF7142F720100EE62E7 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -156,7 +158,7 @@
 		9315D80B13D5417A001B1A70 = {
 			isa = PBXGroup;
 			children = (
-				9315D82413D5417A001B1A70 /* iRayTrace */,
+				9315D82413D5417A001B1A70 /* Spheres! */,
 				9315D81913D5417A001B1A70 /* Frameworks */,
 				9315D81713D5417A001B1A70 /* Products */,
 			);
@@ -182,9 +184,10 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		9315D82413D5417A001B1A70 /* iRayTrace */ = {
+		9315D82413D5417A001B1A70 /* Spheres! */ = {
 			isa = PBXGroup;
 			children = (
+				932DBFD61433EF78008BEA2E /* Icon.png */,
 				932DBFC41432EBE9008BEA2E /* Icon-72.png */,
 				932DBFC51432EBE9008BEA2E /* Icon-Small-50.png */,
 				932DBFC61432EBE9008BEA2E /* Icon-Small.png */,
@@ -205,6 +208,7 @@
 				9315D83D13D5417B001B1A70 /* iRayTraceViewController.xib */,
 				9315D82513D5417A001B1A70 /* Supporting Files */,
 			);
+			name = "Spheres!";
 			path = iRayTrace;
 			sourceTree = "<group>";
 		};
@@ -375,6 +379,7 @@
 				932DBFC91432EBE9008BEA2E /* Icon-Small-50.png in Resources */,
 				932DBFCA1432EBE9008BEA2E /* Icon-Small.png in Resources */,
 				932DBFCB1432EBE9008BEA2E /* iTunesArtwork.png in Resources */,
+				932DBFD71433EF78008BEA2E /* Icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,6 +510,39 @@
 			};
 			name = Release;
 		};
+		932DBFCC1433EB6B008BEA2E /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Distribution;
+		};
+		932DBFCD1433EB6B008BEA2E /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iRayTrace/Spheres!-Prefix.pch";
+				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
+				INFOPLIST_FILE = "iRayTrace/Spheres!-Info.plist";
+				PRODUCT_NAME = "Spheres!";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Distribution;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -513,18 +551,20 @@
 			buildConfigurations = (
 				9315D84013D5417B001B1A70 /* Debug */,
 				9315D84113D5417B001B1A70 /* Release */,
+				932DBFCC1433EB6B008BEA2E /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Distribution;
 		};
 		9315D84213D5417B001B1A70 /* Build configuration list for PBXNativeTarget "Spheres!" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9315D84313D5417B001B1A70 /* Debug */,
 				9315D84413D5417B001B1A70 /* Release */,
+				932DBFCD1433EB6B008BEA2E /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Distribution;
 		};
 /* End XCConfigurationList section */
 	};
