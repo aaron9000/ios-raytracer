@@ -52,6 +52,9 @@
     renderDivider = 2;
     displayScaling = MaxScale;
 }
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
+    return true;
+}
 - (void)viewDidLoad
 {
     //check what device the user has
@@ -108,7 +111,6 @@
 /////////////////
 /* DEVICE META */
 /////////////////
-
 - (NSString *) getPlatform{
     size_t size;
     sysctlbyname("hw.machine", NULL, &size, NULL, 0);
